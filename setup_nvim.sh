@@ -1,8 +1,11 @@
 #!/bin/bash
 
-# Installing plugins
+# Installing Tools
 brew install fzf
-brew install ripgrep
 brew install lazygit
-brew install leazydocker
+brew install lazydocker
+# File and string search tools
 brew install fd
+brew install ripgrep
+# File manager
+brew install yazi

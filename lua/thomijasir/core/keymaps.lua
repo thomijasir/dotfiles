@@ -24,3 +24,19 @@ keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer
 -- Save with Ctrl+S in normal and insert mode
 keymap.set("n", "<C-s>", ":w<CR>", { silent = true })
 keymap.set("i", "<C-s>", "<Esc>:w<CR>", { silent = true })
+
+function ToggleMouse()
+  if vim.o.mouse == "a" then
+    vim.o.mouse = ""
+    print("Mouse disabled")
+  else
+    vim.o.mouse = "a"
+    print("Mouse enabled")
+  end
+end
+
+-- Optional: Create a command to call the function
+vim.api.nvim_create_user_command("ToggleMouse", ToggleMouse, {})
+
+-- Optional: Create a keymapping (e.g., <leader>m)
+vim.keymap.set("n", "<leader>i", ToggleMouse, { desc = "Toggle mouse", noremap = true, silent = false })
