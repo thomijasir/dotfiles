@@ -27,3 +27,21 @@ vim.api.nvim_create_user_command("Rfinder", function()
   local path = vim.api.nvim_buf_get_name(0)
   os.execute("open -R " .. path)
 end, {})
+
+-- Mouse control
+function ToggleMouse()
+  if vim.o.mouse == "a" then
+    vim.o.mouse = ""
+    print("Mouse disabled")
+  else
+    vim.o.mouse = "a"
+    print("Mouse enabled")
+  end
+end
+
+-- disable mouse as default
+vim.o.mouse = ""
+-- Optional: Create a command to call the function
+vim.api.nvim_create_user_command("ToggleMouse", ToggleMouse, {})
+-- Optional: Create a keymapping (e.g., <leader>m)
+vim.keymap.set("n", "<leader>i", ToggleMouse, { desc = "Toggle mouse", noremap = true, silent = false })

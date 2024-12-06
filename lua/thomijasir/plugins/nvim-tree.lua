@@ -3,6 +3,7 @@ return {
   dependencies = "nvim-tree/nvim-web-devicons",
   config = function()
     local nvimtree = require("nvim-tree")
+    local api = require("nvim-tree.api")
 
     -- recommended settings from nvim-tree documentation
     vim.g.loaded_netrw = 1
@@ -12,10 +13,15 @@ return {
       update_focused_file = {
         enable = true,
         update_cwd = true,
+        ignore_list = {},
       },
       view = {
         width = 40,
         relativenumber = true,
+      },
+      diagnostics = {
+        enable = true,
+        show_on_dirs = true,
       },
       -- change folder arrow icons
       renderer = {
@@ -51,7 +57,6 @@ return {
     })
 
     -- auto open file after create file
-    local api = require("nvim-tree.api")
     api.events.subscribe(api.events.Event.FileCreated, function(file)
       vim.cmd("edit " .. file.fname)
     end)
