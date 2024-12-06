@@ -9,3 +9,8 @@ brew install fd
 brew install ripgrep
 # File manager
 brew install yazi
+brew install chafa
+brew install viu
+
+# Node tools
+npm install -g neovim

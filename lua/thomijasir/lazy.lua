@@ -1,5 +1,19 @@
+-- OLD WAY
+-- local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+-- if not vim.loop.fs_stat(lazypath) then
+--   vim.fn.system({
+--     "git",
+--     "clone",
+--     "--filter=blob:none",
+--     "https://github.com/folke/lazy.nvim.git",
+--     "--branch=stable", -- Latest stable release
+--     lazypath,
+--   })
+-- end
+-- vim.opt.rtp:prepend(lazypath)
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if vim.fn.isdirectory(lazypath) == 0 then
   vim.fn.system({
     "git",
     "clone",
@@ -35,5 +49,12 @@ require("lazy").setup({
   },
   change_detection = {
     notify = false,
+  },
+  rocks = {
+    enabled = false, -- completely disable luarocks
+    hererocks = false, -- disable hererocks integration
+  },
+  log = {
+    level = "info",
   },
 })
