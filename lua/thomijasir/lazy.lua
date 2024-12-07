@@ -29,11 +29,6 @@ require("lazy").setup({
   -- General plugins
   { "nvim-lua/plenary.nvim" },
   {
-    "christoomey/vim-tmux-navigator",
-    event = { "BufReadPre", "BufNewFile" },
-    lazy = false,
-  },
-  {
     "szw/vim-maximizer",
     keys = {
       { "<leader>sm", "<cmd>MaximizerToggle<CR>", desc = "Maximize/minimize a split" },
