@@ -50,7 +50,6 @@ return {
     },
   },
   keys = {
-    { "<leader><leader>", "<cmd>FzfLua files<cr>", desc = "Files finder" },
     { "<leader>fs", "<cmd>FzfLua live_grep<cr>", desc = "Live grep" },
     { "<leader>fc", "<cmd>FzfLua lgrep_curbuf<cr>", desc = "Grep current buffer" },
     { "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "Buffers" },

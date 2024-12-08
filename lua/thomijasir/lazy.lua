@@ -28,6 +28,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   -- General plugins
   { "nvim-lua/plenary.nvim" },
+  { "mg979/vim-visual-multi" },
   {
     "szw/vim-maximizer",
     keys = {
