@@ -1,5 +1,11 @@
 #!/bin/bash
 
+ln -s ~/Workspace/dotfiles/.zshrc ~/.zshrc
+ln -s ~/Workspace/dotfiles/wezterm/.wezterm.lua ~/.wezterm.lua
+ln -s ~/Workspace/dotfiles/nvim ~/.config/nvim
+ln -s ~/Workspace/dotfiles/yazi ~/.config/yazi
+
+
 # Install homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
