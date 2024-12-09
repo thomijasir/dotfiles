@@ -1,13 +1,17 @@
 vim.g.mapleader = " "
 
 local keymap = vim.keymap -- for conciseness
-
+local opts = { noremap = true, silent = true }
 -- keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
 keymap.set("n", "<leader>c", ":nohl<CR>", { desc = "Clear highlights" })
 
 -- increment/decrement numbers
 -- keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" }) -- increment
 -- keymap.set("n", "<leader>-", "<C-x>", { desc = "Decrement number" }) -- decrement
+
+-- Scrolling
+keymap.set("n", "<C-u>", "<C-u>zz", opts) -- scroll up
+keymap.set("n", "<C-d>", "<C-d>zz", opts) -- scroll down
 
 -- window management
 keymap.set("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" }) -- split window vertically
@@ -24,3 +28,28 @@ keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer
 -- Save with Ctrl+S in normal and insert mode
 keymap.set("n", "<C-s>", ":w<CR>", { silent = true })
 keymap.set("i", "<C-s>", "<Esc>:w<CR>", { silent = true })
+
+-- quit file
+keymap.set("n", "<C-q>", "<cmd> q <CR>", opts)
+
+-- delete single character without copying into register
+keymap.set("n", "x", '"_x', opts)
+
+-- Stay in indent mode
+keymap.set("v", "<", "<gv", opts)
+keymap.set("v", ">", ">gv", opts)
+
+-- Keep last yanked when pasting
+keymap.set("v", "p", '"_dP', opts)
+
+-- Navigate between splits
+keymap.set("n", "<C-k>", ":wincmd k<CR>", opts)
+keymap.set("n", "<C-j>", ":wincmd j<CR>", opts)
+keymap.set("n", "<C-h>", ":wincmd h<CR>", opts)
+keymap.set("n", "<C-l>", ":wincmd l<CR>", opts)
+
+-- Resize with arrows
+keymap.set("n", "<Up>", ":resize -2<CR>", opts)
+keymap.set("n", "<Down>", ":resize +2<CR>", opts)
+keymap.set("n", "<Left>", ":vertical resize -2<CR>", opts)
+keymap.set("n", "<Right>", ":vertical resize +2<CR>", opts)

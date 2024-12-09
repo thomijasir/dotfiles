@@ -56,6 +56,11 @@ return {
         "<leader>w",
         group = "Window session",
       },
+      {
+        "<leader>h",
+        group = "Bookmarks",
+        icon = "",
+      },
     },
   },
   keys = {

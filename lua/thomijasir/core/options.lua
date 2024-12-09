@@ -38,8 +38,9 @@ opt.splitbelow = true -- Split horizontal window to the bottom
 
 -- Turn off swapfile
 opt.swapfile = false
-
 -- Folding
 opt.foldcolumn = "1"
 opt.foldlevel = 99
 opt.foldenable = true
+
+opt.scrolloff = 10
