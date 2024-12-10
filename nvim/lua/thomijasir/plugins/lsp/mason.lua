@@ -48,7 +48,7 @@ return {
         "isort", -- python formatter
         "black", -- python formatter
         "pylint",
-        "eslint_d",
+        { "eslint_d", version = "13.1.2" }, -- eslint
       },
     })
   end,

@@ -26,8 +26,12 @@ keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" }) 
 keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab
 
 -- Save with Ctrl+S in normal and insert mode
-keymap.set("n", "<C-s>", ":w<CR>", { silent = true })
-keymap.set("i", "<C-s>", "<Esc>:w<CR>", { silent = true })
+keymap.set("n", "<C-s>", ":w<CR>", opts)
+keymap.set("i", "<C-s>", "<Esc>:w<CR>", opts)
+
+-- Save without formatting
+keymap.set("n", "<leader>W", ":noa w<CR>", { desc = "Save without formatting", silent = true })
+keymap.set("i", "<leader>W", "<Esc>:noa w<CR>", { desc = "Save without formatting", silent = true })
 
 -- quit file
 keymap.set("n", "<C-q>", "<cmd> q <CR>", opts)
@@ -53,3 +57,7 @@ keymap.set("n", "<Up>", ":resize -2<CR>", opts)
 keymap.set("n", "<Down>", ":resize +2<CR>", opts)
 keymap.set("n", "<Left>", ":vertical resize -2<CR>", opts)
 keymap.set("n", "<Right>", ":vertical resize +2<CR>", opts)
+
+-- Move lines up/down in visual mode
+keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
+keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up" })
