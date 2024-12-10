@@ -27,7 +27,3 @@ npm install -g black
 npm install -g pylint
 npm install -g eslint_d
 ```
-
-```
-
-```

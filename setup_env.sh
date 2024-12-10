@@ -1,7 +1,7 @@
 #!/bin/bash
 
-ln -s ~/Workspace/dotfiles/.zshrc ~/.zshrc
-ln -s ~/Workspace/dotfiles/wezterm/.wezterm.lua ~/.wezterm.lua
+cp ~/Workspace/dotfiles/.zshrc ~/.zshrc
+cp ~/Workspace/dotfiles/wezterm/.wezterm.lua ~/.wezterm.lua
 ln -s ~/Workspace/dotfiles/nvim ~/.config/nvim
 ln -s ~/Workspace/dotfiles/yazi ~/.config/yazi
 
@@ -30,4 +30,3 @@ brew install zsh-syntax-highlighting
 # optional setup
 echo "source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
 echo "source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ~/.zshrc
-
