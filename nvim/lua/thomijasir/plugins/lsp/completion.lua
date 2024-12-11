@@ -20,12 +20,26 @@ return {
     local cmp = require("cmp")
 
     local luasnip = require("luasnip")
+    local lss = luasnip.snippet
+    local lsi = luasnip.insert_node
+    local lst = luasnip.text_node
 
     local lspkind = require("lspkind")
 
     -- loads vscode style snippets from installed plugins (e.g. friendly-snippets)
     require("luasnip.loaders.from_vscode").lazy_load()
 
+    -- Custom snippets
+    -- Add snippets for JavaScript
+    luasnip.add_snippets("javascript", {
+      lss("clg", { lst('console.log("'), lsi(1), lst('");') }),
+    })
+
+    -- Add snippets for TypeScript
+    luasnip.add_snippets("typescript", {
+      lss("clg", { lst('console.log("'), lsi(1), lst('");') }),
+    })
+    -- CMP setup
     cmp.setup({
       completion = {
         completeopt = "menu,menuone,preview,noselect",

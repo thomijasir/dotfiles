@@ -29,9 +29,12 @@ keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer
 keymap.set("n", "<C-s>", ":w<CR>", opts)
 keymap.set("i", "<C-s>", "<Esc>:w<CR>", opts)
 
+-- Select all
+keymap.set("n", "<C-a>", "ggVG", opts)
+
 -- Save without formatting
 keymap.set("n", "<leader>W", ":noa w<CR>", { desc = "Save without formatting", silent = true })
-keymap.set("i", "<leader>W", "<Esc>:noa w<CR>", { desc = "Save without formatting", silent = true })
+-- keymap.set("i", "<leader>W", "<Esc>:noa w<CR>", { desc = "Save without formatting", silent = true })
 
 -- quit file
 keymap.set("n", "<C-q>", "<cmd> q <CR>", opts)
@@ -53,10 +56,10 @@ keymap.set("n", "<C-h>", ":wincmd h<CR>", opts)
 keymap.set("n", "<C-l>", ":wincmd l<CR>", opts)
 
 -- Resize with arrows
-keymap.set("n", "<Up>", ":resize -2<CR>", opts)
-keymap.set("n", "<Down>", ":resize +2<CR>", opts)
-keymap.set("n", "<Left>", ":vertical resize -2<CR>", opts)
-keymap.set("n", "<Right>", ":vertical resize +2<CR>", opts)
+keymap.set("n", "<M-Up>", ":resize -2<CR>", opts)
+keymap.set("n", "<M-Down>", ":resize +2<CR>", opts)
+keymap.set("n", "<M-Left>", ":vertical resize -2<CR>", opts)
+keymap.set("n", "<M-Right>", ":vertical resize +2<CR>", opts)
 
 -- Move lines up/down in visual mode
 keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
