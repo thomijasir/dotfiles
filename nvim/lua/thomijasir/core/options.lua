@@ -44,3 +44,7 @@ opt.foldlevel = 99
 opt.foldenable = true
 
 opt.scrolloff = 10
+
+-- Colors
+opt.termguicolors = true
+opt.signcolumn = "yes"

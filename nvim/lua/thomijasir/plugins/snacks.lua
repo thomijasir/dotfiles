@@ -6,6 +6,7 @@ return {
     bigfile = { enabled = false },
     bufdelete = { enabled = false },
     dashboard = {
+      enabled = true,
       sections = {
         { section = "header" },
         { section = "keys", gap = 1 },

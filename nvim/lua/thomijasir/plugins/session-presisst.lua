@@ -4,8 +4,8 @@ return {
   opts = {
     -- dir = vim.fn.stdpath("data") .. "/sessions/", -- directory where session files are saved
     -- options = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp" }, -- sessionoptions used for saving
-    pre_save = nil, -- function to run before saving the session
-    save_empty = false, -- don't save if there are no open file buffers
+    -- pre_save = nil, -- function to run before saving the session
+    -- save_empty = false, -- don't save if there are no open file buffers
   },
   keys = {
     -- restore the session for the current directory

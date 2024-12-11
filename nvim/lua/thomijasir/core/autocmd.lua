@@ -40,7 +40,7 @@ function ToggleMouse()
 end
 
 -- disable mouse as default
-vim.o.mouse = ""
+-- vim.o.mouse = ""
 -- Optional: Create a command to call the function
 vim.api.nvim_create_user_command("ToggleMouse", ToggleMouse, {})
 -- Optional: Create a keymapping (e.g., <leader>m)

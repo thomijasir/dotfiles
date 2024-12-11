@@ -25,8 +25,8 @@ config.window_padding = {
 	top = 0,
 	right = 0,
 }
-config.window_background_opacity = 0.9
-config.macos_window_background_blur = 85
+-- config.window_background_opacity = 0.9
+-- config.macos_window_background_blur = 90
 config.window_decorations = "TITLE | RESIZE"
 -- Font
 -- config.font = wezterm.font("JetBrainsMono Nerd Font Mono")
@@ -39,8 +39,13 @@ config.cursor_blink_ease_out = "Constant"
 config.default_cursor_style = "BlinkingBlock"
 
 -- Color Scheme
-config.color_scheme = "Catppuccin Mocha"
-
+-- config.color_scheme = "Catppuccin Mocha"
+-- config.color_scheme = "OneDark (base16)"
+-- config.color_scheme = "Google Dark (Gogh)"
+-- config.color_scheme = "Homebrew"
+-- config.color_scheme = "Greenscreen (dark) (terminal.sexy)"
+-- config.color_scheme = "GitHub Dark"
+config.color_scheme = "Galaxy"
 -- tmux
 config.leader = { key = "q", mods = "ALT", timeout_milliseconds = 2500 }
 config.keys = {
