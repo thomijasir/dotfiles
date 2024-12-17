@@ -21,7 +21,7 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     keys = function(_, keys)
       -- Populate the keys based on the user's options
-      local color = "#fff"
+      -- local color = "#fff"
       local plugin = require("lazy.core.config").spec.plugins["mini.surround"]
       local opts = require("lazy.core.plugin").values(plugin, "opts", false)
       local mappings = {

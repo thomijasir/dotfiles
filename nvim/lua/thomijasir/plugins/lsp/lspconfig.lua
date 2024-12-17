@@ -151,6 +151,27 @@ return {
       },
     })
 
+    -- configur astro language server
+    lspconfig["astro"].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      filetypes = { "astro" },
+    })
+
+    -- configure for rust
+    lspconfig["rust_analyzer"].setup({
+      settings = {
+        ["rust-analyzer"] = {
+          cargo = {
+            allFeatures = true,
+          },
+          checkOnSave = {
+            command = "clippy",
+          },
+        },
+      },
+    })
+
     vim.filetype.add({
       extension = {
         mdx = "jsx",

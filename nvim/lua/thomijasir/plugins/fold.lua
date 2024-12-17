@@ -7,12 +7,14 @@ return {
     config = function()
       -- Configure UFO
       require("ufo").setup({
-        provider_selector = function(bufnr, filetype, buftype)
+        provider_selector = function()
           return { "treesitter", "indent" }
         end,
       })
 
+      local opts = { noremap = true, silent = true }
       -- Key mappings
+      vim.keymap.set("n", "_", "za", opts)
       vim.keymap.set("n", "zR", function()
         require("ufo").openAllFolds()
       end, { desc = "Open all folds" })

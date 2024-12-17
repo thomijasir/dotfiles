@@ -35,7 +35,6 @@ return {
         "markdown",
         "markdown_inline",
         "svelte",
-        "graphql",
         "bash",
         "lua",
         "vim",
@@ -45,6 +44,8 @@ return {
         "vimdoc",
         "c",
         "rust",
+        "astro",
+        "toml",
       },
       incremental_selection = {
         enable = true,
@@ -56,5 +57,7 @@ return {
         },
       },
     })
+    -- Enable Treesitter highlight automatically
+    -- vim.cmd("autocmd BufRead,BufNewFile * TSEnable highlight")
   end,
 }
