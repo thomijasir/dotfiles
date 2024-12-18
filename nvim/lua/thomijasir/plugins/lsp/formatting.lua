@@ -25,15 +25,19 @@ return {
       format_on_save = {
         lsp_fallback = true,
         async = false,
-        timeout_ms = 1000,
+        timeout_ms = 3000,
       },
     })
+
+    conform.formatters.prettier = {
+      prepend_args = { "--prose-wrap", "always" },
+    }
 
     vim.keymap.set({ "n", "v" }, "<leader>mp", function()
       conform.format({
         lsp_fallback = true,
         async = false,
-        timeout_ms = 1000,
+        timeout_ms = 3000,
       })
     end, { desc = "Formatting file" })
   end,

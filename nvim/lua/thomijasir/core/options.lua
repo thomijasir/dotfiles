@@ -50,3 +50,4 @@ opt.scrolloff = 10
 -- Colors
 opt.termguicolors = true
 opt.signcolumn = "yes"
+-- opt.showmatch = true

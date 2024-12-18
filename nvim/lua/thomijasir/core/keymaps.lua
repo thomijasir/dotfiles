@@ -33,7 +33,7 @@ keymap.set("i", "<C-s>", "<Esc>:w<CR>", opts)
 keymap.set("n", "<C-a>", "ggVG", opts)
 
 -- Save without formatting
-keymap.set("n", "<leader>W", ":noa w<CR>", { desc = "Save without formatting", silent = true })
+keymap.set("n", "<leader>W", ":noa w<CR>", { desc = "Save w/o formatting", silent = true })
 -- keymap.set("i", "<leader>W", "<Esc>:noa w<CR>", { desc = "Save without formatting", silent = true })
 
 -- quit file
