@@ -33,7 +33,7 @@ return {
         end,
       })
 
-      vim.keymap.set({ "n", "v" }, "<leader>ml", function()
+      vim.keymap.set({ "n", "v" }, "<leader>fl", function()
         lint.try_lint()
       end, { desc = "Lint file" })
     end,

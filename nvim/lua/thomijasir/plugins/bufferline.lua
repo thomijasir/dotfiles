@@ -11,7 +11,7 @@ return {
     {
       "<leader>tc",
       "<cmd>BufferLineCloseOthers<cr>",
-      desc = "Close All Buffers But Current or Pinned",
+      desc = "Close all buffers",
       mode = "n",
     },
     { "<leader>tx", "<cmd>BufferLinePickClose<cr>", desc = "Close Buffer by Ordinal", mode = "n" },

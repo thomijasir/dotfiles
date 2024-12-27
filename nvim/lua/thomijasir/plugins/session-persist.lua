@@ -10,7 +10,7 @@ return {
   keys = {
     -- restore the session for the current directory
     {
-      "<leader>wr",
+      "<leader>sr",
       function()
         require("persistence").load()
       end,
@@ -18,7 +18,7 @@ return {
     },
     -- restore the last session
     {
-      "<leader>wl",
+      "<leader>sl",
       function()
         require("persistence").load({ last = true })
       end,
@@ -26,7 +26,7 @@ return {
     },
     -- stop Persistence => session won't be saved on exit
     {
-      "<leader>wd",
+      "<leader>sd",
       function()
         require("persistence").stop()
       end,
@@ -34,7 +34,7 @@ return {
     },
     -- save session
     {
-      "<leader>ws",
+      "<leader>ss",
       function()
         require("persistence").save()
       end,

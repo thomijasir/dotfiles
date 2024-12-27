@@ -22,7 +22,8 @@ return {
       },
       {
         "<leader>s",
-        group = "Screen window",
+        group = "Session",
+        icon = "",
       },
       {
         "<leader>e",
@@ -30,7 +31,7 @@ return {
       },
       {
         "<leader>f",
-        group = "Finder tools",
+        group = "Find & Format",
       },
       {
         "<leader>x",
@@ -43,18 +44,17 @@ return {
         icon = "",
       },
       {
-        "<leader>u",
-        group = "Undo history",
-        icon = "",
-      },
-      {
-        "<leader>m",
-        group = "Formatter",
-        icon = "",
-      },
-      {
         "<leader>w",
-        group = "Window session",
+        group = "Window",
+      },
+      {
+        "<leader>t",
+        group = "Tools",
+        icon = "",
+      },
+      {
+        "<leader>r",
+        group = "Refactor & LSP",
       },
       {
         "<leader>h",

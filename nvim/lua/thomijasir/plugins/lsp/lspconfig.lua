@@ -43,7 +43,7 @@ return {
         keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
 
         opts.desc = "Typescript Organize Imports"
-        keymap.set("n", "<leader>oi", ":OrganizeImports<CR>", opts) -- mapping to restart lsp if necessary
+        keymap.set("n", "<leader>ts", ":OrganizeImports<CR>", opts) -- mapping to restart lsp if necessary
       end
 
       -- used to enable autocompletion (assign to every lsp server config)

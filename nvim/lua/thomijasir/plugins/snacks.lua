@@ -38,7 +38,7 @@ return {
   },
   keys = {
     {
-      "<leader>ft",
+      "<leader>tt",
       function()
         require("snacks").terminal.toggle()
       end,

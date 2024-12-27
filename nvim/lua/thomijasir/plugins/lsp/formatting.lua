@@ -33,7 +33,7 @@ return {
       prepend_args = { "--prose-wrap", "always" },
     }
 
-    vim.keymap.set({ "n", "v" }, "<leader>mp", function()
+    vim.keymap.set({ "n", "v" }, "<leader>fp", function()
       conform.format({
         lsp_fallback = true,
         async = false,

@@ -43,7 +43,6 @@ end
 -- vim.o.mouse = ""
 -- Optional: Create a command to call the function
 vim.api.nvim_create_user_command("ToggleMouse", ToggleMouse, {})
--- Optional: Create a keymapping (e.g., <leader>m)
-vim.keymap.set("n", "<leader>i", ToggleMouse, { desc = "Toggle mouse", noremap = true, silent = false })
+vim.keymap.set("n", "<leader>wi", ToggleMouse, { desc = "Toggle mouse", noremap = true, silent = false })
 
 -- vim.cmd([[highlight MatchParen cterm=bold gui=bold]])

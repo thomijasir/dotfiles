@@ -17,7 +17,7 @@ return {
     { "<leader>fc", "<cmd>FzfLua lgrep_curbuf<cr>", desc = "Grep current buffer" },
     { "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "Buffers" },
     { "<leader>ff", "<cmd>FzfLua files<cr>", desc = "Files finder" },
-    { "<leader>o", "<cmd>FzfLua lsp_document_symbols<cr>", desc = "Symbols file" },
+    { "<leader>fo", "<cmd>FzfLua lsp_document_symbols<cr>", desc = "Symbols file" },
     { "<leader>fk", "<cmd>FzfLua keymaps<cr>", desc = "Keymaps" },
     { "<leader>a", "<cmd>FzfLua lsp_code_actions<cr>", desc = "Code actions" },
     { "gf", "<cmd>FzfLua lsp_references<cr>", desc = "Show LSP references" },
