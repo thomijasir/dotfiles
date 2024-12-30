@@ -1,17 +1,8 @@
 #!/bin/bash
 
+# CLI tools
+brew install yazi ffmpeg sevenzip jq poppler fd ripgrep fzf zoxide imagemagick 
 # Installing Tools
-brew install neovim
-brew install fzf
-brew install lazygit
-brew install lazydocker
-# File and string search tools
-brew install fd
-brew install ripgrep
-# File manager
-brew install yazi
-# brew install chafa
-# brew install viu
-
+brew install neovim lazygit lazydocker
 # Node tools
 npm install -g neovim

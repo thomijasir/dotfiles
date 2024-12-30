@@ -27,9 +27,6 @@ return {
         --   return ":IncRename " .. vim.fn.expand("<cword>")
         -- end, { expr = true })
 
-        opts.desc = "Rename LSP"
-        keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-
         opts.desc = "Go to previous diagnostic"
         keymap.set("n", "[[", vim.diagnostic.goto_prev, opts) -- jump to previous diagnostic in buffer
 
@@ -39,8 +36,17 @@ return {
         opts.desc = "Show documentation for what is under cursor"
         keymap.set("n", "K", vim.lsp.buf.hover, opts) -- show documentation for what is under cursor
 
-        opts.desc = "Restart LSP"
-        keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
+        opts.desc = "LSP Restart"
+        keymap.set("n", "<leader>lr", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
+
+        opts.desc = "LSP Stop"
+        keymap.set("n", "<leader>ls", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
+
+        opts.desc = "LSP Start"
+        keymap.set("n", "<leader>ll", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
+
+        opts.desc = "LSP Rename"
+        keymap.set("n", "<leader>ln", vim.lsp.buf.rename, opts)
 
         opts.desc = "Typescript Organize Imports"
         keymap.set("n", "<leader>ts", ":OrganizeImports<CR>", opts) -- mapping to restart lsp if necessary

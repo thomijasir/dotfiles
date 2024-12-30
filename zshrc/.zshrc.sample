@@ -1,3 +1,8 @@
+# AI API
+export ANTHROPIC_API_KEY=xxx
+export GROQ_API_KEY=xxx
+export OPENROUTER_API_KEY=xxx
+
 # SurrealDB
 export PATH=$HOME/.surrealdb:$PATH
 

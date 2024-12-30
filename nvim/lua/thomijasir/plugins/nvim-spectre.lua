@@ -12,6 +12,6 @@ return {
       },
     })
     -- Keymaps
-    vim.keymap.set("n", "<leader>rf", "<cmd>lua require('spectre').open()<CR>", { desc = "Refactor" })
+    vim.keymap.set("n", "<leader>r", "<cmd>lua require('spectre').open()<CR>", { desc = "Refactor" })
   end,
 }

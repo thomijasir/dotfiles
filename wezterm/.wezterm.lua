@@ -31,7 +31,7 @@ config.window_decorations = "TITLE | RESIZE"
 -- Font
 -- config.font = wezterm.font("JetBrainsMono Nerd Font Mono")
 config.font = wezterm.font("JetBrainsMonoNL Nerd Font")
-config.font_size = 13
+config.font_size = 16
 
 -- Cursor
 config.cursor_blink_ease_in = "Constant"

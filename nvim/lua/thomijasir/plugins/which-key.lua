@@ -53,8 +53,9 @@ return {
         icon = "",
       },
       {
-        "<leader>r",
-        group = "Refactor & LSP",
+        "<leader>l",
+        group = "Languange server",
+        icon = "",
       },
       {
         "<leader>h",
