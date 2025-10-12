@@ -34,9 +34,9 @@ opt.clipboard:append("unnamedplus")
 
 -- Split windows
 opt.splitright = true -- Split vertical window to the right
-opt.splitbelow = true -- Split horizontal window to the bottom
+opt.splitbelow = true -- Split horizontal window to the bottmo
 
--- Turn off swapfile
+-- Turn off swap file
 opt.swapfile = false
 
 -- Folding
@@ -51,3 +51,13 @@ opt.scrolloff = 10
 opt.termguicolors = true
 opt.signcolumn = "yes"
 -- opt.showmatch = true
+
+-- Spelling settings
+-- opt.spell = true
+-- opt.spelllang = "en,en_gb"
+-- opt.spelloptions = "camel"
+-- change color of spelling mistake
+-- vim.cmd("highlight SpellBad ctermbg=white guibg=white")
+-- vim.cmd("highlight SpellCap ctermbg=blue guibg=blue")
+-- vim.cmd("highlight SpellRare ctermbg=magenta guibg=magenta")
+-- vim.cmd("highlight SpellLocal ctermbg=cyan guibg=cyan")

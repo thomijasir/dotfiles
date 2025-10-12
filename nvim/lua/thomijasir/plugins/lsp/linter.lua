@@ -4,7 +4,7 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     opts = {
       linters_by_ft = {
-        javescript = { "eslint_d" },
+        javascript = { "eslint_d" },
         typescript = { "eslint_d" },
         javascriptreact = { "eslint_d" },
         typescriptreact = { "eslint_d" },
@@ -22,7 +22,7 @@ return {
         "--stdin",
         "--stdin-filename",
         function()
-          return vim.api.nvim_buf_get_name(0)
+          return vim.api.nvim_buf_get_nme(0)
         end,
       }
 

@@ -184,6 +184,11 @@ return {
             checkOnSave = {
               command = "clippy",
             },
+            completion = {
+              autoimport = {
+                enable = true,
+              },
+            },
           },
         },
       })

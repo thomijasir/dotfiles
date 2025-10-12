@@ -1,6 +1,8 @@
 # SurrealDB
 export PATH=$HOME/.surrealdb:$PATH
 
+export LIBRARY_PATH="/opt/homebrew/lib:$LIBRARY_PATH"
+export DYLD_LIBRARY_PATH="/opt/homebrew/lib:$DYLD_LIBRARY_PATH"
 # Java Lib Load
 #export JAVA_HOME=$(/usr/libexec/java_home)
 #export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
@@ -25,7 +27,7 @@ export PATH="$PATH:/usr/local/bin/"
 export PATH="/usr/local/git/bin:/sw/bin/:/usr/local/bin:/usr/local/:/usr/local/sbin:/usr/local/mysql/bin:$PATH"
 
 # PYTHON
-export PATH="$HOME/.pyenv/versions/3.12.4/bin:$PATH"
+# export PATH="$HOME/.pyenv/versions/3.9.6/bin:$PATH"
 export EDITOR=/opt/homebrew/bin/nvim
 
 # BUN
@@ -48,6 +50,9 @@ export PATH="$PATH:$HOME/.rvm/bin"
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
 
 # Custom Aliases
+alias crw='cargo watch -q -c -w src/ -x run'
+alias tencent_sg='ssh -i ~/.ssh-keys/tencent_sg_key.pem root@43.134.91.33'
+alias tencent_hk='ssh -i ~/.ssh-keys/tencent_hk_key.pem root@43.159.230.62'
 alias auto-translate='python ~/Workspace/minootube/scripts/auto-translate.py'
 alias auto-transcribe='python ~/Workspace/minootube/scripts/auto-transcribe.py'
 alias video-compress='python ~/Workspace/minootube/scripts/auto-compress.py'
@@ -75,12 +80,12 @@ alias cleanupDS="find . -type f -name '*.DS_Store' -ls -delete"	# Auto Clean DS
 
 # Alias tools
 alias vim='nvim'
-alias ls='ls --color'
+alias ls='ls -n --color=auto'
 alias cp='cp -iv'                           		# Preferred 'cp' implementation
 alias mv='mv -iv'                           		# Preferred 'mv' implementation
 alias mkdir='mkdir -pv'                     		# Preferred 'mkdir' implementation
 alias ll='ls -FGlAhp'                       		# Preferred 'ls' implementation
-
+alias temp='nvim ~/temp.md'
 # Git zsh Configuration
 autoload -Uz vcs_info
 precmd() { vcs_info }
@@ -95,17 +100,17 @@ PROMPT='${PWD/#$HOME/~} ${vcs_info_msg_0_} '
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/venobi/miniconda/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/venobi/miniconda/etc/profile.d/conda.sh" ]; then
-        . "/Users/venobi/miniconda/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/venobi/miniconda/bin:$PATH"
-    fi
-fi
-unset __conda_setup
+# __conda_setup="$('/Users/venobi/miniconda/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/Users/venobi/miniconda/etc/profile.d/conda.sh" ]; then
+#         . "/Users/venobi/miniconda/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/Users/venobi/miniconda/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
 # <<< conda initialize <<<
 
 # history setup
@@ -125,3 +130,9 @@ bindkey '^[[B' history-search-forward
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - zsh)"
+
+# Added by Windsurf
+export PATH="/Users/venobi/.codeium/windsurf/bin:$PATH"

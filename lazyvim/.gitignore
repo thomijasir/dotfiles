@@ -1,0 +1,9 @@
+tt.*
+.tests
+.DS_Store
+doc/tags
+debug
+.repro
+foo.*
+*.log
+data
