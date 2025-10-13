@@ -54,3 +54,7 @@ map("n", "<leader>wi", toggle_mouse, {
   noremap = true,
   silent = true, -- Silent since vim.notify() handles feedback
 })
+
+-- map("n", "<C-m", function()
+--   require("snacks").terminal.toggle()
+-- end, { desc = "Toggle Terminal" })

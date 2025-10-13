@@ -1,10 +1,16 @@
 #!/bin/bash
 
-ln -s ~/Workspace/zsh/zshrc ~/.zshrc
-ln -s ~/Workspace/wezterm/.wezterm.lua ~/.wezterm.lua
-ln -s ~/Workspace/nvim ~/.config/nvim
-ln -s ~/Workspace/yazi ~/.config/yazi
+# For apple only | show hidden files
+defaults write com.apple.finder AppleShowAllFiles YES
 
+mkdir -p ~/.config
+ln -s ~/Workspace/dotfiles/zsh/zshrc ~/.zshrc
+ln -s ~/Workspace/dotfiles/wezterm/.wezterm.lua ~/.wezterm.lua
+# use this for default custom nvim
+# ln -s ~/Workspace/dotfiles/nvim ~/.config/nvim
+# use this for default lazyvim
+ln -s ~/Workspace/dotfiles/lazyvim ~/.config/nvim
+ln -s ~/Workspace/dotfiles/yazi ~/.config/yazi
 
 # Install homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -26,9 +32,8 @@ brew install --cask font-fira-code-nerd-font
 brew install font-symbols-only-nerd-font
 
 # install zsh autosuggestions
-brew install zsh-autosuggestions
-brew install zsh-syntax-highlighting
+brew install zsh-autosuggestions zsh-syntax-highlighting
 
 # optional setup
-echo "source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
-echo "source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ~/.zshrc
+echo "source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" >>~/.zshrc
+echo "source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >>~/.zshrc

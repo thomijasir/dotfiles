@@ -24,8 +24,15 @@ return {
     terminal = {
       enabled = true,
       win = {
-        position = "float",
+        -- position = "float",
         border = "single",
+        split = "below",
+        height = 0.3,
+        position = "bottom",
+        focusable = true,
+        enter = true,
+        show = true,
+        hide = false,
       },
     },
     toggle = { enabled = false },
