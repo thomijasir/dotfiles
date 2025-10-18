@@ -1,0 +1,70 @@
+[language-server.eslint]
+command = "vscode-eslint-language-server"
+args = ["--stdio"]
+except-features = ["format"]
+
+[language-server.cspell]
+command = "cspell-lsp"
+args = ["--stdio"]
+
+[language-server.deno]
+command = "deno"
+args = ["lsp"]
+
+[language-server.harper-ls]
+command = "harper-ls"
+args = ["--stdio"]
+
+[language-server.sql-lsp]
+command = "postgrestools"
+args = ["lsp-proxy"]
+
+# Add for every language that you want to spell check
+[[language]]
+name = "rust"
+language-servers = ["rust-analyzer", "cspell"]
+roots = ["Cargo.toml", "Cargo.lock"]
+
+[[language]]
+name = "markdown"
+language-servers = ["marksman", "harper-ls"]
+
+[[language]]
+name = "typescript"
+language-servers = ["typescript-language-server", "eslint", "cspell"]
+formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "typescript"] }
+
+# [[language]]
+# name = "tsx"
+# language-servers = ["deno", "eslint", "cspell"]
+# formatter = { command = "prettier", args = ["--parser", "typescript"] }
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "tsx"] }
+
+[[language]]
+name = "javascript"
+language-servers = ["typescript-language-server", "eslint", "cspell"]
+formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "javascript"] }
+
+# [[language]]
+# name = "jsx"
+# language-servers = ["typescript-language-server", "eslint", "cspell"]
+# formatter = { command = "prettier", args = ["--parser", "typescript"] }
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "jsx"] }
+
+[[language]]
+name = "json"
+language-servers = ["harper-ls"]
+formatter = { command = "prettier", args = ["--parser", "json"] }
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "json"] }
+
+[[language]]
+name = "html"
+language-servers = ["vscode-html-language-server", "cspell"]
+formatter = { command = 'prettier', args = ["--parser", "html"] }
+
+[[language]]
+name = "sql"
+language-servers = ["sql-lsp", "cspell"]
+formatter = { command = "sql-formatter", args = ["-l", "postgresql"] }

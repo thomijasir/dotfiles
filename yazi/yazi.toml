@@ -1,7 +1,20 @@
-[manager]
+[mgr]
 show_hidden = true
 show_symlink = true
 ratio = [0, 2, 4]
 linemode = "size"
 sort_dir_first = true
 sort_by = "alphabetical"
+
+[opener]
+edit = [{ run = 'hx "$@"', block = true }]
+
+[[plugin.prepend_fetchers]]
+id   = "git"
+name = "*"
+run  = "git"
+
+[[plugin.prepend_fetchers]]
+id   = "git"
+name = "*/"
+run  = "git"

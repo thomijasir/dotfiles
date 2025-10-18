@@ -1,0 +1,110 @@
+theme = "sonokai"
+
+[editor]
+scrolloff = 10
+color-modes = true
+line-number = "relative"
+bufferline = "always"
+cursorline = true
+cursorcolumn = true
+auto-pairs = true
+true-color = true
+shell = ["zsh", "-c"]
+
+[editor.statusline]
+left = [
+  "spinner",
+  "mode",
+  "version-control",
+  "file-name",
+  "read-only-indicator",
+  "file-modification-indicator",
+]
+right = [
+  "diagnostics",
+  "selections",
+  "register",
+  "position",
+  "position-percentage",
+  "total-line-numbers",
+  "file-encoding",
+  "file-line-ending",
+  "file-type",
+]
+mode.normal = "NORMAL"
+mode.insert = "INSERT"
+mode.select = "VISUAL"
+
+[editor.file-picker]
+hidden = false
+
+[editor.lsp]
+enable = true
+snippets = true
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "block"
+
+[editor.soft-wrap]
+enable = true
+
+[editor.indent-guides]
+render = true
+character = "┊"
+skip-levels = 1
+
+[keys.normal]
+# Common
+"*" = [
+  "move_char_right",
+  "move_prev_word_start",
+  "move_next_word_end",
+  "search_selection",
+  "search_next",
+]
+"#" = [
+  "move_char_right",
+  "move_prev_word_start",
+  "move_next_word_end",
+  "search_selection",
+  "search_prev",
+]
+"}" = "goto_next_paragraph"
+"{" = "goto_prev_paragraph"
+"C-s" = [":format", ":w"]
+"C-j" = "jump_view_down"
+"C-k" = "jump_view_up"
+"C-h" = "jump_view_left"
+"C-l" = "jump_view_right"
+"C-g" = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
+"C-e" = [
+  ':sh rm -f /tmp/unique-file',
+  ':insert-output yazi %{buffer_name} --chooser-file=/tmp/unique-file',
+  ':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty',
+  ':open %sh{cat /tmp/unique-file}',
+  ':redraw',
+]
+
+# Yank to system clipboard
+"y" = ["yank", ":clipboard-yank"]
+"Y" = ["extend_line_below", ":clipboard-yank"]
+"D" = ["extend_line_below", "delete_selection"]
+# Buffer Line
+"S-h" = ":bprev"
+"S-l" = ":bnext"
+
+[keys.normal.space]
+"|" = "vsplit"
+"-" = "hsplit"
+"l" = ":toggle lsp.display-inlay-hints"
+
+[keys.select]
+"y" = ["yank", ":clipboard-yank"]
+"=" = ":format"
+i = "select_textobject_inner"
+a = "select_textobject_around"
+
+[keys.insert]
+"C-s" = [":format", ":w", "normal_mode"]

@@ -59,9 +59,9 @@ alias video-compress='python ~/Workspace/minootube/scripts/auto-compress.py'
 alias androidUp='emulator -avd Pixel_2_API_28'		# Open Emulator	
 alias iosUp='open -a Simulator'				# Open Simulator
 alias work='cd ~/Workspace'
-alias nvim_config='nvim ~/.config/nvim'
-alias wezterm_config='nvim ~/.wezterm.lua'
-alias zsh_config='nvim ~/.zshrc'
+alias nvim_config='hx ~/.config/nvim'
+alias wezterm_config='hx ~/.wezterm.lua'
+alias zsh_config='hx ~/.zshrc'
 alias zsh_reload='source ~/.zshrc'
 alias rm_node='rm -rf node_modules package-lock.json'
 #alias py='python3'					# Python Alias
@@ -80,6 +80,7 @@ alias cleanupDS="find . -type f -name '*.DS_Store' -ls -delete"	# Auto Clean DS
 
 # Alias tools
 alias vim='nvim'
+alias yz="yazi"
 alias ls='ls -n --color=auto'
 alias cp='cp -iv'                           		# Preferred 'cp' implementation
 alias mv='mv -iv'                           		# Preferred 'mv' implementation

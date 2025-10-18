@@ -46,6 +46,7 @@ config.default_cursor_style = "BlinkingBlock"
 -- config.color_scheme = "Greenscreen (dark) (terminal.sexy)"
 -- config.color_scheme = "GitHub Dark"
 config.color_scheme = "Galaxy"
+-- config.color_scheme = "sonokai"
 -- TMUX Alternative
 config.leader = { key = "q", mods = "ALT", timeout_milliseconds = 2500 }
 config.keys = {
