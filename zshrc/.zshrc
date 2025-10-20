@@ -80,7 +80,7 @@ alias cleanupDS="find . -type f -name '*.DS_Store' -ls -delete"	# Auto Clean DS
 
 # Alias tools
 alias vim='nvim'
-alias yz="yazi"
+alias yt="yazi ."
 alias ls='ls -n --color=auto'
 alias cp='cp -iv'                           		# Preferred 'cp' implementation
 alias mv='mv -iv'                           		# Preferred 'mv' implementation

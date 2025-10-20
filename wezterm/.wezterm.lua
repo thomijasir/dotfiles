@@ -46,18 +46,22 @@ config.default_cursor_style = "BlinkingBlock"
 -- config.color_scheme = "Greenscreen (dark) (terminal.sexy)"
 -- config.color_scheme = "GitHub Dark"
 config.color_scheme = "Galaxy"
--- config.color_scheme = "sonokai"
+-- config.color_scheme = "Monokai Pro (Gogh)"
 -- TMUX Alternative
-config.leader = { key = "q", mods = "ALT", timeout_milliseconds = 2500 }
+config.leader = { key = "a", mods = "ALT", timeout_milliseconds = 2500 }
 config.keys = {
+	-- Make Alt+Enter work properly
+  {
+    key = 'Enter',
+    mods = 'ALT',
+    action = wezterm.action.SendKey {
+      key = 'Enter',
+      mods = 'ALT',
+    },
+  },
 	{
 		mods = "LEADER",
 		key = "q",
-		action = wezterm.action.PaneSelect,
-	},
-	{
-		mods = "ALT",
-		key = "x",
 		action = wezterm.action.PaneSelect,
 	},
 	{
@@ -132,15 +136,23 @@ config.keys = {
 	},
 }
 
-for i = 0, 9 do
-	-- leader + number to activate that tab
-	table.insert(config.keys, {
-		key = tostring(i),
-		mods = "LEADER",
-		action = wezterm.action.ActivateTab(i),
-	})
-end
+-- leader + number to activate that tab
+-- for i = 0, 9 do
+-- 	table.insert(config.keys, {
+-- 		key = tostring(i),
+-- 		mods = "LEADER",
+-- 		action = wezterm.action.ActivateTab(i),
+-- 	})
+-- end
 
+-- Move the active tab to a specific position using CTRL+ALT + number
+for i = 1, 8 do
+    table.insert(config.keys, {
+        key = tostring(i),
+        mods = 'LEADER',
+        action = wezterm.action.MoveTab(i - 1),
+    })
+end
 -- tmux status | activate this when often use tab menu
 -- wezterm.on("update-right-status", function(window, _)
 -- 	local SOLID_LEFT_ARROW = ""

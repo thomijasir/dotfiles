@@ -1,4 +1,4 @@
-theme = "sonokai"
+theme = "sonokai_custom"
 
 [editor]
 scrolloff = 10
@@ -10,11 +10,12 @@ cursorcolumn = true
 auto-pairs = true
 true-color = true
 shell = ["zsh", "-c"]
+jump-label-alphabet = "jfkdls;aurieowpqnvmcxz"
 
 [editor.statusline]
 left = [
-  "spinner",
   "mode",
+  "spinner",
   "version-control",
   "file-name",
   "read-only-indicator",
@@ -57,6 +58,9 @@ skip-levels = 1
 
 [keys.normal]
 # Common
+"esc" = ["collapse_selection", "normal_mode"]
+# Jump between selected word next and prev
+# for * (Star key) remapped from search_selection_detect_word_boundaries to automatic select and go to next search
 "*" = [
   "move_char_right",
   "move_prev_word_start",
@@ -71,14 +75,20 @@ skip-levels = 1
   "search_selection",
   "search_prev",
 ]
+
+# Jump between paragraph
 "}" = "goto_next_paragraph"
 "{" = "goto_prev_paragraph"
-"C-s" = [":format", ":w"]
+
+# Common control
+# Remap original CTRL+s Save the current selection to the jumplist to format and Save files 
+"C-s" = [":format", ":write"]
 "C-j" = "jump_view_down"
 "C-k" = "jump_view_up"
 "C-h" = "jump_view_left"
 "C-l" = "jump_view_right"
 "C-g" = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
+"C-r" = ":reload"
 "C-e" = [
   ':sh rm -f /tmp/unique-file',
   ':insert-output yazi %{buffer_name} --chooser-file=/tmp/unique-file',
@@ -88,23 +98,71 @@ skip-levels = 1
 ]
 
 # Yank to system clipboard
-"y" = ["yank", ":clipboard-yank"]
-"Y" = ["extend_line_below", ":clipboard-yank"]
-"D" = ["extend_line_below", "delete_selection"]
+"y" = ["yank", ":clipboard-yank", "collapse_selection"]
+"Y" = ["extend_line_below", "yank", ":clipboard-yank", "collapse_selection"]
+"D" = ["extend_line_below", "yank", ":clipboard-yank", "delete_selection"]
+"V" = ["select_mode", "extend_line_below"]
+
 # Buffer Line
-"S-h" = ":bprev"
-"S-l" = ":bnext"
+# Remap original key from swap window left righ to change buffer prev and next
+# to access swap still available on window mode (Ctrl+w)
+"H" = ":bprev"
+"L" = ":bnext"
+
+# Quick select up and down Normal Mode
+"S-up" = "extend_line_up"
+"S-down" = "extend_line_down"
+"," = "buffer_picker"
+
+[keys.select]
+# Common
+"esc" = ["collapse_selection", "normal_mode"]
+
+# Yank Plus
+"y" = ["yank", ":clipboard-yank", "collapse_selection"]
+"Y" = ["extend_line_below", "yank", ":clipboard-yank", "collapse_selection"]
+
+# Selection object around
+"i" = "select_textobject_inner"
+"a" = "select_textobject_around"
+
+# Quick select up and down Normal Mode
+"S-up" = "extend_line_up"
+"S-down" = "extend_line_down"
+
+# Move lines up/down in visual mode
+"A-j" = [
+  "extend_to_line_bounds",
+  "delete_selection",
+  "move_line_down",
+  "paste_after",
+  "select_mode",
+]
+"A-k" = [
+  "extend_to_line_bounds",
+  "delete_selection",
+  "move_line_up",
+  "paste_before",
+  "select_mode",
+]
+
+[keys.insert]
+"esc" = ["collapse_selection", "normal_mode"]
+"C-s" = [":format", ":write", "normal_mode"]
 
 [keys.normal.space]
+"space" = "file_picker_in_current_buffer_directory"
 "|" = "vsplit"
 "-" = "hsplit"
 "l" = ":toggle lsp.display-inlay-hints"
+"q" = "wclose"
 
-[keys.select]
-"y" = ["yank", ":clipboard-yank"]
-"=" = ":format"
-i = "select_textobject_inner"
-a = "select_textobject_around"
-
-[keys.insert]
-"C-s" = [":format", ":w", "normal_mode"]
+# Buffer Control
+[keys.normal.space.b]
+"a" = ":buffer-close-all"
+"A" = ":buffer-close-all!"
+"b" = "buffer_picker"
+"d" = ":buffer-close"
+"D" = ":buffer-close!"
+"o" = ":buffer-close-others"
+"O" = ":buffer-close-others!"

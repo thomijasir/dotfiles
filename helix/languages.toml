@@ -60,6 +60,12 @@ formatter = { command = "prettier", args = ["--parser", "json"] }
 # formatter = { command = "dprint", args = ["fmt", "--stdin", "json"] }
 
 [[language]]
+name = "yaml"
+language-servers = ["yaml-language-server"]
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "json"] }
+
+
+[[language]]
 name = "html"
 language-servers = ["vscode-html-language-server", "cspell"]
 formatter = { command = 'prettier', args = ["--parser", "html"] }
