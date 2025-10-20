@@ -8,7 +8,7 @@ This is a custom Helix configuration with opinionated keybindings and settings o
 
 ```sh
 # Essential language services (must install)
-npm install -g typescript-language-server typescript vscode-langservers-extracted emmet-ls prettier @postgrestools/postgrestools sql-formatter bash-language-server
+npm install -g typescript-language-server typescript vscode-langservers-extracted emmet-ls prettier @postgrestools/postgrestools sql-formatter bash-language-server mdts
 
 # dprint formatter
 curl -fsSL https://dprint.dev/install.sh | sh
