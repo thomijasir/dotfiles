@@ -62,8 +62,13 @@ formatter = { command = "prettier", args = ["--parser", "json"] }
 [[language]]
 name = "yaml"
 language-servers = ["yaml-language-server"]
+formatter = { command = "prettier", args = ["--stdin-filepath", "file.yaml"] }
 # formatter = { command = "dprint", args = ["fmt", "--stdin", "json"] }
 
+# [[language]]
+# name = "bash"
+# language-servers = ["bash-language-server"]
+# formatter = { command = "shfmt", args = ["-i", "2", "-ci"] }
 
 [[language]]
 name = "html"

@@ -8,7 +8,7 @@ This is a custom Helix configuration with opinionated keybindings and settings o
 
 ```sh
 # Essential language services (must install)
-npm install -g typescript-language-server typescript vscode-langservers-extracted emmet-ls prettier @postgrestools/postgrestools sql-formatter
+npm install -g typescript-language-server typescript vscode-langservers-extracted emmet-ls prettier @postgrestools/postgrestools sql-formatter bash-language-server
 
 # dprint formatter
 curl -fsSL https://dprint.dev/install.sh | sh
@@ -17,7 +17,7 @@ curl -fsSL https://dprint.dev/install.sh | sh
 curl -fsSL https://deno.land/x/install/install.sh | sh
 
 # Grammar and language server check
-brew install harper
+brew install harper shfmt yaml-language-server
 
 # Install and check Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -177,4 +177,4 @@ command -v rust-analyzer
 
 This configuration can be found at: `~/.config/helix/config.toml`
 The custom theme is located at: `~/.config/helix/themes/sonokai_custom.toml`
-Feel free to modify keybindings to suit your workflow!
+Feel free to modify keybindings to suit your workflow.
