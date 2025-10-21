@@ -7,10 +7,6 @@ except-features = ["format"]
 command = "cspell-lsp"
 args = ["--stdio"]
 
-[language-server.deno]
-command = "deno"
-args = ["lsp"]
-
 [language-server.harper-ls]
 command = "harper-ls"
 args = ["--stdio"]
@@ -32,25 +28,25 @@ language-servers = ["marksman", "harper-ls"]
 [[language]]
 name = "typescript"
 language-servers = ["typescript-language-server", "eslint", "cspell"]
-formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+formatter = { command = "prettier", args = ["--parser", "typescript"] }
 # formatter = { command = "dprint", args = ["fmt", "--stdin", "typescript"] }
 
-# [[language]]
-# name = "tsx"
-# language-servers = ["deno", "eslint", "cspell"]
-# formatter = { command = "prettier", args = ["--parser", "typescript"] }
+[[language]]
+name = "tsx"
+language-servers = ["typescript-language-server", "eslint", "cspell"]
+formatter = { command = "prettier", args = ["--parser", "typescript"] }
 # formatter = { command = "dprint", args = ["fmt", "--stdin", "tsx"] }
 
 [[language]]
 name = "javascript"
 language-servers = ["typescript-language-server", "eslint", "cspell"]
-formatter = { command = 'prettier', args = ["--parser", "typescript"] }
+formatter = { command = "prettier" }
 # formatter = { command = "dprint", args = ["fmt", "--stdin", "javascript"] }
 
-# [[language]]
-# name = "jsx"
-# language-servers = ["typescript-language-server", "eslint", "cspell"]
-# formatter = { command = "prettier", args = ["--parser", "typescript"] }
+[[language]]
+name = "jsx"
+language-servers = ["typescript-language-server", "eslint", "cspell"]
+formatter = { command = "prettier", args = ["--parser", "typescript"] }
 # formatter = { command = "dprint", args = ["fmt", "--stdin", "jsx"] }
 
 [[language]]
@@ -65,15 +61,16 @@ language-servers = ["yaml-language-server"]
 formatter = { command = "prettier", args = ["--stdin-filepath", "file.yaml"] }
 # formatter = { command = "dprint", args = ["fmt", "--stdin", "json"] }
 
-# [[language]]
-# name = "bash"
-# language-servers = ["bash-language-server"]
-# formatter = { command = "shfmt", args = ["-i", "2", "-ci"] }
+[[language]]
+name = "bash"
+language-servers = ["bash-language-server"]
+formatter = { command = "shfmt", args = ["-i", "2", "-ci"] }
 
 [[language]]
 name = "html"
 language-servers = ["vscode-html-language-server", "cspell"]
-formatter = { command = 'prettier', args = ["--parser", "html"] }
+formatter = { command = "prettier", args = ["--parser", "html"] }
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "html"] } # Required to initialization first
 
 [[language]]
 name = "sql"

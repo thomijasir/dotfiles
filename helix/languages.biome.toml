@@ -1,0 +1,186 @@
+# Discussion source: https://claude.ai/chat/3491ca44-8670-4e5f-be6f-d86d37dc5cc4
+# ============================================
+# PRODUCTION-READY BLAZING FAST CONFIGURATION
+# Based on official Helix best practices
+# ============================================
+
+# ============================================
+# Language Server Definitions
+# ============================================
+
+# OPTION 1: Biome (RECOMMENDED - Fastest all-in-one)
+[language-server.biome]
+command = "biome"
+args = ["lsp-proxy"]
+
+# Keep TypeScript LS for full IDE features (go-to-def, intellisense)
+[language-server.typescript-language-server]
+command = "typescript-language-server"
+args = ["--stdio"]
+
+# OPTION 2: Traditional setup (if Biome doesn't fit your needs)
+[language-server.eslint]
+command = "vscode-eslint-language-server"
+args = ["--stdio"]
+
+[language-server.cspell]
+command = "cspell-lsp"
+args = ["--stdio"]
+
+[language-server.harper-ls]
+command = "harper-ls"
+args = ["--stdio"]
+
+[language-server.sql-lsp]
+command = "postgrestools"
+args = ["lsp-proxy"]
+
+# ============================================
+# Language Configurations
+# ============================================
+
+# --- RUST ---
+[[language]]
+name = "rust"
+language-servers = ["rust-analyzer", "cspell"]
+roots = ["Cargo.toml", "Cargo.lock"]
+# rust-analyzer includes formatting, no extra config needed
+
+# --- MARKDOWN ---
+[[language]]
+name = "markdown"
+language-servers = ["marksman", "harper-ls"]
+
+# ============================================
+# JAVASCRIPT/TYPESCRIPT FAMILY
+# IMPORTANT: All 4 must be configured separately!
+# ============================================
+
+# --- TYPESCRIPT (.ts files) ---
+[[language]]
+name = "typescript"
+# Biome approach (FASTEST):
+language-servers = [
+    { name = "typescript-language-server", except-features = ["format"] },
+    "biome",
+    "cspell"
+]
+formatter = { command = "biome", args = ["format", "--stdin-file-path", "file.ts"] }
+auto-format = true
+
+# Traditional approach (if not using Biome):
+# language-servers = ["typescript-language-server", "eslint", "cspell"]
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "typescript"] }
+
+# --- TSX (.tsx files) - MUST be separate! ---
+[[language]]
+name = "tsx"
+language-servers = [
+    { name = "typescript-language-server", except-features = ["format"] },
+    "biome",
+    "cspell"
+]
+formatter = { command = "biome", args = ["format", "--stdin-file-path", "file.tsx"] }
+auto-format = true
+
+# Traditional:
+# language-servers = ["typescript-language-server", "eslint", "cspell"]
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "tsx"] }
+
+# --- JAVASCRIPT (.js files) ---
+[[language]]
+name = "javascript"
+language-servers = [
+    { name = "typescript-language-server", except-features = ["format"] },
+    "biome",
+    "cspell"
+]
+formatter = { command = "biome", args = ["format", "--stdin-file-path", "file.js"] }
+auto-format = true
+
+# Traditional:
+# language-servers = ["typescript-language-server", "eslint", "cspell"]
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "javascript"] }
+
+# --- JSX (.jsx files) - MUST be separate! ---
+[[language]]
+name = "jsx"
+language-servers = [
+    { name = "typescript-language-server", except-features = ["format"] },
+    "biome",
+    "cspell"
+]
+formatter = { command = "biome", args = ["format", "--stdin-file-path", "file.jsx"] }
+auto-format = true
+
+# Traditional:
+# language-servers = ["typescript-language-server", "eslint", "cspell"]
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "jsx"] }
+
+# ============================================
+# OTHER WEB LANGUAGES
+# ============================================
+
+# --- JSON ---
+[[language]]
+name = "json"
+# No LSP needed for JSON, just formatting
+formatter = { command = "biome", args = ["format", "--stdin-file-path", "file.json"] }
+auto-format = true
+
+# Alternative: dprint
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "json"] }
+
+# --- YAML ---
+[[language]]
+name = "yaml"
+language-servers = ["yaml-language-server"]
+formatter = { command = "dprint", args = ["fmt", "--stdin", "yaml"] }
+auto-format = true
+
+# --- HTML ---
+[[language]]
+name = "html"
+language-servers = ["vscode-html-language-server", "cspell"]
+formatter = { command = "dprint", args = ["fmt", "--stdin", "html"] }
+auto-format = true
+
+# --- SQL ---
+[[language]]
+name = "sql"
+language-servers = ["sql-lsp", "cspell"]
+formatter = { command = "sqruff", args = ["format", "-"] }
+auto-format = true
+
+# Fallback if sqruff not available:
+# formatter = { command = "sql-formatter", args = ["-l", "postgresql"] }
+
+# --- BASH ---
+[[language]]
+name = "bash"
+language-servers = ["bash-language-server"]
+formatter = { command = "shfmt", args = ["-i", "2", "-ci"] }
+auto-format = true
+
+# ============================================
+# PERFORMANCE NOTES
+# ============================================
+# 
+# Biome vs Traditional Stack:
+# - Biome: 20-100x faster formatting, combined LSP + linting
+# - Trade-off: ~90% ESLint rule compatibility (missing some typescript-eslint rules)
+# 
+# Why separate tsx/jsx configs are CRITICAL:
+# - Helix uses different tree-sitter grammars for each
+# - Wrong config = syntax errors and broken highlighting
+# - typescript-language-server supports all 4 by default
+# 
+# Formatter speed (fastest to slowest):
+# 1. Biome (Rust-based, 20-100x faster than Prettier)
+# 2. dprint (Rust-based, 5-30x faster than Prettier)
+# 3. Prettier (Node.js-based, slowest but most compatible)
+# 
+# Installation:
+# cargo install biome dprint sqruff  # Ultra-fast formatters
+# npm install -g @biomejs/biome typescript-language-server typescript
+# ============================================
