@@ -10,14 +10,13 @@ This is a custom Helix configuration with opinionated keybindings and settings o
 # Essential language services (must install)
 npm install -g typescript-language-server typescript vscode-langservers-extracted emmet-ls prettier @postgrestools/postgrestools sql-formatter bash-language-server mdts
 
-# dprint formatter
-curl -fsSL https://dprint.dev/install.sh | sh
-
-# Deno service for TypeScript files
 curl -fsSL https://deno.land/x/install/install.sh | sh
 
 # Grammar and language server check
-brew install harper shfmt yaml-language-server
+brew install harper shfmt yaml-language-server dprint
+
+# dprint formatter
+dprint init -c ~/.dprint.json
 
 # Install and check Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
