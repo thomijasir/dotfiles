@@ -138,3 +138,4 @@ eval "$(pyenv init - zsh)"
 
 # Added by Windsurf
 export PATH="/Users/venobi/.codeium/windsurf/bin:$PATH"
+eval "$(zoxide init zsh)"
