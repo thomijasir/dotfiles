@@ -1,6 +1,13 @@
 -- Pull in the wezterm API
 local wezterm = require("wezterm")
 
+-- Simplified tab title with directory
+wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
+  local cwd = tab.active_pane.current_working_dir
+  local dir = cwd and cwd.file_path:match("([^/]+)/?$") or "~"
+  return string.format(" %d: %s ", tab.tab_index + 1, dir)
+end)
+
 -- This will hold the configuration.
 local config = wezterm.config_builder()
 
@@ -12,7 +19,7 @@ config.underline_position = "-4pt"
 
 -- Tab bar
 config.hide_tab_bar_if_only_one_tab = true
-config.use_fancy_tab_bar = false
+config.use_fancy_tab_bar = true
 config.tab_bar_at_bottom = true
 config.tab_and_split_indices_are_zero_based = true
 
@@ -28,6 +35,7 @@ config.window_padding = {
 -- config.window_background_opacity = 0.9
 -- config.macos_window_background_blur = 90
 config.window_decorations = "TITLE | RESIZE"
+-- config.window_decorations = "RESIZE"
 -- Font
 -- config.font = wezterm.font("JetBrainsMono Nerd Font Mono")
 config.font = wezterm.font("JetBrainsMonoNL Nerd Font")
@@ -49,6 +57,7 @@ config.color_scheme = "Galaxy"
 -- config.color_scheme = "Monokai Pro (Gogh)"
 -- TMUX Alternative
 config.leader = { key = "a", mods = "ALT", timeout_milliseconds = 2500 }
+
 config.keys = {
 	-- Make Alt+Enter work properly
   {
@@ -59,6 +68,7 @@ config.keys = {
       mods = 'ALT',
     },
   },
+  -- LEADER KEY CONTROL
 	{
 		mods = "LEADER",
 		key = "q",
@@ -74,46 +84,7 @@ config.keys = {
 		key = "x",
 		action = wezterm.action.CloseCurrentPane({ confirm = true }),
 	},
-	{
-		mods = "LEADER",
-		key = "b",
-		action = wezterm.action.ActivateTabRelative(-1),
-	},
-	{
-		mods = "LEADER",
-		key = "n",
-		action = wezterm.action.ActivateTabRelative(1),
-	},
-	{
-		mods = "LEADER",
-		key = "|",
-		action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
-	},
-	{
-		mods = "LEADER",
-		key = "-",
-		action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }),
-	},
-	{
-		mods = "LEADER",
-		key = "h",
-		action = wezterm.action.ActivatePaneDirection("Left"),
-	},
-	{
-		mods = "LEADER",
-		key = "j",
-		action = wezterm.action.ActivatePaneDirection("Down"),
-	},
-	{
-		mods = "LEADER",
-		key = "k",
-		action = wezterm.action.ActivatePaneDirection("Up"),
-	},
-	{
-		mods = "LEADER",
-		key = "l",
-		action = wezterm.action.ActivatePaneDirection("Right"),
-	},
+	-- PANE CONTROL
 	{
 		mods = "LEADER",
 		key = "LeftArrow",
@@ -134,6 +105,41 @@ config.keys = {
 		key = "UpArrow",
 		action = wezterm.action.AdjustPaneSize({ "Up", 5 }),
 	},
+	{
+		mods = "LEADER",
+		key = "|",
+		action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+	},
+	{
+		mods = "LEADER",
+		key = "-",
+		action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }),
+	},
+	{
+		mods = "CMD", key = "h",
+		action = wezterm.action.ActivatePaneDirection("Left"),
+	},
+	{
+		mods = "CMD", key = "j",
+		action = wezterm.action.ActivatePaneDirection("Down"),
+	},
+	{
+		mods = "CMD", key = "k",
+		action = wezterm.action.ActivatePaneDirection("Up"),
+	},
+	{
+		mods = "CMD", key = "l",
+		action = wezterm.action.ActivatePaneDirection("Right"),
+	},
+	-- Tabs Control
+	{
+		mods = "CMD", key = "{",
+		action = wezterm.action.ActivateTabRelative(-1)
+	},
+  {
+  	mods = "CMD", key = "}",
+  	action = wezterm.action.ActivateTabRelative(1)
+  },
 }
 
 -- leader + number to activate that tab
