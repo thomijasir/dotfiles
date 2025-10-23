@@ -2,30 +2,6 @@
 
 This is a custom Helix configuration with opinionated keybindings and settings optimized for productivity.
 
-## Important Note - Helix Preparation
-
-### Install Language Server Protocol (LSP) Services
-
-```sh
-# Essential language services (must install)
-npm install -g typescript-language-server typescript vscode-langservers-extracted emmet-ls prettier @postgrestools/postgrestools sql-formatter bash-language-server mdts
-
-curl -fsSL https://deno.land/x/install/install.sh | sh
-
-# Grammar and language server check
-brew install harper shfmt yaml-language-server dprint
-
-# dprint formatter
-dprint init -c ~/.dprint.json
-
-# Install and check Rust
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-rustup component add rust-analyzer
-command -v rust-analyzer
-```
-
----
-
 ## Editor Features
 
 - **Theme**: `sonokai_custom`
