@@ -1,5 +1,6 @@
 -- Pull in the wezterm API
 local wezterm = require("wezterm")
+local act = wezterm.action
 
 -- Simplified tab title with directory
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
@@ -22,6 +23,8 @@ config.hide_tab_bar_if_only_one_tab = true
 config.use_fancy_tab_bar = true
 config.tab_bar_at_bottom = true
 config.tab_and_split_indices_are_zero_based = true
+-- Enable enhanced keyboard protocol for better key handling
+config.enable_kitty_keyboard = true
 
 -- Window
 -- config.initial_cols = 180
@@ -63,7 +66,7 @@ config.keys = {
   {
     key = 'Enter',
     mods = 'ALT',
-    action = wezterm.action.SendKey {
+    action = act.SendKey {
       key = 'Enter',
       mods = 'ALT',
     },
@@ -72,93 +75,117 @@ config.keys = {
 	{
 		mods = "LEADER",
 		key = "q",
-		action = wezterm.action.PaneSelect,
+		action = act.PaneSelect,
 	},
 	{
 		mods = "LEADER",
 		key = "c",
-		action = wezterm.action.SpawnTab("CurrentPaneDomain"),
+		action = act.SpawnTab("CurrentPaneDomain"),
 	},
 	{
 		mods = "LEADER",
 		key = "x",
-		action = wezterm.action.CloseCurrentPane({ confirm = true }),
+		action = act.CloseCurrentPane({ confirm = true }),
 	},
 	-- PANE CONTROL
 	{
 		mods = "LEADER",
 		key = "LeftArrow",
-		action = wezterm.action.AdjustPaneSize({ "Left", 5 }),
+		action = act.AdjustPaneSize({ "Left", 5 }),
 	},
 	{
 		mods = "LEADER",
 		key = "RightArrow",
-		action = wezterm.action.AdjustPaneSize({ "Right", 5 }),
+		action = act.AdjustPaneSize({ "Right", 5 }),
 	},
 	{
 		mods = "LEADER",
 		key = "DownArrow",
-		action = wezterm.action.AdjustPaneSize({ "Down", 5 }),
+		action = act.AdjustPaneSize({ "Down", 5 }),
 	},
 	{
 		mods = "LEADER",
 		key = "UpArrow",
-		action = wezterm.action.AdjustPaneSize({ "Up", 5 }),
+		action = act.AdjustPaneSize({ "Up", 5 }),
 	},
 	{
 		mods = "LEADER",
-		key = "|",
-		action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+		key = "v",
+		action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
 	},
 	{
 		mods = "LEADER",
-		key = "-",
-		action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }),
+		key = "h",
+		action = act.SplitVertical({ domain = "CurrentPaneDomain" }),
 	},
 	{
-		mods = "CMD", key = "h",
-		action = wezterm.action.ActivatePaneDirection("Left"),
+		mods = "ALT", key = "h",
+		action = act.ActivatePaneDirection("Left"),
 	},
 	{
-		mods = "CMD", key = "j",
-		action = wezterm.action.ActivatePaneDirection("Down"),
+		mods = "ALT", key = "j",
+		action = act.ActivatePaneDirection("Down"),
 	},
 	{
-		mods = "CMD", key = "k",
-		action = wezterm.action.ActivatePaneDirection("Up"),
+		mods = "ALT", key = "k",
+		action = act.ActivatePaneDirection("Up"),
 	},
 	{
-		mods = "CMD", key = "l",
-		action = wezterm.action.ActivatePaneDirection("Right"),
+		mods = "ALT", key = "l",
+		action = act.ActivatePaneDirection("Right"),
 	},
 	-- Tabs Control
 	{
 		mods = "CMD", key = "{",
-		action = wezterm.action.ActivateTabRelative(-1)
+		action = act.ActivateTabRelative(-1)
 	},
   {
   	mods = "CMD", key = "}",
-  	action = wezterm.action.ActivateTabRelative(1)
+  	action = act.ActivateTabRelative(1)
   },
 }
 
--- leader + number to activate that tab
--- for i = 0, 9 do
--- 	table.insert(config.keys, {
--- 		key = tostring(i),
--- 		mods = "LEADER",
--- 		action = wezterm.action.ActivateTab(i),
--- 	})
--- end
 
--- Move the active tab to a specific position using CTRL+ALT + number
-for i = 1, 8 do
-    table.insert(config.keys, {
-        key = tostring(i),
-        mods = 'LEADER',
-        action = wezterm.action.MoveTab(i - 1),
-    })
+-- ==========================================
+-- LEADER + NUMBER: Move tab to position
+-- ==========================================
+for i = 1, 9 do
+  table.insert(config.keys, {
+    key = tostring(i),
+    mods = "LEADER",
+    action = act.MoveTab(i - 1),
+  })
 end
+
+-- ==========================================
+-- CMD + NUMBER: Activate specific tab
+-- ==========================================
+for i = 1, 9 do
+  table.insert(config.keys, {
+    key = tostring(i),
+    mods = "CMD",
+    action = act.ActivateTab(i - 1),
+  })
+end
+
+-- ============================================
+-- HYPERLINKS CONFIGURATION
+-- ============================================
+
+config.hyperlink_rules = wezterm.default_hyperlink_rules()
+
+-- Make localhost URLs clickable
+table.insert(config.hyperlink_rules, {
+  regex = [[\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d+)\b]],
+  format = "http://$1:$2",
+})
+
+-- Make file paths clickable
+table.insert(config.hyperlink_rules, {
+  regex = [[\bfile://([^\s]+)\b]],
+  format = "file://$1",
+})
+
 -- tmux status | activate this when often use tab menu
 -- wezterm.on("update-right-status", function(window, _)
 -- 	local SOLID_LEFT_ARROW = ""

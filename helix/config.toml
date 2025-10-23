@@ -102,11 +102,14 @@ skip-levels = 1
 "Y" = ["extend_to_line_bounds", "yank", ":clipboard-yank", "collapse_selection"]
 "D" = ["extend_to_line_bounds", "yank", ":clipboard-yank", "delete_selection"]
 "V" = ["select_mode", "extend_to_line_bounds"]
+
 # Buffer Line
 # Remap original key from swap window left righ to change buffer prev and next
 # to access swap still available on window mode (Ctrl+w)
-"H" = ":bprev"
-"L" = ":bnext"
+"G" = ":bprev"
+"H" = ":bnext"
+# tab = ":bnext"
+# S-tab = ":bprev"
 
 # Quick select up and down Normal Mode
 "S-up" = "extend_line_up"
@@ -155,15 +158,18 @@ skip-levels = 1
 "l" = ":toggle lsp.display-inlay-hints"
 "q" = "wclose"
 "," = "buffer_picker"
+
 # Buffer Control
 [keys.normal.space.b]
-"a" = ":buffer-close-all"
-"A" = ":buffer-close-all!"
-"b" = "buffer_picker"
-"d" = ":buffer-close"
-"D" = ":buffer-close!"
-"o" = ":buffer-close-others"
-"O" = ":buffer-close-others!"
+b = "buffer_picker"
+d = ":buffer-close"
+D = ":buffer-close!"
+o = ":buffer-close-others"
+O = ":buffer-close-others!"
+a = ":buffer-close-all"
+A = ":buffer-close-all!"
+n = ":bnext"
+p = ":bprev"
 # Window Control is not working due to helix limitation
 # [keys.normal.space.w]
 # "=" = "resize_pane_equal"
