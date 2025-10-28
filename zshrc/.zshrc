@@ -87,11 +87,18 @@ alias vim='nvim'
 alias yt="yazi ."
 alias lg="lazygit"
 alias mdts="npx mdts . --silent"
-alias ls='ls -n --color=auto'
+# options :  --no-filesize --no-time --no-permissions
+alias ls="eza --no-filesize --long --color=always --icons=always --no-user"
+
+# tree
+alias tree="tree -L 3 -a -I '.git' --charset X "
+alias dtree="tree -L 3 -a -d -I '.git' --charset X "
+
 alias cp='cp -iv'       # Preferred 'cp' implementation
 alias mv='mv -iv'       # Preferred 'mv' implementation
 alias mkdir='mkdir -pv' # Preferred 'mkdir' implementation
 alias ll='ls -FGlAhp'   # Preferred 'ls' implementation
+alias cd='z'
 alias temp='nvim ~/temp.md'
 # Git zsh Configuration
 autoload -Uz vcs_info
@@ -146,6 +153,7 @@ source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # Added by Windsurf
 export PATH="/Users/venobi/.codeium/windsurf/bin:$PATH"
 eval "$(zoxide init zsh)"
-# export PATH="/Users/venobi/.codeium/windsurf/bin:$PATH"
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+
+# Ruby
+# export PATH="$HOME/.rbenv/bin:$PATH"
+# eval "$(rbenv init -)"

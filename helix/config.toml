@@ -59,6 +59,7 @@ skip-levels = 1
 [keys.normal]
 # Common
 "esc" = ["collapse_selection", "normal_mode"]
+"w" = ["move_next_word_start", "select_mode"]
 # Jump between selected word next and prev
 # for * (Star key) remapped from search_selection_detect_word_boundaries to automatic select and go to next search
 # "*" = [
@@ -98,10 +99,17 @@ skip-levels = 1
 ]
 
 # Yank to system clipboard
-"y" = ["yank", ":clipboard-yank", "collapse_selection"]
-"Y" = ["extend_to_line_bounds", "yank", ":clipboard-yank", "collapse_selection"]
-"D" = ["extend_to_line_bounds", "yank", ":clipboard-yank", "delete_selection"]
-"V" = ["select_mode", "extend_to_line_bounds"]
+"y" = ["yank_to_clipboard", "collapse_selection"]
+"Y" = ["extend_to_line_bounds", "yank_to_clipboard", "collapse_selection"]
+# Paste Plus
+"p" = "paste_clipboard_after"
+"P" = "paste_clipboard_before"
+
+# Extend  and selection
+"D" = ["extend_to_line_bounds", "yank_to_clipboard", "delete_selection"]
+"V" = ["select_mode", "extend_line"]
+# Line select extend plus
+"X" = ["extend_line_above"]
 
 # Buffer Line
 # Remap original key from swap window left righ to change buffer prev and next
@@ -112,24 +120,32 @@ skip-levels = 1
 # S-tab = ":bprev"
 
 # Quick select up and down Normal Mode
-"S-up" = "extend_line_up"
-"S-down" = "extend_line_down"
+"S-up" = "extend_line_above"
+"S-down" = "extend_line_below"
 
 [keys.select]
 # Common
 "esc" = ["collapse_selection", "normal_mode"]
 
 # Yank Plus
-"y" = ["yank", ":clipboard-yank", "collapse_selection"]
-"Y" = ["extend_to_line_bounds", "yank", ":clipboard-yank", "collapse_selection"]
+"y" = ["yank_to_clipboard", "collapse_selection"]
+"Y" = ["extend_to_line_bounds", "yank_to_clipboard", "collapse_selection"]
+# Paste Plus
+"p" = "paste_clipboard_after"
+"P" = "paste_clipboard_before"
+# Line select extend plus
+"X" = ["extend_line_above"]
+
+# Selection change plus
+"c" = ["change_selection", "yank_to_clipboard"]
 
 # Selection object around
 "i" = "select_textobject_inner"
 "a" = "select_textobject_around"
 
 # Quick select up and down Normal Mode
-"S-up" = "extend_line_up"
-"S-down" = "extend_line_down"
+"S-up" = "extend_line_above"
+"S-down" = "extend_line_below"
 
 # Move lines up/down in visual mode
 "A-j" = [

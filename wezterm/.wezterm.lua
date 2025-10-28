@@ -119,19 +119,19 @@ config.keys = {
 		action = act.SplitVertical({ domain = "CurrentPaneDomain" }),
 	},
 	{
-		mods = "ALT", key = "h",
+		mods = "CMD", key = "h",
 		action = act.ActivatePaneDirection("Left"),
 	},
 	{
-		mods = "ALT", key = "j",
+		mods = "CMD", key = "j",
 		action = act.ActivatePaneDirection("Down"),
 	},
 	{
-		mods = "ALT", key = "k",
+		mods = "CMD", key = "k",
 		action = act.ActivatePaneDirection("Up"),
 	},
 	{
-		mods = "ALT", key = "l",
+		mods = "CMD", key = "l",
 		action = act.ActivatePaneDirection("Right"),
 	},
 	-- Tabs Control
