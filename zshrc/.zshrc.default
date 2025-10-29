@@ -1,0 +1,191 @@
+#!/bin/zsh
+# =========================
+# ZSH CONFIGURATION
+# =========================
+
+# Script Action
+
+# --- Python Scripts ---
+alias auto-translate='python ~/Workspace/minootube/scripts/auto-translate.py'
+alias auto-transcribe='python ~/Workspace/minootube/scripts/auto-transcribe.py'
+alias video-compress='python ~/Workspace/minootube/scripts/auto-compress.py'
+
+# --- SSH Connections ---
+alias tencent_sg='ssh -i ~/.ssh-keys/tencent_sg_key.pem root@43.134.91.33'
+alias tencent_hk='ssh -i ~/.ssh-keys/tencent_hk_key.pem root@43.159.230.62'
+alias aliyun='ssh root@8.219.9.110 -i ~/aliyun-key.pem' # Aliyun SSH
+
+# =========================
+# HISTORY SETTINGS
+# =========================
+
+HISTFILE=$HOME/.zhistory
+SAVEHIST=1000
+HISTSIZE=999
+setopt share_history
+setopt hist_expire_dups_first
+setopt hist_ignore_dups
+setopt hist_verify
+
+# ========================
+# PROMPT CONFIGURATION
+# ========================
+# Git zsh Configuration
+autoload -Uz vcs_info
+function precmd() {
+  vcs_info
+}
+zstyle ':vcs_info:git:*' formats '(%b)'
+setopt PROMPT_SUBST
+PROMPT='${PWD/#$HOME/~} ${vcs_info_msg_0_} '
+
+# ========================
+# DEVELOPMENT TOOLS
+# =======================
+
+# Zoxide (smart cd)
+eval "$(zoxide init zsh)"
+
+# FZF (fuzzy finder)
+source <(fzf --zsh)
+
+# Atuin
+eval "$(atuin init zsh)"
+
+# Dart CLI Completion
+[[ -f /Users/venobi/.dart-cli-completion/zsh-config.zsh ]] && . /Users/venobi/.dart-cli-completion/zsh-config.zsh || true
+
+# =============================================================================
+# DATABASE TOOLS
+# =============================================================================
+
+# SurrealDB
+# export PATH=$HOME/.surrealdb:$PATH
+
+# =============================================================================
+# PLUGIN CONFIGURATION
+# =============================================================================
+
+# Syntax auto-completion and highlighting
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Completion using arrow keys (based on history)
+bindkey '^[[A' history-search-backward
+bindkey '^[[B' history-search-forward
+
+# --- MacOS Process ---
+alias appkill='f() {
+  local pid
+  pid=$(ps aux | sed 1d | fzf -m --header="[kill process]" --preview="echo {}" --preview-window=down:3:wrap | awk "{print \$2}")
+  if [ "x$pid" != "x" ]; then
+    echo $pid | xargs kill -9
+    echo "Killed process(es): $pid"
+  fi
+}; f'
+
+# --- File Operations ---
+alias cp='cp -iv'       # Preferred 'cp' implementation
+alias mv='mv -iv'       # Preferred 'mv' implementation
+alias mkdir='mkdir -pv' # Preferred 'mkdir' implementation
+
+# --- Directory Listing ---
+alias ll='ls -FGlAhp' # Preferred 'ls' implementation
+# options: --no-filesize --no-time --no-permissions
+alias ls="eza --no-filesize --long --color=always --icons=always --no-user"
+
+# --- Directory Navigation ---
+alias cd='z' # Use zoxide
+alias work='cd ~/Workspace'
+
+# --- Tree View ---
+alias tree="tree -L 3 -a -I '.git' --charset X "
+alias dtree="tree -L 3 -a -d -I '.git' --charset X "
+
+# --- Editor Aliases ---
+alias vim='nvim'
+alias temp='nvim ~/temp.md'
+
+# --- Development Tools ---
+alias lg="lazygit"
+alias mdts="npx mdts . --silent"
+
+# --- Git Shortcuts ---
+alias ga='git add .'                        # Git Add
+alias gf='git fetch && git pull'            # Git Fetch And Pull
+alias gp='git push'                         # Git Push
+alias gs='git status'                       # Git Status
+alias gc='f() { git commit -m "$1"; }; f'   # Git Commit with message
+alias gb='f() { git checkout -b "$1"; }; f' # Git create new branch
+
+# --- Configuration Files ---
+alias nvim_config='hx ~/.config/nvim'
+alias helix_config='hx ~/.config/helix'
+alias wezterm_config='hx ~/.wezterm.lua'
+
+# --- Development Environment ---
+alias crw='cargo watch -q -c -w src/ -x run' # Cargo watch and run
+
+# --- Mobile Development ---
+alias androidUp='emulator -avd Pixel_2_API_28' # Open Emulator
+alias iosUp='open -a Simulator'                # Open Simulator
+
+# Alternative Python aliases (commented out)
+#alias py='python3'     # Python Alias
+#alias python='python3' # Python load
+#alias pip='pip3'       # Python pip
+
+# --- Network Tools ---
+alias ngrok="$HOME/.ngrok" # add ngrok
+
+# --- Cleanup Commands ---
+alias rm_node='rm -rf node_modules package-lock.json'
+alias cleanupDS="find . -type f -name '*.DS_Store' -ls -delete" # Auto Clean DS
+alias cleadNODE="find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' \;"
+
+# Super Shell Yazi
+function y() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+  yazi "$@" --cwd-file="$tmp"
+  IFS= read -r -d '' cwd <"$tmp"
+  [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+  rm -f -- "$tmp"
+}
+
+# Calculate file/directory sizes
+dsize() {
+  du -sh "${1:-.}"/* 2>/dev/null | sort -hr | head -n 20
+}
+
+# Find biggest files in current directory
+bigfiles() {
+  find . -type f -exec du -h {} + 2>/dev/null | sort -rh | head -n "${1:-10}"
+}
+
+# Open project directories with fzf
+proj() {
+  local dir
+  dir=$(find ~/Workspace -maxdepth 3 -type d 2>/dev/null | fzf --preview "ls -la {}")
+  [ -n "$dir" ] && cd "$dir"
+}
+
+# Get public IP address
+myip() {
+  curl -s https://api.ipify.org
+  echo ""
+}
+
+# Get local IP address
+localip() {
+  ipconfig getifaddr en0 || ipconfig getifaddr en1
+}
+
+# ZSH Configuration commad
+alias zsh_profile='hx ~/.zprofile'
+alias zsh_config='hx ~/.zshrc'
+# reload zsh config
+alias zsh_reload='source ~/.zshrc && source ~/.zprofile'
+
+# ======================
+# END OF CONFIGURATION
+# ======================
