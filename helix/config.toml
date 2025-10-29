@@ -59,7 +59,7 @@ skip-levels = 1
 [keys.normal]
 # Common
 "esc" = ["collapse_selection", "normal_mode"]
-"w" = ["move_next_word_start", "select_mode"]
+# "w" = ["move_next_word_start", "select_mode"]
 # Jump between selected word next and prev
 # for * (Star key) remapped from search_selection_detect_word_boundaries to automatic select and go to next search
 # "*" = [
@@ -99,14 +99,14 @@ skip-levels = 1
 ]
 
 # Yank to system clipboard
-"y" = ["yank_to_clipboard", "collapse_selection"]
-"Y" = ["extend_to_line_bounds", "yank_to_clipboard", "collapse_selection"]
+"y" = ["yank","yank_to_clipboard", "collapse_selection"]
+"Y" = ["extend_to_line_bounds", "yank","yank_to_clipboard", "collapse_selection"]
 # Paste Plus
-"p" = "paste_clipboard_after"
-"P" = "paste_clipboard_before"
+# "p" = "paste_clipboard_after"
+# "P" = "paste_clipboard_before"
 
 # Extend  and selection
-"D" = ["extend_to_line_bounds", "yank_to_clipboard", "delete_selection"]
+"D" = ["extend_to_line_bounds", "yank","yank_to_clipboard", "delete_selection"]
 "V" = ["select_mode", "extend_line"]
 # Line select extend plus
 "X" = ["extend_line_above"]
@@ -126,20 +126,21 @@ skip-levels = 1
 [keys.select]
 # Common
 "esc" = ["collapse_selection", "normal_mode"]
+# "w" = ["collapse_selection","move_next_word_start"]
 
 # Yank Plus
-"y" = ["yank_to_clipboard", "collapse_selection"]
-"Y" = ["extend_to_line_bounds", "yank_to_clipboard", "collapse_selection"]
+"y" = ["yank","yank_to_clipboard", "collapse_selection"]
+"Y" = ["extend_to_line_bounds", "yank","yank_to_clipboard", "collapse_selection"]
 # Paste Plus
-"p" = "paste_clipboard_after"
-"P" = "paste_clipboard_before"
+# "p" = "paste_clipboard_after"
+# "P" = "paste_clipboard_before"
 # Line select extend plus
 "X" = ["extend_line_above"]
 
-# Selection change plus
-"c" = ["change_selection", "yank_to_clipboard"]
+# Selection change without copy to register 
+"c" = "change_selection"
 
-# Selection object around
+# Selection object
 "i" = "select_textobject_inner"
 "a" = "select_textobject_around"
 
