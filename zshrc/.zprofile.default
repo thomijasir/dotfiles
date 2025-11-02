@@ -3,13 +3,17 @@
 # PATH & LIBRARY EXPORTS
 # ==========================
 
+# Homebrew Init
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
 # Library paths
 export LIBRARY_PATH="/opt/homebrew/lib:$LIBRARY_PATH"
 export DYLD_LIBRARY_PATH="/opt/homebrew/lib:$DYLD_LIBRARY_PATH"
 
 # General PATH improvements
-export PATH="$PATH:/usr/local/bin/"
-export PATH="/usr/local/git/bin:/sw/bin/:/usr/local/bin:/usr/local/:/usr/local/sbin:/usr/local/mysql/bin:$PATH"
+export PATH="/usr/local/git/bin:/sw/bin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:$PATH"
 
 # ==========================
 # RUNTIME ENVIRONMENTS
@@ -62,12 +66,24 @@ export PATH="$PATH:$HOME/.rvm/bin"
 # export PATH="$PATH:`pwd`/flutter/bin"
 # export PATH=$HOME/.gem/bin:$PATH
 
+# EDITORS & TOOLS
 # Default Terminal editor (helix or nvim)
-export EDITOR=/opt/homebrew/bin/hx
 # export EDITOR=/opt/homebrew/bin/nvim
-
+export EDITOR=/opt/homebrew/bin/hx
 # Visual Studio Code
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
-
 # Windsurf (Added by Windsurf)
 export PATH="$HOME/.codeium/windsurf/bin:$PATH"
+
+
+# Script Action alias
+
+# --- Python Scripts ---
+alias auto-translate='python ~/Workspace/minootube/scripts/auto-translate.py'
+alias auto-transcribe='python ~/Workspace/minootube/scripts/auto-transcribe.py'
+alias video-compress='python ~/Workspace/minootube/scripts/auto-compress.py'
+
+# --- SSH Connections ---
+alias tencent_sg='ssh -i ~/.ssh-keys/tencent_sg_key.pem root@43.134.91.33'
+alias tencent_hk='ssh -i ~/.ssh-keys/tencent_hk_key.pem root@43.159.230.62'
+alias aliyun='ssh root@8.219.9.110 -i ~/aliyun-key.pem' # Aliyun SSH

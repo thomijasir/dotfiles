@@ -3,29 +3,22 @@
 # ZSH CONFIGURATION
 # =========================
 
-# Script Action
-
-# --- Python Scripts ---
-alias auto-translate='python ~/Workspace/minootube/scripts/auto-translate.py'
-alias auto-transcribe='python ~/Workspace/minootube/scripts/auto-transcribe.py'
-alias video-compress='python ~/Workspace/minootube/scripts/auto-compress.py'
-
-# --- SSH Connections ---
-alias tencent_sg='ssh -i ~/.ssh-keys/tencent_sg_key.pem root@43.134.91.33'
-alias tencent_hk='ssh -i ~/.ssh-keys/tencent_hk_key.pem root@43.159.230.62'
-alias aliyun='ssh root@8.219.9.110 -i ~/aliyun-key.pem' # Aliyun SSH
+# load env vars from .zprofile into the shells
+if [[ -r ~/.zprofile ]]; then
+  source ~/.zprofile
+fi
 
 # =========================
 # HISTORY SETTINGS
 # =========================
 
-HISTFILE=$HOME/.zhistory
-SAVEHIST=1000
-HISTSIZE=999
-setopt share_history
-setopt hist_expire_dups_first
-setopt hist_ignore_dups
-setopt hist_verify
+HISTFILE="$HOME/.zhistory"
+HISTSIZE=5000
+SAVEHIST=5000
+
+setopt share_history append_history inc_append_history \
+       hist_expire_dups_first hist_ignore_dups \
+       hist_reduce_blanks hist_verify extended_history
 
 # ========================
 # PROMPT CONFIGURATION
@@ -35,7 +28,7 @@ autoload -Uz vcs_info
 function precmd() {
   vcs_info
 }
-zstyle ':vcs_info:git:*' formats '(%b)'
+zstyle ':vcs_info:git:*' formats '%F{cyan}(%b)'
 setopt PROMPT_SUBST
 PROMPT='${PWD/#$HOME/~} ${vcs_info_msg_0_} '
 
@@ -52,8 +45,8 @@ source <(fzf --zsh)
 # Atuin
 eval "$(atuin init zsh)"
 
-# Dart CLI Completion
-[[ -f /Users/venobi/.dart-cli-completion/zsh-config.zsh ]] && . /Users/venobi/.dart-cli-completion/zsh-config.zsh || true
+# --- Dart CLI Completion ---
+[[ -f "$HOME/.dart-cli-completion/zsh-config.zsh" ]] && source "$HOME/.dart-cli-completion/zsh-config.zsh"
 
 # =============================================================================
 # DATABASE TOOLS
