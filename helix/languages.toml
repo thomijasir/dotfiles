@@ -11,6 +11,10 @@ command = "vscode-eslint-language-server"
 args = ["--stdio"]
 except-features = ["format"]
 
+[language-server.emmet]
+command = "emmet-ls"
+args = [ "--stdio" ]
+
 [language-server.cspell]
 command = "cspell-lsp"
 args = ["--stdio"]
@@ -65,7 +69,7 @@ auto-format = true
 
 [[language]]
 name = "tsx"
-language-servers = ["typescript-language-server", "eslint", "cspell"]
+language-servers = ["typescript-language-server", "eslint", "cspell", "emmet"]
 formatter = { command = "prettier", args = ["--parser", "typescript"] }
 auto-format = true
 # formatter = { command = "dprint", args = ["fmt", "--stdin", "tsx"] }
@@ -97,7 +101,7 @@ auto-format = true
 
 [[language]]
 name = "jsx"
-language-servers = ["typescript-language-server", "eslint", "cspell"]
+language-servers = ["typescript-language-server", "eslint", "cspell", "emmet"]
 formatter = { command = "prettier", args = ["--parser", "babel"] }
 auto-format = true
 # formatter = { command = "dprint", args = ["fmt", "--stdin", "jsx"] }

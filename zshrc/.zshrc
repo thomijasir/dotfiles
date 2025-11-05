@@ -78,6 +78,8 @@ alias gp='git push'                                     # Git Push
 alias gs='git status'                                   # Git Status
 alias gc='f() { git commit -m "$1"; }; f'
 alias gb='f() { git checkout -b "$1"; }; f'
+alias sr='f() { ~/Workspace/dotfiles/scripts/replace_str.sh "$1"; }; f'
+alias sf='f() { ~/Workspace/dotfiles/scripts/replace_file.sh "$1"; }; f'
 alias ngrok="$HOME/.ngrok" # add ngrok
 alias cleadNODE="find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' \;"
 alias cleanupDS="find . -type f -name '*.DS_Store' -ls -delete" # Auto Clean DS
@@ -157,3 +159,10 @@ eval "$(zoxide init zsh)"
 # Ruby
 # export PATH="$HOME/.rbenv/bin:$PATH"
 # eval "$(rbenv init -)"
+function y() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+  yazi "$@" --cwd-file="$tmp"
+  IFS= read -r -d '' cwd <"$tmp"
+  [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+  rm -f -- "$tmp"
+}

@@ -58,7 +58,7 @@ brew install openjdk@17 yazi ffmpeg sevenzip jq poppler fd ripgrep fzf zoxide im
 brew install lazygit lazydocker
 
 # Instal LSP
-npm install -g typescript-language-server typescript vscode-langservers-extracted emmet-ls prettier @postgrestools/postgrestools sql-formatter bash-language-server mdts
+npm install -g typescript-language-server typescript vscode-langservers-extracted emmet-ls prettier @postgrestools/postgrestools sql-formatter bash-language-server mdts @vlabo/cspell-lsp
 
 ## Installing formatters
 npm install -g prettier stylua isort black pylint eslint_d

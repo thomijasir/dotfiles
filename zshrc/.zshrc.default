@@ -103,6 +103,10 @@ alias temp='nvim ~/temp.md'
 alias lg="lazygit"
 alias mdts="npx mdts . --silent"
 
+# --- Replace Script ---
+alias sr='f() { ~/Workspace/dotfiles/scripts/replace_str.sh "$1"; }; f'
+alias sf='f() { ~/Workspace/dotfiles/scripts/replace_file.sh "$1"; }; f'
+
 # --- Git Shortcuts ---
 alias ga='git add .'                        # Git Add
 alias gf='git fetch && git pull'            # Git Fetch And Pull
