@@ -57,6 +57,10 @@ brew install luarocks fish tectonic ast-grep wget mmdbctl
 brew install openjdk@17 yazi ffmpeg sevenzip jq poppler fd ripgrep fzf zoxide imagemagick bat
 brew install lazygit lazydocker
 
+# Code Spell
+# https://github.com/blopker/codebook
+brew install codebook-lsp
+
 # Instal LSP
 npm install -g typescript-language-server typescript vscode-langservers-extracted emmet-ls prettier @postgrestools/postgrestools sql-formatter bash-language-server mdts @vlabo/cspell-lsp
 
