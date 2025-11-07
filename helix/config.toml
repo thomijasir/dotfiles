@@ -81,8 +81,8 @@ skip-levels = 1
 # ]
 
 # Jump between paragraph
-"}" = "goto_next_paragraph"
-"{" = "goto_prev_paragraph"
+"G" = "goto_next_paragraph"
+"H" = "goto_prev_paragraph"
 
 # Common control
 # Remap original CTRL+s Save the current selection to the jumplist to format and Save files 
@@ -117,8 +117,8 @@ skip-levels = 1
 # Buffer Line
 # Remap original key from swap window left righ to change buffer prev and next
 # to access swap still available on window mode (Ctrl+w)
-"G" = ":bprev"
-"H" = ":bnext"
+"{" = ":bprev"
+"}" = ":bnext"
 # tab = ":bnext"
 # S-tab = ":bprev"
 

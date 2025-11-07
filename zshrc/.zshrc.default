@@ -114,6 +114,11 @@ alias gp='git push'                         # Git Push
 alias gs='git status'                       # Git Status
 alias gc='f() { git commit -m "$1"; }; f'   # Git Commit with message
 alias gb='f() { git checkout -b "$1"; }; f' # Git create new branch
+alias gdb='f() { ~/Workspace/dotfiles/scripts/git_delete_branch.sh "$1"; }; f'
+
+# --- Open Files Script ---
+alias hzo='~/Workspace/dotfiles/scripts/helix_zoxide_search_open.sh'
+alias fman="compgen -c | fzf | xargs man"
 
 # --- Configuration Files ---
 alias nvim_config='hx ~/.config/nvim'
