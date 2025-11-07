@@ -1,5 +1,7 @@
 theme = "sonokai_ips"
 
+# --- EDITOR CONFIG ---
+
 [editor]
 scrolloff = 10
 color-modes = true
@@ -58,7 +60,8 @@ skip-levels = 1
 
 [keys.normal]
 # Common
-"esc" = ["collapse_selection", "normal_mode"]
+# "esc" = ["collapse_selection", "normal_mode"]
+"esc" = ["collapse_selection","keep_primary_selection"]
 # "w" = ["move_next_word_start", "select_mode"]
 # Jump between selected word next and prev
 # for * (Star key) remapped from search_selection_detect_word_boundaries to automatic select and go to next search

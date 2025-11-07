@@ -55,16 +55,18 @@ export PATH="$PATH:$HOME/.rvm/bin"
 # =============================================================================
 
 # --- Android ---
-# export ANDROID_HOME=$HOME/Library/Android/sdk
-# export PATH=$PATH:$ANDROID_HOME/emulator
-# export PATH=$PATH:$ANDROID_HOME/platform-tools
-# export PATH=$PATH:$ANDROID_HOME/tools
-# export PATH=$PATH:$ANDROID_HOME/tools/bin
-# export NDK_HOME="$ANDROID_HOME/ndk/$(ls -1 $ANDROID_HOME/ndk)"
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export NDK_HOME="$ANDROID_HOME/ndk/$(ls -1 $ANDROID_HOME/ndk)"
 
 # --- Flutter ---
-# export PATH="$PATH:`pwd`/flutter/bin"
+# export PATH="$PATH:$(pwd)/flutter/bin"
 # export PATH=$HOME/.gem/bin:$PATH
+# --- Flutter Version Manager
+# export PATH="$HOME/.fvm_flutter/bin:$PATH"
 
 # EDITORS & TOOLS
 # Default Terminal editor (helix or nvim)
@@ -74,7 +76,6 @@ export EDITOR=/opt/homebrew/bin/hx
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 # Windsurf (Added by Windsurf)
 export PATH="$HOME/.codeium/windsurf/bin:$PATH"
-
 
 # Script Action alias
 

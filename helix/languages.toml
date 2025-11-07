@@ -1,6 +1,4 @@
-# ============================================
-# Language Server Definitions
-# ============================================
+# --- Language Server Definitions ---
 
 [language-server.biome]
 command = "biome"
@@ -27,9 +25,21 @@ args = ["--stdio"]
 command = "postgrestools"
 args = ["lsp-proxy"]
 
-# ============================================
-# Language Configurations
-# ============================================
+[language-server.dart-ls]
+command = "fvm"
+args = ["dart", "language-server"]
+
+# --- Language Configurations ---
+
+[[language]]
+name = "dart"
+language-servers = ["dart-ls", "cspell"]
+formatter = { command = "fvm", args = ["dart", "format", "-l", "120"] }
+scope = "source.dart"
+file-types = ["dart"]
+roots = ["pubspec.yaml"]
+auto-format = true
+
 
 [[language]]
 name = "rust"

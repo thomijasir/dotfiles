@@ -17,8 +17,8 @@ HISTSIZE=5000
 SAVEHIST=5000
 
 setopt share_history append_history inc_append_history \
-       hist_expire_dups_first hist_ignore_dups \
-       hist_reduce_blanks hist_verify extended_history
+  hist_expire_dups_first hist_ignore_dups \
+  hist_reduce_blanks hist_verify extended_history
 
 # ========================
 # PROMPT CONFIGURATION
@@ -131,6 +131,10 @@ alias iosUp='open -a Simulator'                # Open Simulator
 #alias py='python3'     # Python Alias
 #alias python='python3' # Python load
 #alias pip='pip3'       # Python pip
+
+# -- Dart & Flutter
+alias dart='fvm dart'
+alias flutter='fvm flutter'
 
 # --- Network Tools ---
 alias ngrok="$HOME/.ngrok" # add ngrok

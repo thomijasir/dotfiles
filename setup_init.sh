@@ -54,7 +54,7 @@ brew install zsh-autosuggestions zsh-syntax-highlighting
 
 # CLI tools
 brew install luarocks fish tectonic ast-grep wget mmdbctl
-brew install openjdk@17 yazi ffmpeg sevenzip jq poppler fd ripgrep fzf zoxide imagemagick
+brew install openjdk@17 yazi ffmpeg sevenzip jq poppler fd ripgrep fzf zoxide imagemagick bat
 brew install lazygit lazydocker
 
 # Instal LSP
