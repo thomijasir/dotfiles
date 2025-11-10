@@ -54,6 +54,7 @@ auto-format = true
 [[language]]
 name = "markdown"
 language-servers = ["marksman", "harper-ls"]
+formatter = { command = "dprint", args = ["fmt", "--stdin", "md"]}
 auto-format = true
 
 # [[language]]

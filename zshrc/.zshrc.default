@@ -101,6 +101,7 @@ alias temp='nvim ~/temp.md'
 
 # --- Development Tools ---
 alias lg="lazygit"
+alias ld="lazydocker"
 alias mdts="npx mdts . --silent"
 
 # --- Replace Script ---
