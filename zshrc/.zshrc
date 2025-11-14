@@ -79,6 +79,9 @@ alias gs='git status'                                   # Git Status
 alias gc='f() { git commit -m "$1"; }; f'
 alias gb='f() { git checkout -b "$1"; }; f'
 alias gdb='f() { ~/Workspace/dotfiles/scripts/git_delete_branch.sh "$1"; }; f'
+alias hx_wezterm='f() { ~/Workspace/dotfiles/helix/scripts/hx_wezterm.sh "$1"; }; f'
+alias zipdist='f() { ~/Workspace/dotfiles/scripts/zipdist.sh "$1"; }; f'
+
 alias sr='f() { ~/Workspace/dotfiles/scripts/replace_str.sh "$1"; }; f'
 alias sf='f() { ~/Workspace/dotfiles/scripts/replace_file.sh "$1"; }; f'
 alias ngrok="$HOME/.ngrok" # add ngrok
@@ -87,6 +90,9 @@ alias cleanupDS="find . -type f -name '*.DS_Store' -ls -delete" # Auto Clean DS
 
 alias hzo='~/Workspace/dotfiles/scripts/helix_zoxide_search_open.sh'
 alias fman="compgen -c | fzf | xargs man"
+
+# Development Tools Scripts
+alias react_tools='deno run --allow-read --allow-write ~/Workspace/dotfiles/scripts/react_tools.ts'
 
 # Alias tools
 alias vim='nvim'

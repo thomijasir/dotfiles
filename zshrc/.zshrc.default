@@ -67,6 +67,9 @@ source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
 
+# -- Development Tools Scripts
+alias react_tools='deno run --allow-read --allow-write ~/Workspace/dotfiles/scripts/react_tools.ts'
+
 # --- MacOS Process ---
 alias appkill='f() {
   local pid

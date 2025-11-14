@@ -27,10 +27,11 @@ if [ -z "${RAW_QUERY}" ]; then
   exit 0
 fi
 
-# Determine literal vs regex
+IS_REGEX=0
 QUERY=""
 RG_FLAGS=(-n -H --no-heading --color=never -S)
 if [[ "${RAW_QUERY}" == r=* ]]; then
+  IS_REGEX=1
   QUERY="${RAW_QUERY#r=}"
 else
   QUERY="${RAW_QUERY}"
@@ -78,19 +79,53 @@ echo
 echo "Total matches selected: $COUNT_MATCHES"
 echo
 
+# --- sed helpers --------------------------------------------------------------
+# Use a rarely-occurring delimiter to avoid clashes (Unit Separator)
+DELIM=$'\x1f'
+
+# Detect ERE flag for sed (GNU vs BSD/macOS)
+if sed --version >/dev/null 2>&1; then
+  SED_ERE_FLAG=(-E) # Modern GNU sed supports -E
+else
+  SED_ERE_FLAG=(-E) # BSD/macOS sed uses -E
+fi
+
+# Escape only the delimiter inside a string
+escape_delim_only() {
+  printf '%s' "$1" | sed -e "s/${DELIM}/\\${DELIM}/g"
+}
+
+# Escape regex metacharacters for literal matching (BRE/ERE-safe)
+escape_regex_literal() {
+  # Escape: ] [ \ . ^ $ * + ? ( ) { } | and delimiter
+  printf '%s' "$1" | sed -e 's/[][\/.^$*+?(){}|]/\\&/g' -e "s/${DELIM}/\\${DELIM}/g"
+}
+
+# Escape replacement (keep backslashes for regex backrefs like \1)
+# Escape only & (the whole-match token) and the delimiter
+escape_replacement() {
+  printf '%s' "$1" | sed -e 's/[&]/\\&/g' -e "s/${DELIM}/\\${DELIM}/g"
+}
+
 # --- replacement input --------------------------------------------------------
 echo -e "Replacement string (only matched portion will be replaced):"
 read -r -p "> " REPLACEMENT
-ESCAPED_REPL=$(printf '%s' "$REPLACEMENT" | sed -e 's/[\/&]/\\&/g' -e 's/\\/\\\\/g')
+
+# Prepare sed components consistently
+if [ "$IS_REGEX" -eq 1 ]; then
+  SED_PATTERN="$(escape_delim_only "$QUERY")" # keep regex features
+else
+  SED_PATTERN="$(escape_regex_literal "$QUERY")" # make it literal
+fi
+SED_REPL="$(escape_replacement "$REPLACEMENT")"
 
 # --- dry-run preview ----------------------------------------------------------
-
 echo
 echo -e "\033[1;36m🔍 Dry-run preview of replacements:\033[0m"
 printf '%s\n' "$SELECTED" | while IFS=: read -r FILE LINE; do
   if [[ "$LINE" =~ ^[0-9]+$ ]]; then
     ORIGINAL=$(sed -n "${LINE}p" "$FILE")
-    MODIFIED=$(echo "$ORIGINAL" | sed "s/${QUERY}/${ESCAPED_REPL}/g")
+    MODIFIED=$(printf '%s' "$ORIGINAL" | sed "${SED_ERE_FLAG[@]}" -e "s${DELIM}${SED_PATTERN}${DELIM}${SED_REPL}${DELIM}g")
 
     # Colors
     FILE_COLOR="\033[1;34m"     # Blue for file name
@@ -124,7 +159,7 @@ echo -e "\033[1;36mApplying replacements...\033[0m"
 i=0
 printf '%s\n' "$SELECTED" | while IFS=: read -r FILE LINE; do
   if [[ "$LINE" =~ ^[0-9]+$ ]]; then
-    sed "${SED_INPLACE[@]}" "${LINE}s/${QUERY}/${ESCAPED_REPL}/g" "$FILE"
+    sed "${SED_INPLACE[@]}" "${SED_ERE_FLAG[@]}" -e "${LINE}s${DELIM}${SED_PATTERN}${DELIM}${SED_REPL}${DELIM}g" "$FILE"
     i=$((i + 1))
     echo -ne "\rProgress: $i/$COUNT_MATCHES replaced..."
   fi
