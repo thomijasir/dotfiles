@@ -1,0 +1,9 @@
+verbs: [
+    {
+        invocation: edit
+        key: enter
+        execution: "hx-open.sh {file}"
+        leave_broot: false
+        apply_to: file
+    }
+]

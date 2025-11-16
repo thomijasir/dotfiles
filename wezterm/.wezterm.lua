@@ -9,6 +9,25 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
   return string.format(" %d: %s ", tab.tab_index + 1, dir)
 end)
 
+local function switch_pane_and_reload(direction)
+  return wezterm.action_callback(function(window, pane)
+    -- Switch to the target pane
+    window:perform_action(act.ActivatePaneDirection(direction), pane)
+    
+    -- Small delay to ensure pane is active
+    wezterm.sleep_ms(50)
+    
+    -- Get the newly active pane
+    local new_pane = window:active_pane()
+    local process = new_pane:get_foreground_process_name()
+    
+    -- If it's Helix, reload
+    if process and process:match('hx$') then
+      new_pane:send_text(':reload-all\r')
+    end
+  end)
+end
+
 -- This will hold the configuration.
 local config = wezterm.config_builder()
 
@@ -120,19 +139,19 @@ config.keys = {
 	},
 	{
 		mods = "CMD", key = "h",
-		action = act.ActivatePaneDirection("Left"),
+		action = switch_pane_and_reload("Left"),
 	},
 	{
 		mods = "CMD", key = "j",
-		action = act.ActivatePaneDirection("Down"),
+		action = switch_pane_and_reload("Down"),
 	},
 	{
 		mods = "CMD", key = "k",
-		action = act.ActivatePaneDirection("Up"),
+		action = switch_pane_and_reload("Up"),
 	},
 	{
 		mods = "CMD", key = "l",
-		action = act.ActivatePaneDirection("Right"),
+		action = switch_pane_and_reload("Right"),
 	},
 	-- Tabs Control
 	{
@@ -167,6 +186,22 @@ for i = 1, 9 do
     action = act.ActivateTab(i - 1),
   })
 end
+
+-- HELIX RELOAD ON OPEN TAB
+
+wezterm.on('reload-helix', function(window, pane)
+  local top_process = basename(pane:get_foreground_process_name())
+  if top_process == 'hx' then
+    local bottom_pane = pane:tab():get_pane_direction('Down')
+    if bottom_pane ~= nil then
+      local bottom_process = basename(bottom_pane:get_foreground_process_name())
+      if bottom_process == 'lazygit' then
+        local action = wezterm.action.SendString(':reload-all\r\n')
+        window:perform_action(action, pane);
+      end
+    end
+  end
+end)
 
 -- ============================================
 -- HYPERLINKS CONFIGURATION

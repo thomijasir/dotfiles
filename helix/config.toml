@@ -90,7 +90,6 @@ skip-levels = 1
 "C-k" = "jump_view_up"
 "C-h" = "jump_view_left"
 "C-l" = "jump_view_right"
-"C-g" = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
 "C-r" = [":rla",":echo 'Reload and discrad all buffer from source ✅'"]
 
 # Open Current Buffer Project
@@ -177,6 +176,8 @@ skip-levels = 1
 [keys.insert]
 "esc" = ["collapse_selection", "keep_primary_selection", "normal_mode"]
 "C-s" = [":write", "normal_mode"]
+"C-t" = "indent"
+"C-d" = "unindent"
 
 [keys.normal.space]
 "space" = "file_picker_in_current_buffer_directory"
@@ -186,25 +187,23 @@ skip-levels = 1
 "q" = "wclose"
 "," = "buffer_picker"
 
-# ~/.config/helix/config.toml
-[keys.normal.C-y]
-# Open the file(s) in the current window
-y = ":sh zellij run -n Yazi -c -f -x 10%% -y 10%% --width 80%% --height 80%% -- bash ~/.config/helix/scripts/yazi-picker.sh open %{buffer_name}"
-# Open the file(s) in a vertical split
-v = ":sh zellij run -n Yazi -c -f -x 10%% -y 10%% --width 80%% --height 80%% -- bash ~/.config/helix/scripts/yazi-picker.sh vsplit %{buffer_name}"
-# Open the file(s) in a horizontal split
-h = ":sh zellij run -n Yazi -c -f -x 10%% -y 10%% --width 80%% --height 80%% -- bash ~/.config/helix/scripts/yazi-picker.sh hsplit %{buffer_name}"
-
-# Central tools that might you need
-[keys.normal.C-t]
-# Copy current file name
+[keys.normal.";"]
+a = ":sh echo 'ai Assistance'; wezterm cli split-pane --right --percent 40 --cwd $PWD -- zsh -i -c -lc 'gemini; exec zsh'"
+b = ":sh hx-wezterm.sh blame"
+e = ":pipe-to hx-wezterm.sh explorer"
+c = ":pipe-to echo 'Open vscode!';code ."
+d = [":new", ":insert-output lazydocker", ":buffer-close!", ":redraw"]
+q = [":new", ":insert-output lazysql", ":buffer-close!", ":redraw"]
+# g = ":sh hx-wezterm.sh lazygit"
+g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
+h = ":sh hx-wezterm.sh howdoi"
+# r = ":sh hx-wezterm.sh run"
 f = ":sh echo 'Filename copied!';basename '%{buffer_name}' | pbcopy"
 F = ":sh echo 'Absolute path copied!';echo -n '%{buffer_name}' | pbcopy"
-t = ":sh echo 'Open terminal horizontal';wezterm cli split-pane --bottom --percent 25 --cwd $PWD"
-T = ":sh echo 'Open terminal vertical';wezterm cli split-pane --right --percent 35 --cwd $PWD"
-c = ":sh echo 'Open vscode!';code ."
-s = ":sh echo 'Replace string';wezterm cli split-pane --right --percent 35 --cwd $PWD -- zsh -i -c -lc 'sr; exec zsh'"
-r = ":sh echo 'Replace folder and filename';wezterm cli split-pane --right --percent 35 --cwd $PWD -- zsh -i -c -lc 'sf; exec zsh'"
+t = ":pipe-to echo 'Open terminal horizontal';wezterm cli split-pane --bottom --percent 25 --cwd $PWD"
+T = ":pipe-to echo 'Open terminal vertical';wezterm cli split-pane --right --percent 35 --cwd $PWD"
+s = ":pipe-to echo 'Replace string';wezterm cli split-pane --right --percent 35 --cwd $PWD -- zsh -i -c -lc 'sr; exec zsh'"
+r = ":pipe-to echo 'Replace folder and filename';wezterm cli split-pane --right --percent 35 --cwd $PWD -- zsh -i -c -lc 'sf; exec zsh'"
 
 # Buffer Control
 [keys.normal.space.b]

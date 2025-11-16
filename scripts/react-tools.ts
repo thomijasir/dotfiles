@@ -207,8 +207,10 @@ function componentTemplate(
     ? `<p>Hello, {state.name}</p>`
     : `<p>Hello, ${namePascal}</p>`;
 
+  const addProps = withInterface ? "_props" : "";
+
   return `${imports}
-export const ${namePascal}: ${signature} = (_props) => {
+export const ${namePascal}: ${signature} = (${addProps}) => {
 ${controllerSetup}  return (
     <div>
       ${helloLine}
@@ -225,7 +227,7 @@ function interfaceTemplate(namePascal: string): string {
 
 function testTemplate(namePascal: string, suffix: string): string {
   return `import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { ${namePascal} } from "./${namePascal}.${suffix}";
 
 describe("${namePascal}", () => {
@@ -262,9 +264,7 @@ function indexTemplate(
 ): string {
   const lines: string[] = [];
   // Re-export default & named component
-  lines.push(
-    `export { ${namePascal} as default, ${namePascal} } from "./${namePascal}.${suffix}";`,
-  );
+  lines.push(`export { ${namePascal} } from "./${namePascal}.${suffix}";`);
   if (withInterface) {
     lines.push(
       `export type { ${namePascal}Props } from "./${namePascal}.interface";`,

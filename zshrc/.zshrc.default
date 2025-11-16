@@ -59,6 +59,9 @@ eval "$(atuin init zsh)"
 # PLUGIN CONFIGURATION
 # =============================================================================
 
+# Broot File Tree
+source $HOME/.config/broot/launcher/bash/br
+
 # Syntax auto-completion and highlighting
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -68,7 +71,7 @@ bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
 
 # -- Development Tools Scripts
-alias react_tools='deno run --allow-read --allow-write ~/Workspace/dotfiles/scripts/react_tools.ts'
+alias react_tools='deno run --allow-read --allow-write $DOTFILES_ROOT/scripts/react-tools.ts'
 
 # --- MacOS Process ---
 alias appkill='f() {
@@ -108,8 +111,8 @@ alias ld="lazydocker"
 alias mdts="npx mdts . --silent"
 
 # --- Replace Script ---
-alias sr='f() { ~/Workspace/dotfiles/scripts/replace_str.sh "$1"; }; f'
-alias sf='f() { ~/Workspace/dotfiles/scripts/replace_file.sh "$1"; }; f'
+alias sr='replace-str.sh'
+alias sf='replace-file.sh'
 
 # --- Git Shortcuts ---
 alias ga='git add .'                        # Git Add
@@ -118,10 +121,10 @@ alias gp='git push'                         # Git Push
 alias gs='git status'                       # Git Status
 alias gc='f() { git commit -m "$1"; }; f'   # Git Commit with message
 alias gb='f() { git checkout -b "$1"; }; f' # Git create new branch
-alias gdb='f() { ~/Workspace/dotfiles/scripts/git_delete_branch.sh "$1"; }; f'
+alias gdb='git-delete-branch.sh'
 
 # --- Open Files Script ---
-alias hzo='~/Workspace/dotfiles/scripts/helix_zoxide_search_open.sh'
+alias hzo='hx-zoxide.sh'
 alias fman="compgen -c | fzf | xargs man"
 
 # --- Configuration Files ---
@@ -188,6 +191,11 @@ myip() {
 # Get local IP address
 localip() {
   ipconfig getifaddr en0 || ipconfig getifaddr en1
+}
+
+# make and crete file
+cf() {
+  mkdir -p "$(dirname "$1")" && touch "$1"
 }
 
 # ZSH Configuration commad

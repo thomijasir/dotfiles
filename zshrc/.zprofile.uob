@@ -3,6 +3,17 @@
 # PATH & LIBRARY EXPORTS
 # ==========================
 
+# --- Variable Setup
+export DOTFILES_ROOT="${HOME}/Workspace/dotfiles"
+
+# Custon Scripts dot files
+export PATH="$HOME/$DOTFILES_ROOT/scripts:$PATH"
+
+# Homebrew Init
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
 # Library paths
 export LIBRARY_PATH="/opt/homebrew/lib:$LIBRARY_PATH"
 export DYLD_LIBRARY_PATH="/opt/homebrew/lib:$DYLD_LIBRARY_PATH"
@@ -17,10 +28,6 @@ export PATH="/usr/local/git/bin:/sw/bin/:/usr/local/bin:/usr/local/:/usr/local/s
 # --- Java ---
 export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
 export PATH="$JAVA_HOME/bin:$PATH"
-# Alternative Java configurations (commented out)
-#export JAVA_HOME=$(/usr/libexec/java_home)
-#export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
-#export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
 
 # --- Node Version Manager ---
 # https://github.com/nvm-sh/nvm
@@ -36,9 +43,6 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # --- Ruby (RVM) ---
 export PATH="$PATH:$HOME/.rvm/bin"
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
-# Alternative Ruby configuration (commented out)
-# export PATH="$HOME/.rbenv/bin:$PATH"
-# eval "$(rbenv init -)"
 
 # --- Python ---
 # export PATH="$HOME/.pyenv/versions/3.9.6/bin:$PATH"
@@ -51,12 +55,12 @@ export PATH="$PATH:$HOME/.rvm/bin"
 # =============================================================================
 
 # --- Android ---
-# export ANDROID_HOME=$HOME/Library/Android/sdk
-# export PATH=$PATH:$ANDROID_HOME/emulator
-# export PATH=$PATH:$ANDROID_HOME/platform-tools
-# export PATH=$PATH:$ANDROID_HOME/tools
-# export PATH=$PATH:$ANDROID_HOME/tools/bin
-# export NDK_HOME="$ANDROID_HOME/ndk/$(ls -1 $ANDROID_HOME/ndk)"
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export NDK_HOME="$ANDROID_HOME/ndk/$(ls -1 $ANDROID_HOME/ndk)"
 
 # --- Flutter ---
 # export PATH="$PATH:`pwd`/flutter/bin"

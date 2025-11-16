@@ -44,7 +44,6 @@ brew install --cask wezterm
 brew install --cask font-jetbrains-mono-nerd-font
 brew install --cask font-fira-code-nerd-font
 brew install font-symbols-only-nerd-font
-brew install eza zoxide
 
 # Grammar and language server check
 brew install harper shfmt yaml-language-server dprint
@@ -53,23 +52,25 @@ brew install harper shfmt yaml-language-server dprint
 brew install zsh-autosuggestions zsh-syntax-highlighting
 
 # CLI tools
-brew install luarocks fish tectonic ast-grep wget mmdbctl
-brew install openjdk@17 yazi ffmpeg sevenzip jq poppler fd ripgrep fzf zoxide imagemagick bat
-brew install lazygit lazydocker
+brew install broot luarocks fish tectonic ast-grep wget mmdbctl
+brew install openjdk@17 yazi ffmpeg sevenzip jq yq poppler fd ripgrep fzf zoxide imagemagick bat
+brew install lazygit lazydocker lazysql tig
+brew install howdoi
+brew install eza zoxide
 
 # Code Spell
 # https://github.com/blopker/codebook
 brew install codebook-lsp
 
 # Instal LSP
-npm install -g typescript-language-server typescript vscode-langservers-extracted emmet-ls prettier @postgrestools/postgrestools sql-formatter bash-language-server mdts @vlabo/cspell-lsp
+npm install -g typescript-language-server typescript vscode-langservers-extracted emmet-ls prettier @postgrestools/postgrestools sql-formatter bash-language-server mdts @vlabo/cspell-lsp @tailwindcss/language-server
 
 ## Installing formatters
 npm install -g prettier stylua isort black pylint eslint_d
 
 # # optional setup
-echo "source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" >>~/.zshrc
-echo "source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >>~/.zshrc
+# echo "source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" >>~/.zshrc
+# echo "source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >>~/.zshrc
 
 # dprint formatter
 dprint init -c ~/.dprint.json

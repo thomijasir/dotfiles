@@ -33,6 +33,9 @@ export PATH="/usr/local/git/bin:/sw/bin/:/usr/local/bin:/usr/local/:/usr/local/s
 # export EDITOR=/opt/homebrew/bin/nvim
 export EDITOR=/opt/homebrew/bin/hx
 
+# Custon Scripts dot files
+export PATH="$HOME/Workspace/dotfiles/scripts:$PATH"
+
 # BUN
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"

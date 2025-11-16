@@ -9,7 +9,13 @@ hx_pane_id=$(echo $WEZTERM_PANE)
 send_to_hx_pane="wezterm cli send-text --pane-id $hx_pane_id --no-paste"
 switch_to_hx_pane_and_zoom="if [ \$status = 0 ]; wezterm cli activate-pane-direction up; wezterm cli zoom-pane --pane-id $hx_pane_id --zoom; end"
 
-status_line=$(wezterm cli get-text | rg -e "(?:NORMAL|INSERT|SELECT)\s+[\x{2800}-\x{28FF}]*\s+(\S*)\s[^│]* (\d+):*.*" -o --replace '$1 $2')
+status_line=$(wezterm cli get-text | rg -e "(?:N|I|S)\s+[\x{2800}-\x{28FF}]*\s+(\S*)\s[^│]* (\d+):*.*" -o --replace '$1 $2')
+
+# status_line=$(
+#   wezterm cli get-text |
+#     rg -o -e '(?:N|I|S)\s+[\x{2800}-\x{28FF}]*\s+(\S+)[^│]*\s(\d+):\d+' -r '$1 $2' -m1
+# )
+
 filename=$(echo $status_line | awk '{ print $1}')
 line_number=$(echo $status_line | awk '{ print $2}')
 
@@ -65,8 +71,11 @@ case "$1" in
     ;;
   "fzf")
     split_pane_down
-    echo "cd $pwd; hx-fzf.sh \$(rg --line-number --column --no-heading --smart-case . | fzf --delimiter : --preview 'bat --style=full --color=always --highlight-line {2} {1}' --preview-window '~3,+{2}+3/2' | awk '{ print \$1 }' | cut -d: -f1,2,3)" | $send_to_bottom_pane
+    echo "hx-fzf.sh \$(rg --line-number --column --no-heading --smart-case . | fzf --delimiter : --preview 'bat --style=full --color=always --highlight-line {2} {1}' --preview-window '~3,+{2}+3/2' | awk '{ print \$1 }' | cut -d: -f1,2,3)" | $send_to_bottom_pane
     ;;
+    # split_pane_down
+    # echo "cd $pwd; hx-fzf.sh \$(rg --line-number --column --no-heading --smart-case . | fzf --delimiter : --preview 'bat --style=full --color=always --highlight-line {2} {1}' --preview-window '~3,+{2}+3/2' | awk '{ print \$1 }' | cut -d: -f1,2,3)" | $send_to_bottom_pane
+    # ;;
   "howdoi")
     split_pane_down
     echo "howdoi -c $(pbpaste)" | $send_to_bottom_pane

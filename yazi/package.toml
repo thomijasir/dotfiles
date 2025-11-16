@@ -18,5 +18,10 @@ use = "yazi-rs/plugins:chmod"
 rev = "9a52857"
 hash = "8ad3e90b079190b4905f24a44f4ca06b"
 
+[[plugin.deps]]
+use = "boydaihungst/restore"
+rev = "2161735"
+hash = "901741afba1979739b4650324265162e"
+
 [flavor]
 deps = []
