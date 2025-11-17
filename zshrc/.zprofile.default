@@ -7,7 +7,7 @@
 export DOTFILES_ROOT="${HOME}/Workspace/dotfiles"
 
 # Custon Scripts dot files
-export PATH="$HOME/$DOTFILES_ROOT/scripts:$PATH"
+export PATH="$DOTFILES_ROOT/scripts:$PATH"
 
 # Homebrew Init
 if [[ -x /opt/homebrew/bin/brew ]]; then

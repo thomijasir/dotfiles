@@ -187,6 +187,12 @@ skip-levels = 1
 "q" = "wclose"
 "," = "buffer_picker"
 
+# --- Snippet Tools ---
+[keys.normal."'"]
+"r" = ":append-output hx-snippet.sh rct"
+"c" = ":append-output hx-snippet.sh clg"
+
+# --- Development Tools ---
 [keys.normal.";"]
 a = ":sh echo 'ai Assistance'; wezterm cli split-pane --right --percent 40 --cwd $PWD -- zsh -i -c -lc 'gemini; exec zsh'"
 b = ":sh hx-wezterm.sh blame"
