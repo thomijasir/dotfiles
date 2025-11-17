@@ -7,7 +7,8 @@ DOTFILES_DIR=~/Workspace/dotfiles
 defaults write com.apple.finder AppleShowAllFiles YES
 
 mkdir -p ~/.config
-ln -sf $DOTFILES_DIR/zsh/zshrc ~/.zshrc
+ln -sf $DOTFILES_DIR/zshrc/.zprofile.default ~/.zprofile
+ln -sf $DOTFILES_DIR/zshrc/.zshrc.default ~/.zshrc
 ln -sf $DOTFILES_DIR/wezterm/.wezterm.lua ~/.wezterm.lua
 # use this for default custom nvim
 # ln -s $DOTFILES_DIR/nvim ~/.config/nvim
