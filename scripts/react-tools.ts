@@ -89,7 +89,7 @@ ${cyan("⚙️ Defaults & behavior")}
   • Overwrite on conflicts: ${green("y")}es / ${red("n")}o / ${b("a")}ll / ${b("s")}kip all
 
 ${cyan("🧪 Test prompt options")}
-  • ${green("y")} → create default: ${dim("<Name>.<suffix>.test.ts")}
+  • ${green("y")} → create default: ${dim("<Name>.<suffix>.test.tsx")}
   • ${red("n")} → skip
   • ${b("<custom>")} → create ${dim("<custom>.ts")}
       e.g., input ${b("UserCard.test")} → file ${dim("UserCard.test.ts")}
@@ -294,7 +294,7 @@ function makePlan(
   let testCreate = true;
   let testIsCustom = false;
   let testFileName: string | undefined;
-  const defaultTestBase = `${namePascal}.${suffix}.test.ts`;
+  const defaultTestBase = `${namePascal}.${suffix}.test.tsx`;
   const tAns = (testAnswer || "y").trim().toLowerCase();
 
   if (tAns === "y" || tAns === "yes" || tAns === "") {
