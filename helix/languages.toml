@@ -53,7 +53,6 @@ auto-format = true
 [[language]]
 name = "rust"
 language-servers = ["rust-analyzer", "codebook"]
-roots = ["Cargo.toml", "Cargo.lock"]
 auto-format = true
 
 [[language]]
