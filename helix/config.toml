@@ -198,14 +198,15 @@ skip-levels = 1
 # --- Development Tools ---
 [keys.normal.";"]
 "a" = ":sh echo 'ai Assistance'; wezterm cli split-pane --right --percent 40 --cwd $PWD -- zsh -i -c -lc 'gemini; exec zsh'"
-"b" = ":sh hx-wezterm.sh blame"
+"b" = ":pipe-to hx-wezterm.sh blame %{buffer_name} %{cursor_line}"
 "e" = ":pipe-to hx-wezterm.sh explorer"
 "c" = ":pipe-to echo 'Open vscode!';code ."
-"d" = [":new", ":insert-output lazydocker", ":buffer-close!", ":redraw"]
-"q" = [":new", ":insert-output lazysql", ":buffer-close!", ":redraw"]
-# g = ":sh hx-wezterm.sh lazygit"
-"g" = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
-"h" = ":sh hx-wezterm.sh howdoi"
+# "d" = [":new", ":insert-output lazydocker", ":buffer-close!", ":redraw"]
+# "q" = [":new", ":insert-output lazysql", ":buffer-close!", ":redraw"]
+"g" = ":pipe-to hx-wezterm.sh lazygit"
+"y" = ":pipe-to hx-wezterm.sh yazi %{buffer_name} %{cursor_line}"
+# "g" = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
+# "h" = ":sh hx-wezterm.sh howdoi"
 # r = ":sh hx-wezterm.sh run"
 "f" = ":sh echo 'Filename copied!';basename '%{buffer_name}' | pbcopy"
 "F" = ":sh echo 'Absolute path copied!';echo -n '%{buffer_name}' | pbcopy"
@@ -213,8 +214,8 @@ skip-levels = 1
 "o" = ':sh open "$(dirname "%{buffer_name}:-.")"'
 "O" = ":sh open ."
 "v" = ":pipe-to echo 'Open terminal vertical';wezterm cli split-pane --right --percent 35 --cwd $PWD"
-"s" = ":pipe-to echo 'Replace string';wezterm cli split-pane --right --percent 35 --cwd $PWD -- zsh -i -c -lc 'sr; exec zsh'"
-"r" = ":pipe-to echo 'Replace folder and filename';wezterm cli split-pane --right --percent 35 --cwd $PWD -- zsh -i -c -lc 'sf; exec zsh'"
+"s" = ":pipe-to echo 'Replace string';wezterm cli split-pane --top --percent 35 --cwd $PWD -- zsh -i -c -lc 'sr; exec zsh'"
+"r" = ":pipe-to echo 'Replace folder and filename';wezterm cli split-pane --top --percent 35 --cwd $PWD -- zsh -i -c -lc 'sf; exec zsh'"
 
 # Buffer Control
 [keys.normal.space.b]

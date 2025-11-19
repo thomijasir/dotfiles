@@ -1,23 +1,22 @@
 #!/bin/sh
 
 # Original Scripts
-# https://github.com/quantonganh/dotfiles/blob/main/.local/bin/helix-wezterm.sh
+# Author Thomi Jasir (thomijasir@gmail.com)
 
 set -x
 
+command_prompt="$1"
+file_path="$2"
+cursor_line="$3"
 hx_pane_id=$(echo $WEZTERM_PANE)
+pwd=$(PWD)
+basedir=$(dirname "$filename")
+basename=$(basename "$filename")
+basename_without_extension="${basename%.*}"
+extension="${filename##*.}"
+
 send_to_hx_pane="wezterm cli send-text --pane-id $hx_pane_id --no-paste"
 switch_to_hx_pane_and_zoom="if [ \$status = 0 ]; wezterm cli activate-pane-direction up; wezterm cli zoom-pane --pane-id $hx_pane_id --zoom; end"
-
-status_line=$(wezterm cli get-text | rg -e "(?:N|I|S)\s+[\x{2800}-\x{28FF}]*\s+(\S*)\s[^│]* (\d+):*.*" -o --replace '$1 $2')
-
-# status_line=$(
-#   wezterm cli get-text |
-#     rg -o -e '(?:N|I|S)\s+[\x{2800}-\x{28FF}]*\s+(\S+)[^│]*\s(\d+):\d+' -r '$1 $2' -m1
-# )
-
-filename=$(echo $status_line | awk '{ print $1}')
-line_number=$(echo $status_line | awk '{ print $2}')
 
 split_pane_down() {
   bottom_pane_id=$(wezterm cli get-pane-direction down)
@@ -34,16 +33,10 @@ split_pane_down() {
   fi
 }
 
-pwd=$(PWD)
-basedir=$(dirname "$filename")
-basename=$(basename "$filename")
-basename_without_extension="${basename%.*}"
-extension="${filename##*.}"
-
-case "$1" in
+case "$command_prompt" in
   "blame")
     split_pane_down
-    echo "cd $pwd; tig blame $filename +$line_number" | $send_to_bottom_pane
+    echo "tig blame $file_path +$cursor_line; exit" | $send_to_bottom_pane
     ;;
   "check")
     split_pane_down
@@ -53,6 +46,12 @@ case "$1" in
         ;;
     esac
     echo "$run_command" | $send_to_bottom_pane
+    ;;
+  "yazi")
+    split_pane_down
+    run_command='tmp="$(mktemp -t yazi-chooser.XXXXXX)"; yazi "$PWD" --chooser-file="$tmp"; [ -s "$tmp" ] && hx-yazi.sh "$(head -n1 "$tmp")"; rm -rf "$tmp"'
+
+    echo "$run_command; exit" | $send_to_bottom_pane
     ;;
   "explorer")
     wezterm cli activate-pane-direction up
@@ -64,7 +63,7 @@ case "$1" in
 
     left_program=$(wezterm cli list | awk -v pane_id="$left_pane_id" '$3==pane_id { print $6 }')
     if [ "$left_program" != "br" ]; then
-      echo "br" | wezterm cli send-text --pane-id $left_pane_id --no-paste
+      echo "br; exit" | wezterm cli send-text --pane-id $left_pane_id --no-paste
     fi
 
     wezterm cli activate-pane-direction left
@@ -72,13 +71,6 @@ case "$1" in
   "fzf")
     split_pane_down
     echo "hx-fzf.sh \$(rg --line-number --column --no-heading --smart-case . | fzf --delimiter : --preview 'bat --style=full --color=always --highlight-line {2} {1}' --preview-window '~3,+{2}+3/2' | awk '{ print \$1 }' | cut -d: -f1,2,3)" | $send_to_bottom_pane
-    ;;
-    # split_pane_down
-    # echo "cd $pwd; hx-fzf.sh \$(rg --line-number --column --no-heading --smart-case . | fzf --delimiter : --preview 'bat --style=full --color=always --highlight-line {2} {1}' --preview-window '~3,+{2}+3/2' | awk '{ print \$1 }' | cut -d: -f1,2,3)" | $send_to_bottom_pane
-    # ;;
-  "howdoi")
-    split_pane_down
-    echo "howdoi -c $(pbpaste)" | $send_to_bottom_pane
     ;;
   "jq")
     split_pane_down
@@ -90,11 +82,8 @@ case "$1" in
     if [ "$program" = "lazygit" ]; then
       wezterm cli activate-pane-direction down
     else
-      echo "lazygit" | $send_to_bottom_pane
+      echo "lazygit; exit" | $send_to_bottom_pane
     fi
-    ;;
-  "open")
-    gh browse $filename:$line_number
     ;;
   "run")
     split_pane_down
@@ -155,9 +144,5 @@ case "$1" in
         ;;
     esac
     echo "$run_command" | $send_to_bottom_pane
-    ;;
-  "tgpt")
-    split_pane_down
-    echo "tgpt '$(pbpaste)'" | $send_to_bottom_pane
     ;;
 esac
