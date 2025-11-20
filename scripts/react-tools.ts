@@ -76,7 +76,7 @@ ${cyan("🔤 Naming & suffix")}
 ${cyan("📦 Files generated")}
   • <Name>.<suffix>.tsx       ${gray("(React component/layout)")}
   • <Name>.interface.ts       ${gray("(Props interface)")} ${yellow("[optional]")}
-  • <Name>.<suffix>.test.ts   ${gray("(simple render test; no snapshot)")} ${yellow("[optional]")}
+  • <Name>.<suffix>.test.tsx   ${gray("(simple render test; no snapshot)")} ${yellow("[optional]")}
   • <Name>.controller.ts      ${gray("(controller module / hook)")} ${yellow("[optional]")}
   • index.ts                  ${gray("(default export + Props type when available; controller re-export)")} ${green("[always]")}
 
@@ -89,10 +89,10 @@ ${cyan("⚙️ Defaults & behavior")}
   • Overwrite on conflicts: ${green("y")}es / ${red("n")}o / ${b("a")}ll / ${b("s")}kip all
 
 ${cyan("🧪 Test prompt options")}
-  • ${green("y")} → create default: ${dim("<Name>.<suffix>.test.ts")}
+  • ${green("y")} → create default: ${dim("<Name>.<suffix>.test.tsx")}
   • ${red("n")} → skip
   • ${b("<custom>")} → create ${dim("<custom>.ts")}
-      e.g., input ${b("UserCard.test")} → file ${dim("UserCard.test.ts")}
+      e.g., input ${b("UserCard.test")} → file ${dim("UserCard.test.tsx")}
 
 ${cyan("🎮 Controller prompt options")}
   • ${green("y")} → create default: ${dim("<Name>.controller.ts")}
@@ -294,7 +294,7 @@ function makePlan(
   let testCreate = true;
   let testIsCustom = false;
   let testFileName: string | undefined;
-  const defaultTestBase = `${namePascal}.${suffix}.test.ts`;
+  const defaultTestBase = `${namePascal}.${suffix}.test.tsx`;
   const tAns = (testAnswer || "y").trim().toLowerCase();
 
   if (tAns === "y" || tAns === "yes" || tAns === "") {
@@ -467,7 +467,7 @@ async function runInteractive(): Promise<void> {
   );
 
   // 4) Test file (y/n/custom; default y)
-  const testHelp = `${green("y")}=default ${dim("<Name>.<suffix>.test.ts")}  ${red("n")}=skip  ${b("<custom>")}=basename → ${dim("<custom>.ts")}`;
+  const testHelp = `${green("y")}=default ${dim("<Name>.<suffix>.test.tsx")}  ${red("n")}=skip  ${b("<custom>")}=basename → ${dim("<custom>.ts")}`;
   const testAnswer = promptMultiline(
     `${b("🧪 Test file?")} ${gray(`(${testHelp})`)}`,
     false,
