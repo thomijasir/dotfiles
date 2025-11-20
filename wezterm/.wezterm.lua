@@ -2,13 +2,6 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
 
--- Simplified tab title with directory
-wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
-  local cwd = tab.active_pane.current_working_dir
-  local dir = cwd and cwd.file_path:match("([^/]+)/?$") or "~"
-  return string.format(" %d: %s ", tab.tab_index + 1, dir)
-end)
-
 -- This will hold the configuration.
 local config = wezterm.config_builder()
 
@@ -145,48 +138,6 @@ config.keys = {
   },
 }
 
-
--- ==========================================
--- LEADER + NUMBER: Move tab to position
--- ==========================================
-for i = 1, 9 do
-  table.insert(config.keys, {
-    key = tostring(i),
-    mods = "LEADER",
-    action = act.MoveTab(i - 1),
-  })
-end
-
--- ==========================================
--- CMD + NUMBER: Activate specific tab
--- ==========================================
-for i = 1, 9 do
-  table.insert(config.keys, {
-    key = tostring(i),
-    mods = "CMD",
-    action = act.ActivateTab(i - 1),
-  })
-end
-
--- HELIX RELOAD ON OPEN TAB
-wezterm.on('reload-helix', function(window, pane)
-  local top_process = basename(pane:get_foreground_process_name())
-  if top_process == 'hx' then
-    local bottom_pane = pane:tab():get_pane_direction('Down')
-    if bottom_pane ~= nil then
-      local bottom_process = basename(bottom_pane:get_foreground_process_name())
-      if bottom_process == 'lazygit' then
-        local action = wezterm.action.SendString(':reload-all\r\n')
-        window:perform_action(action, pane);
-      end
-    end
-  end
-end)
-
--- ============================================
--- HYPERLINKS CONFIGURATION
--- ============================================
-
 config.hyperlink_rules = {
   -- Match http/https URLs and include everything up to whitespace
   {
@@ -218,27 +169,53 @@ table.insert(config.hyperlink_rules, {
   format = "file://$1",
 })
 
--- tmux status | activate this when often use tab menu
--- wezterm.on("update-right-status", function(window, _)
--- 	local SOLID_LEFT_ARROW = ""
--- 	local ARROW_FOREGROUND = { Foreground = { Color = "#c6a0f6" } }
--- 	local prefix = ""
---
--- 	if window:leader_is_active() then
--- 		prefix = " " .. utf8.char(0x1f30a) -- ocean wave
--- 		SOLID_LEFT_ARROW = utf8.char(0xe0b2)
--- 	end
---
--- 	if window:active_tab():tab_id() ~= 0 then
--- 		ARROW_FOREGROUND = { Foreground = { Color = "#1e2030" } }
--- 	end -- arrow color based on if tab is first pane
---
--- 	window:set_left_status(wezterm.format({
--- 		{ Background = { Color = "#b7bdf8" } },
--- 		{ Text = prefix },
--- 		ARROW_FOREGROUND,
--- 		{ Text = SOLID_LEFT_ARROW },
--- 	}))
--- end)
---
+-- ==========================================
+-- LEADER + NUMBER: Move tab to position
+-- ==========================================
+for i = 1, 9 do
+  table.insert(config.keys, {
+    key = tostring(i),
+    mods = "LEADER",
+    action = act.MoveTab(i - 1),
+  })
+end
+
+-- ==========================================
+-- CMD + NUMBER: Activate specific tab
+-- ==========================================
+for i = 1, 9 do
+  table.insert(config.keys, {
+    key = tostring(i),
+    mods = "CMD",
+    action = act.ActivateTab(i - 1),
+  })
+end
+
+
+-- Event Emiiter ---
+
+-- Simplified tab title with directory
+wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
+  local cwd = tab.active_pane.current_working_dir
+  local dir = cwd and cwd.file_path:match("([^/]+)/?$") or "~"
+  return string.format(" %d: %s ", tab.tab_index + 1, dir)
+end)
+
+
+-- reload helix condiitions
+wezterm.on('reload-helix', function(window, pane)
+  local top_process = basename(pane:get_foreground_process_name())
+  if top_process == 'hx' then
+    local bottom_pane = pane:tab():get_pane_direction('Down')
+    if bottom_pane ~= nil then
+      local bottom_process = basename(bottom_pane:get_foreground_process_name())
+      if bottom_process == 'lazygit' then
+        local action = wezterm.action.SendString(':reload-all\r\n')
+        window:perform_action(action, pane);
+      end
+    end
+  end
+end)
+
+
 return config
