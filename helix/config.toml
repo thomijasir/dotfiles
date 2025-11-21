@@ -146,7 +146,7 @@ skip-levels = 1
 "X" = ["extend_line_above"]
 
 # Selection change without copy to register 
-"d" = "change_selection"
+"d" = ["change_selection", "yank_to_clipboard"]
 "c" = "delete_selection"
 
 # Selection object
