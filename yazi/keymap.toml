@@ -1,4 +1,9 @@
 [[mgr.prepend_keymap]]
+on   = "u"
+run  = "plugin restore"
+desc = "Restore last deleted files/folders"
+
+[[mgr.prepend_keymap]]
 on   = [ "c", "m" ]
 run  = "plugin chmod"
 desc = "Chmod on selected files"

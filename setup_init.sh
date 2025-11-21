@@ -58,6 +58,7 @@ brew install openjdk@17 yazi ffmpeg sevenzip jq yq poppler fd ripgrep fzf zoxide
 brew install lazygit lazydocker lazysql tig
 brew install howdoi
 brew install eza zoxide
+brew install trash-cli
 
 # Code Spell
 # https://github.com/blopker/codebook
