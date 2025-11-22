@@ -1,20 +1,21 @@
 #!/bin/bash
 set -e # Exit on error
 
-DOTFILES_DIR=~/Workspace/dotfiles
+DOTFILES_ROOT=~/Workspace/dotfiles
 
 # For apple only | show hidden files
 defaults write com.apple.finder AppleShowAllFiles YES
 
 mkdir -p ~/.config
-ln -sf $DOTFILES_DIR/zshrc/.zprofile.default ~/.zprofile
-ln -sf $DOTFILES_DIR/zshrc/.zshrc.default ~/.zshrc
-ln -sf $DOTFILES_DIR/wezterm/.wezterm.lua ~/.wezterm.lua
+ln -sf $DOTFILES_ROOT/zshrc/.zprofile.default ~/.zprofile
+ln -sf $DOTFILES_ROOT/zshrc/.zshrc.default ~/.zshrc
+ln -sf $DOTFILES_ROOT/wezterm/.wezterm.lua ~/.wezterm.lua
 # use this for default custom nvim
-# ln -s $DOTFILES_DIR/nvim ~/.config/nvim
+# ln -s $DOTFILES_ROOT/nvim ~/.config/nvim
 # use this for default lazyvim
-ln -sf $DOTFILES_DIR/lazyvim ~/.config/nvim
-ln -sf $DOTFILES_DIR/yazi ~/.config/yazi
+ln -sf $DOTFILES_ROOT/lazyvim ~/.config/nvim
+ln -sf $DOTFILES_ROOT/yazi ~/.config/yazi
+ln -sf $DOTFILES_ROOT/lazygit/config.yml ~/Library/Application\ Support/lazygit/config.yml
 
 # Install homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"

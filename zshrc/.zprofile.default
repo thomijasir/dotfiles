@@ -68,6 +68,7 @@ export EDITOR=/opt/homebrew/bin/hx
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 # Windsurf (Added by Windsurf)
 export PATH="$HOME/.codeium/windsurf/bin:$PATH"
+export PATH="/opt/homebrew/opt/trash-cli/bin:$PATH"
 
 # Script Action alias
 

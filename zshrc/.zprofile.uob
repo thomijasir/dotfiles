@@ -69,6 +69,7 @@ export PATH="$PATH:$HOME/.rvm/bin"
 # Default Terminal editor (helix or nvim)
 export EDITOR=/opt/homebrew/bin/hx
 # export EDITOR=/opt/homebrew/bin/nvim
+export PATH="/opt/homebrew/opt/trash-cli/bin:$PATH"
 
 # Visual Studio Code
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
