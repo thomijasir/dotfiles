@@ -3,18 +3,7 @@
 fpath="$1"
 
 pane_id=$(wezterm cli get-pane-direction up)
-if [ -z "${pane_id}" ]; then
-  pane_id=$(wezterm cli split-pane --up --percent 80)
-fi
-
-program=$(wezterm cli list --format json | jq --arg pane_id $pane_id -r '.[] | select(.pane_id  == ($pane_id | tonumber)) | .title' | awk '{ print $1 }')
-program_name=$(basename $program)
-if [ "$program_name" = "hx" ]; then
-  printf ":open '%s'\r" "$fpath" | wezterm cli send-text --pane-id "$pane_id" --no-paste
-else
-  printf "hx ${fpath}" | wezterm cli send-text --pane-id "$pane_id" --no-paste
-fi
-
+printf ":o '%s'\r" "$fpath" | wezterm cli send-text --pane-id "$pane_id" --no-paste
 wezterm cli activate-pane-direction --pane-id $pane_id up
 
 # Get the most recent window id

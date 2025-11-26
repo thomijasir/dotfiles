@@ -21,7 +21,8 @@ switch_to_hx_pane_and_zoom="if [ \$status = 0 ]; wezterm cli activate-pane-direc
 split_pane_down() {
   bottom_pane_id=$(wezterm cli get-pane-direction down)
   if [ -z "${bottom_pane_id}" ]; then
-    bottom_pane_id=$(wezterm cli split-pane)
+    # minimum load zsh to fast open
+    bottom_pane_id=$(wezterm cli split-pane -- zsh -f)
   fi
 
   wezterm cli activate-pane-direction --pane-id $bottom_pane_id down
@@ -50,7 +51,6 @@ case "$command_prompt" in
   "yazi")
     split_pane_down
     run_command='tmp="$(mktemp -t yazi-chooser.XXXXXX)"; yazi "$PWD" --chooser-file="$tmp"; [ -s "$tmp" ] && hx-yazi.sh "$(head -n1 "$tmp")"; rm -rf "$tmp"'
-
     echo "$run_command; exit" | $send_to_bottom_pane
     ;;
   "explorer")

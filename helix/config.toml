@@ -217,6 +217,13 @@ skip-levels = 1
 "s" = ":pipe-to echo 'Replace string';wezterm cli split-pane --top --percent 35 --cwd $PWD -- zsh -i -c -lc 'sr; exec zsh'"
 "r" = ":pipe-to echo 'Replace folder and filename';wezterm cli split-pane --top --percent 35 --cwd $PWD -- zsh -i -c -lc 'sf; exec zsh'"
 
+# Harpoon CLI
+[keys.normal.space.m]
+"a" = ":sh hx-harpoon.sh add %{buffer_name} %{cursor_line}"
+"l" = ":pipe-to echo 'Harpoon Files'; wezterm cli split-pane --bottom -- zsh -fc 'hx-harpoon.sh list; exec zsh'"
+"o" = ":pipe-to echo 'Open Harpoon'; wezterm cli split-pane --bottom -- zsh -fc 'hx-harpoon.sh open'"
+"r" = ":pipe-to echo 'Remove Bookmark'; wezterm cli split-pane --bottom -- zsh -fc 'hx-harpoon.sh remove'"
+
 # Buffer Control
 [keys.normal.space.b]
 "b" = "buffer_picker"
