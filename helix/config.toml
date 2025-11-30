@@ -214,8 +214,8 @@ skip-levels = 1
 "o" = ':sh open "$(dirname "%{buffer_name}:-.")"'
 "O" = ":sh open ."
 "v" = ":pipe-to echo 'Open terminal vertical';wezterm cli split-pane --right --percent 35 --cwd $PWD"
-"s" = ":pipe-to echo 'Replace string';wezterm cli split-pane --top --percent 35 --cwd $PWD -- zsh -i -c -lc 'sr; exec zsh'"
-"r" = ":pipe-to echo 'Replace folder and filename';wezterm cli split-pane --top --percent 35 --cwd $PWD -- zsh -i -c -lc 'sf; exec zsh'"
+"s" = ":pipe-to echo 'Replace string';wezterm cli split-pane --bottom --percent 45 --cwd $PWD -- zsh -i -c -lc 'sr; exec zsh'"
+"r" = ":pipe-to echo 'Replace folder and filename';wezterm cli split-pane --bottom --percent 45 --cwd $PWD -- zsh -i -c -lc 'sf; exec zsh'"
 
 # Harpoon CLI
 [keys.normal.space.m]
