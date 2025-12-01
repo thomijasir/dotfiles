@@ -13,7 +13,7 @@ ln -sf $DOTFILES_ROOT/wezterm/.wezterm.lua ~/.wezterm.lua
 # use this for default custom nvim
 # ln -s $DOTFILES_ROOT/nvim ~/.config/nvim
 # use this for default lazyvim
-ln -sf $DOTFILES_ROOT/lazyvim ~/.config/nvim
+# ln -sf $DOTFILES_ROOT/lazyvim ~/.config/nvim
 ln -sf $DOTFILES_ROOT/yazi ~/.config/yazi
 ln -sf $DOTFILES_ROOT/lazygit/config.yml ~/Library/Application\ Support/lazygit/config.yml
 
@@ -28,20 +28,27 @@ fi
 rustup component add rust-analyzer
 cargo install cargo-watch
 
-# Install bun
-curl -fsSL https://bun.sh/install | bash
+# Rubby RVM
+curl -sSL https://get.rvm.io | bash -s stable
 
-# Install nvm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-
-# Install Deno
-curl -fsSL https://deno.land/x/install/install.sh | sh
+# Add brew lib
+brew tap dart-lang/dart
+brew tap leoafarias/fvm
 
 # Brew Preparation
 brew update && brew upgrade
 
-# Install wezterm cli and tools
+# install Basic Tools
 brew install --cask wezterm
+brew install --cask google-chrome
+brew install --cask visual-studio-code
+brew install --cask bruno
+
+# Programming
+brew install deno
+brew install dart
+
+# Font System
 brew install --cask font-jetbrains-mono-nerd-font
 brew install --cask font-fira-code-nerd-font
 brew install font-symbols-only-nerd-font
@@ -52,12 +59,18 @@ brew install harper shfmt yaml-language-server dprint
 # install zsh autosuggestions
 brew install zsh-autosuggestions zsh-syntax-highlighting
 
+# Editor
+brew install helix neovim
+
 # CLI tools
-brew install broot luarocks fish tectonic ast-grep wget
+brew install broot luarocks tectonic ast-grep wget
 brew install openjdk@17 yazi sevenzip jq yq fd ripgrep fzf bat
 brew install lazygit lazydocker lazysql tig
 brew install eza zoxide
 brew install fswatch
+brew install nvm
+brew install fvm
+brew install pyenv
 
 # Media CLI Tools
 brew install mozjpeg ffmpeg imagemagick pngquant
@@ -75,12 +88,5 @@ npm install -g typescript-language-server typescript vscode-langservers-extracte
 ## Installing formatters
 npm install -g prettier stylua isort black pylint eslint_d
 
-# # optional setup
-# echo "source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" >>~/.zshrc
-# echo "source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >>~/.zshrc
-
 # dprint formatter
 dprint init -c ~/.dprint.json
-
-# Install editor
-brew install helix neovim

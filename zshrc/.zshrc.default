@@ -45,9 +45,6 @@ source <(fzf --zsh)
 # Atuin
 eval "$(atuin init zsh)"
 
-# --- Dart CLI Completion ---
-[[ -f "$HOME/.dart-cli-completion/zsh-config.zsh" ]] && source "$HOME/.dart-cli-completion/zsh-config.zsh"
-
 # =============================================================================
 # DATABASE TOOLS
 # =============================================================================
@@ -58,9 +55,6 @@ eval "$(atuin init zsh)"
 # =============================================================================
 # PLUGIN CONFIGURATION
 # =============================================================================
-
-# Broot File Tree
-source $HOME/.config/broot/launcher/bash/br
 
 # Syntax auto-completion and highlighting
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -139,11 +133,6 @@ alias crw='cargo watch -q -c -w src/ -x run' # Cargo watch and run
 alias androidUp='emulator -avd Pixel_2_API_28' # Open Emulator
 alias iosUp='open -a Simulator'                # Open Simulator
 
-# Alternative Python aliases (commented out)
-#alias py='python3'     # Python Alias
-#alias python='python3' # Python load
-#alias pip='pip3'       # Python pip
-
 # -- Dart & Flutter
 alias dart='fvm dart'
 alias flutter='fvm flutter'
@@ -204,6 +193,5 @@ alias zsh_config='hx ~/.zshrc'
 # reload zsh config
 alias zsh_reload='source ~/.zshrc && source ~/.zprofile'
 
-# ======================
-# END OF CONFIGURATION
-# ======================
+# --- Dart CLI Completion ---
+[[ -f "$HOME/.dart-cli-completion/zsh-config.zsh" ]] && source "$HOME/.dart-cli-completion/zsh-config.zsh"

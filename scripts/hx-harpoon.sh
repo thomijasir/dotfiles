@@ -112,7 +112,7 @@ open_bookmark() {
   fi
 
   # Use fzf to select
-  selected=$(cat "$temp_file" | fzf --delimiter='|' --with-nth=1 --preview='bat --color=always {2} 2>/dev/null || cat {2}' --preview-window=right:60%)
+  selected=$(cat "$temp_file" | fzf -m --delimiter='|' --with-nth=1 --preview='bat --color=always {2} 2>/dev/null || cat {2}' --preview-window=right:60%)
   rm "$temp_file"
 
   if [ -n "$selected" ]; then
