@@ -54,12 +54,17 @@ brew install harper shfmt yaml-language-server dprint
 brew install zsh-autosuggestions zsh-syntax-highlighting
 
 # CLI tools
-brew install broot luarocks fish tectonic ast-grep wget mmdbctl
-brew install openjdk@17 yazi ffmpeg sevenzip jq yq poppler fd ripgrep fzf zoxide imagemagick bat
+brew install broot luarocks fish tectonic ast-grep wget
+brew install openjdk@17 yazi sevenzip jq yq fd ripgrep fzf bat
 brew install lazygit lazydocker lazysql tig
-brew install howdoi
 brew install eza zoxide
-brew install trash-cli
+brew install fswatch
+
+# Media CLI Tools
+brew install mozjpeg ffmpeg imagemagick pngquant
+
+# Document CLI Tools
+brew install poppler
 
 # Code Spell
 # https://github.com/blopker/codebook
