@@ -43,6 +43,15 @@ brew install --cask wezterm
 brew install --cask google-chrome
 brew install --cask visual-studio-code
 brew install --cask bruno
+brew install --cask pgadmin4
+brew install --cask notion
+brew install --cask microsoft-teams
+brew install --cask obs
+brew install --cask audacity
+brew install --cask android-studio
+brew install --cask zoom
+brew install --cask whatsapp
+brew install --cask docker
 
 # Programming
 brew install deno
@@ -52,6 +61,10 @@ brew install dart
 brew install --cask font-jetbrains-mono-nerd-font
 brew install --cask font-fira-code-nerd-font
 brew install font-symbols-only-nerd-font
+
+# AI CLI Tools
+brew install gemini-cli
+brew install --cask claude-code
 
 # Grammar and language server check
 brew install harper shfmt yaml-language-server dprint
@@ -63,7 +76,7 @@ brew install zsh-autosuggestions zsh-syntax-highlighting
 brew install helix neovim
 
 # CLI tools
-brew install broot luarocks tectonic ast-grep wget
+brew install zsh wget
 brew install openjdk@17 yazi sevenzip jq yq fd ripgrep fzf bat
 brew install lazygit lazydocker lazysql tig
 brew install eza zoxide
@@ -71,7 +84,7 @@ brew install fswatch
 brew install nvm
 brew install fvm
 brew install pyenv
-
+brew install htop
 # Media CLI Tools
 brew install mozjpeg ffmpeg imagemagick pngquant
 
