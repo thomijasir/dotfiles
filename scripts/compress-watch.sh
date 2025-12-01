@@ -7,9 +7,8 @@
 
 # --- Configuration ---
 WATCH_DIR="$HOME/Desktop"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-COMPRESS_VIDEO="$SCRIPT_DIR/compress-video.sh"
-COMPRESS_IMAGE="$SCRIPT_DIR/compress-image.sh"
+COMPRESS_VIDEO="compress-video.sh"
+COMPRESS_IMAGE="compress-image.sh"
 
 # --- Check Dependencies ---
 if ! command -v fswatch &>/dev/null; then
@@ -48,9 +47,9 @@ echo "=================================================="
 # -0: Use NUL character as delimiter (handles filenames with spaces)
 # We filter strictly in the loop for better control
 fswatch -0 "$WATCH_DIR" | while read -d "" event; do
-  
+
   FILENAME=$(basename "$event")
-  
+
   # 1. Check if file exists (it might have been deleted or moved quickly)
   if [ ! -f "$event" ]; then
     continue
@@ -80,9 +79,9 @@ fswatch -0 "$WATCH_DIR" | while read -d "" event; do
   fi
 
   # 4. Wait for file to be ready
-  # Screenshots/Recordings might be written progressively. 
+  # Screenshots/Recordings might be written progressively.
   # A simple sleep helps ensure the file handle is released by the OS.
-  sleep 2
+  sleep 3
 
   # 5. Process
   STATUS=1
@@ -97,7 +96,7 @@ fswatch -0 "$WATCH_DIR" | while read -d "" event; do
   fi
 
   # 6. Mark as processed if successful
-  # This is crucial: The compression scripts replace the file. 
+  # This is crucial: The compression scripts replace the file.
   # The replacement triggers a new fswatch event.
   # By marking it immediately, the next loop iteration will see the mark and skip it.
   if [ $STATUS -eq 0 ]; then

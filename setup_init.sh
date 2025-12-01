@@ -26,7 +26,6 @@ if ! command -v rustup &>/dev/null; then
   source $HOME/.cargo/env
 fi
 rustup component add rust-analyzer
-command -v rust-analyzer
 cargo install cargo-watch
 
 # Install bun
