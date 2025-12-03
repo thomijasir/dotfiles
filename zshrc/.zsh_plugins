@@ -1,4 +1,7 @@
 zsh-users/zsh-completions
-zsh-users/zsh-autosuggestions
+ajeetdsouza/zoxide path:zoxide.plugin.zsh
 sindresorhus/pure
+Aloxaf/fzf-tab
+lukechilds/zsh-nvm kind:defer
 zsh-users/zsh-syntax-highlighting
+zsh-users/zsh-autosuggestions kind:defer

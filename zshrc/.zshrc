@@ -31,15 +31,19 @@ function rvm() {
 }
 
 #--- Node (NVM) Lazymode ---
-export NVM_DIR="$HOME/.nvm"
-function _load_nvm() {
-  unset -f nvm node npm npx
-  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-}
-function nvm() { _load_nvm; nvm "$@"; }
-function node() { _load_nvm; node "$@"; }
-function npm() { _load_nvm; npm "$@"; }
-function npx() { _load_nvm; npx "$@"; }
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
+# [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+# function _load_nvm() {
+#   unset -f nvm node npm npx
+#   [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
+#   # This loads nvm bash_completion
+#   [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" 
+# }
+# function nvm() { _load_nvm; nvm "$@"; }
+# function node() { _load_nvm; node "$@"; }
+# function npm() { _load_nvm; npm "$@"; }
+# function npx() { _load_nvm; npx "$@"; }
 
 # --- Android ---
 export ANDROID_HOME=$HOME/Library/Android/sdk
@@ -97,13 +101,13 @@ autoload -Uz compinit
 compinit -C
 
 # Prompt (fast & clean)
-autoload -Uz promptinit && promptinit
-prompt pure
+# autoload -Uz promptinit && promptinit
+# prompt pure
 
 # Zoxide (smart cd)
-if command -v zoxide &>/dev/null; then
-  eval "$(zoxide init zsh)"
-fi
+# if command -v zoxide &>/dev/null; then
+#   eval "$(zoxide init zsh)"
+# fi
 
 # --- python environment ---
 if command -v pyenv 1>/dev/null 2>&1; then

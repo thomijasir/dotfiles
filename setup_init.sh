@@ -125,22 +125,17 @@ check_nvm() {
   # The user said "for node im using nvm".
   # If installed via brew, nvm requires specific setup.
 
-  if [ ! -d "$HOME/.nvm" ]; then
-    add_task "Create .nvm directory" "mkdir -p ~/.nvm"
-  fi
-
   # We will use the brew installation as per the original script's intent (brew install nvm)
   # But we need to ensure it's set up.
-  check_brew_package "nvm" "false"
 
   # Task to install latest node using nvm
   # We need to source nvm to use it
   add_task "Install latest Node.js via NVM" '
-        export NVM_DIR="$HOME/.nvm"
-        [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-        nvm install node
-        nvm use node
-        nvm alias default node
+        export NVM_DIR="$HOME/.nvm" && (
+        git clone https://github.com/nvm-sh/nvm.git "$NVM_DIR"
+        cd "$NVM_DIR"
+        git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
+      ) && \. "$NVM_DIR/nvm.sh"
     '
 }
 
