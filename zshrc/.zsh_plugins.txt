@@ -1,0 +1,9 @@
+# Plugins
+zsh-users/zsh-completions
+zsh-users/zsh-autosuggestions
+
+# FAST git prompt & utility
+sindresorhus/pure
+
+# Syntax Highlighting (Must be last)
+zsh-users/zsh-syntax-highlighting

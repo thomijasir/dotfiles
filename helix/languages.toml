@@ -13,10 +13,6 @@ except-features = ["format"]
 command = "emmet-ls"
 args = [ "--stdio" ]
 
-[language-server.cspell]
-command = "cspell-lsp"
-args = ["--stdio"]
-
 [language-server.harper-ls]
 command = "harper-ls"
 args = ["--stdio"]
@@ -30,8 +26,10 @@ command = "fvm"
 args = ["dart", "language-server"]
 
 [language-server.codebook]
-command = "codebook-lsp"
-args = ["serve"]
+command = "cspell-lsp"
+args = ["--stdio"]
+# command = "codebook-lsp"
+# args = ["serve"]
 
 [language-server.tailwind-ls]
 command = "tailwindcss-language-server"

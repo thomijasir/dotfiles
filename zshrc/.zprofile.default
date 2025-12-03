@@ -4,15 +4,11 @@
 # ==========================
 
 # --- Variable Setup
+export ZPROFILE_LOADED=1
 export DOTFILES_ROOT="${HOME}/Workspace/dotfiles"
 
 # Custon Scripts dot files
 export PATH="$DOTFILES_ROOT/scripts:$PATH"
-
-# Homebrew Init
-if [[ -x /opt/homebrew/bin/brew ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
 
 # Library paths
 export LIBRARY_PATH="/opt/homebrew/lib:$LIBRARY_PATH"
@@ -20,6 +16,11 @@ export DYLD_LIBRARY_PATH="/opt/homebrew/lib:$DYLD_LIBRARY_PATH"
 
 # General PATH improvements
 export PATH="/usr/local/git/bin:/sw/bin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:$PATH"
+
+# Homebrew Init
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
 
 # ==========================
 # RUNTIME ENVIRONMENTS
@@ -30,7 +31,39 @@ export PATH="$JAVA_HOME/bin:$PATH"
 
 # --- Ruby (RVM) ---
 export PATH="$PATH:$HOME/.rvm/bin"
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
+function rvm() {
+  unset -f rvm
+  [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
+  rvm "$@"
+}
+
+#--- Node (NVM) ---
+export NVM_DIR="$HOME/.nvm"
+function nvm() {
+  unset -f nvm node npm npx
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+  nvm "$@"
+}
+function node() {
+  unset -f nvm node npm npx
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+  node "$@"
+}
+function npm() {
+  unset -f nvm node npm npx
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+  npm "$@"
+}
+function npx() {
+  unset -f nvm node npm npx
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+  npx "$@"
+}
+
+#--- python environment ---
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
 
 # =============================================================================
 # MOBILE DEVELOPMENT
@@ -42,7 +75,6 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
-export NDK_HOME="$ANDROID_HOME/ndk/$(ls -1 $ANDROID_HOME/ndk)"
 
 # Default Terminal editor (helix or nvim)
 # export EDITOR=/opt/homebrew/bin/nvim

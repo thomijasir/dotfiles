@@ -1,181 +1,199 @@
-# SurrealDB
-# export PATH=$HOME/.surrealdb:$PATH
+#!/bin/zsh
+# =========================
+# ZSH CONFIGURATION
+# =========================
 
-export LIBRARY_PATH="/opt/homebrew/lib:$LIBRARY_PATH"
-export DYLD_LIBRARY_PATH="/opt/homebrew/lib:$DYLD_LIBRARY_PATH"
-# Java Lib Load
-#export JAVA_HOME=$(/usr/libexec/java_home)
-#export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
-#export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
-export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
-export PATH="$JAVA_HOME/bin:$PATH"
+# load env vars from .zprofile into the shells
+if [[ -z "$ZPROFILE_LOADED" && -r ~/.zprofile ]]; then
+  source ~/.zprofile
+fi
 
-# ANDROID LIB
-# export ANDROID_HOME=$HOME/Library/Android/sdk
-# export PATH=$PATH:$ANDROID_HOME/emulator
-# export PATH=$PATH:$ANDROID_HOME/platform-tools
-# export PATH=$PATH:$ANDROID_HOME/tools
-# export PATH=$PATH:$ANDROID_HOME/tools/bin
-# export NDK_HOME="$ANDROID_HOME/ndk/$(ls -1 $ANDROID_HOME/ndk)"
+# =========================
+# HISTORY SETTINGS
+# =========================
 
-# Flutter
-# export PATH="$PATH:`pwd`/flutter/bin"
-# export PATH=$HOME/.gem/bin:$PATH
+# History
+HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
+setopt SHARE_HISTORY HIST_IGNORE_DUPS
 
-# IMPROVEMENT
-export PATH="$PATH:/usr/local/bin/"
-export PATH="/usr/local/git/bin:/sw/bin/:/usr/local/bin:/usr/local/:/usr/local/sbin:/usr/local/mysql/bin:$PATH"
+# Performance tweaks
+export ZSH_DISABLE_COMPFIX=true
+zstyle ':completion:*' rehash true
+setopt AUTO_CD
+setopt AUTO_PUSHD
+setopt PUSHD_IGNORE_DUPS
 
-# PYTHON
-# export PATH="$HOME/.pyenv/versions/3.9.6/bin:$PATH"
+# Make terminal snappier
+export KEYTIMEOUT=1
 
-# Default Terminal editor helix or nvim
-# export EDITOR=/opt/homebrew/bin/nvim
-export EDITOR=/opt/homebrew/bin/hx
+# =============================================================================
+# PLUGIN CONFIGURATION
+# =============================================================================
 
-# Custon Scripts dot files
-export PATH="$HOME/Workspace/dotfiles/scripts:$PATH"
+# Antidote Plugin Manager
+# Load antidote
+if [[ -f /opt/homebrew/share/antidote/antidote.zsh ]]; then
+  source /opt/homebrew/share/antidote/antidote.zsh
+  antidote load
+elif [[ -f /usr/local/share/antidote/antidote.zsh ]]; then
+  source /usr/local/share/antidote/antidote.zsh
+  antidote load
+fi
 
-# BUN
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+# Zoxide (smart cd)
+eval "$(zoxide init zsh)"
 
-# Add Visual Studio Code (code)
-export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
+# FZF (fuzzy finder)
+# Cache fzf init
+if [[ ! -f ~/.fzf.zsh ]]; then
+  fzf --zsh > ~/.fzf.zsh
+fi
+source ~/.fzf.zsh
 
-# Node Version Manager https://github.com/nvm-sh/nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+# Prompt (fast & clean)
+autoload -Uz promptinit && promptinit
+prompt pure
 
-# bun completions
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+# Fix slow compinit (caching)
+autoload -Uz compinit
+compinit -C
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
-
-# Custom Aliases
-alias crw='cargo watch -q -c -w src/ -x run'
-alias tencent_sg='ssh -i ~/.ssh-keys/tencent_sg_key.pem root@43.134.91.33'
-alias tencent_hk='ssh -i ~/.ssh-keys/tencent_hk_key.pem root@43.159.230.62'
-alias auto-translate='python ~/Workspace/minootube/scripts/auto-translate.py'
-alias auto-transcribe='python ~/Workspace/minootube/scripts/auto-transcribe.py'
-alias video-compress='python ~/Workspace/minootube/scripts/auto-compress.py'
-alias androidUp='emulator -avd Pixel_2_API_28' # Open Emulator
-alias iosUp='open -a Simulator'                # Open Simulator
-alias work='cd ~/Workspace'
-alias nvim_config='hx ~/.config/nvim'
-alias helix_config='hx ~/.config/helix'
-alias wezterm_config='hx ~/.wezterm.lua'
-alias zsh_config='hx ~/.zshrc'
-alias zsh_reload='source ~/.zshrc'
-alias rm_node='rm -rf node_modules package-lock.json'
-#alias py='python3'					# Python Alias
-#alias python='python3'					# Python load
-#alias pip='pip3'					# Python pip
-alias aliyun='ssh root@8.219.9.110 -i ~/aliyun-key.pem' # Aliyun SSH
-alias ga='git add .'                                    # Git Add
-alias gf='git fetch && git pull'                        # Git Fetch And Pull
-alias gp='git push'                                     # Git Push
-alias gs='git status'                                   # Git Status
-alias gc='f() { git commit -m "$1"; }; f'
-alias gb='f() { git checkout -b "$1"; }; f'
-alias gdb='f() { ~/Workspace/dotfiles/scripts/git_delete_branch.sh "$1"; }; f'
-alias hx_wezterm='f() { ~/Workspace/dotfiles/helix/scripts/hx_wezterm.sh "$1"; }; f'
-alias zipdist='f() { ~/Workspace/dotfiles/scripts/zipdist.sh "$1"; }; f'
-
-alias sr='f() { ~/Workspace/dotfiles/scripts/replace_str.sh "$1"; }; f'
-alias sf='f() { ~/Workspace/dotfiles/scripts/replace_file.sh "$1"; }; f'
-alias ngrok="$HOME/.ngrok" # add ngrok
-alias cleadNODE="find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' \;"
-alias cleanupDS="find . -type f -name '*.DS_Store' -ls -delete" # Auto Clean DS
-
-alias hzo='~/Workspace/dotfiles/scripts/helix_zoxide_search_open.sh'
-alias fman="compgen -c | fzf | xargs man"
-
-# Development Tools Scripts
-alias react_tools='deno run --allow-read --allow-write ~/Workspace/dotfiles/scripts/react_tools.ts'
-
-# Alias tools
-alias vim='nvim'
-alias yt="yazi ."
-alias lg="lazygit"
-alias mdts="npx mdts . --silent"
-# options :  --no-filesize --no-time --no-permissions
-alias ls="eza --no-filesize --long --color=always --icons=always --no-user"
-
-# tree
-alias tree="tree -L 3 -a -I '.git' --charset X "
-alias dtree="tree -L 3 -a -d -I '.git' --charset X "
-
-alias cp='cp -iv'       # Preferred 'cp' implementation
-alias mv='mv -iv'       # Preferred 'mv' implementation
-alias mkdir='mkdir -pv' # Preferred 'mkdir' implementation
-alias ll='ls -FGlAhp'   # Preferred 'ls' implementation
-alias cd='z'
-alias temp='nvim ~/temp.md'
-# Git zsh Configuration
-autoload -Uz vcs_info
-function precmd() {
-  vcs_info
-}
-zstyle ':vcs_info:git:*' formats '(%b)'
-setopt PROMPT_SUBST
-PROMPT='${PWD/#$HOME/~} ${vcs_info_msg_0_} '
-
-## [Completion]
-## Completion scripts setup. Remove the following line to uninstall
-[[ -f /Users/venobi/.dart-cli-completion/zsh-config.zsh ]] && . /Users/venobi/.dart-cli-completion/zsh-config.zsh || true
-## [/Completion]
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-# __conda_setup="$('/Users/venobi/miniconda/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-# if [ $? -eq 0 ]; then
-#     eval "$__conda_setup"
-# else
-#     if [ -f "/Users/venobi/miniconda/etc/profile.d/conda.sh" ]; then
-#         . "/Users/venobi/miniconda/etc/profile.d/conda.sh"
-#     else
-#         export PATH="/Users/venobi/miniconda/bin:$PATH"
-#     fi
-# fi
-# unset __conda_setup
-# <<< conda initialize <<<
-
-# history setup
-HISTFILE=$HOME/.zhistory
-SAVEHIST=1000
-HISTSIZE=999
-setopt share_history
-setopt hist_expire_dups_first
-setopt hist_ignore_dups
-setopt hist_verify
-
-# completion using arrow keys (based on history)
+# Completion using arrow keys (based on history)
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
 
-# syntax auto-completion and highlighting
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# =============================================================================
+# Helper Scripts
+# =============================================================================
 
-# export PYENV_ROOT="$HOME/.pyenv"
-# [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-# eval "$(pyenv init - zsh)"
+# ZSH Configuration commad
+alias zsh_profile='hx ~/.zprofile'
+alias zsh_config='hx ~/.zshrc'
+# reload zsh config
+alias zsh_reload='source ~/.zshrc && source ~/.zprofile'
 
-# Added by Windsurf
-export PATH="/Users/venobi/.codeium/windsurf/bin:$PATH"
-eval "$(zoxide init zsh)"
+# -- Development Tools Scripts
+alias react_tools='deno run --allow-read --allow-write $DOTFILES_ROOT/scripts/react-tools.ts'
 
-# Ruby
-# export PATH="$HOME/.rbenv/bin:$PATH"
-# eval "$(rbenv init -)"
-function y() {
+# --- MacOS Process ---
+alias appkill='f() {
+  local pid
+  pid=$(ps aux | sed 1d | fzf -m --header="[kill process]" --preview="echo {}" --preview-window=down:3:wrap | awk "{print \$2}")
+  if [ "x$pid" != "x" ]; then
+    echo $pid | xargs kill -9
+    echo "Killed process(es): $pid"
+  fi
+}; f'
+
+# --- File Operations ---
+alias cp='cp -iv'       # Preferred 'cp' implementation
+alias mv='mv -iv'       # Preferred 'mv' implementation
+alias mkdir='mkdir -pv' # Preferred 'mkdir' implementation
+
+# --- Directory Listing ---
+alias ll='ls -FGlAhp' # Preferred 'ls' implementation
+# options: --no-filesize --no-time --no-permissions
+alias ls="eza --no-filesize --long --color=always --icons=always --no-user"
+
+# --- Directory Navigation ---
+alias cd='z' # Use zoxide
+alias work='cd ~/Workspace'
+
+# --- Tree View ---
+alias tree="tree -L 3 -a -I '.git' --charset X "
+alias dtree="tree -L 3 -a -d -I '.git' --charset X "
+
+# --- Editor Aliases ---
+alias vim='nvim'
+alias temp='nvim ~/temp.md'
+
+# --- Development Tools ---
+alias lg="lazygit"
+alias ld="lazydocker"
+alias mdts="npx mdts . --silent"
+
+# --- Replace Script ---
+alias sr='replace-str.sh'
+alias sf='replace-file.sh'
+
+# --- Git Shortcuts ---
+alias ga='git add .'                        # Git Add
+alias gf='git fetch && git pull'            # Git Fetch And Pull
+alias gp='git push'                         # Git Push
+alias gs='git status'                       # Git Status
+alias gc='f() { git commit -m "$1"; }; f'   # Git Commit with message
+alias gb='f() { git checkout -b "$1"; }; f' # Git create new branch
+alias gdb='git-delete-branch.sh'
+
+# --- Open Files Script ---
+alias hzo='hx-zoxide.sh'
+alias fman="compgen -c | fzf | xargs man"
+
+# --- Configuration Files ---
+alias nvim_config='hx ~/.config/nvim'
+alias helix_config='hx ~/.config/helix'
+alias wezterm_config='hx ~/.wezterm.lua'
+
+# --- Development Environment ---
+alias crw='cargo watch -q -c -w src/ -x run' # Cargo watch and run
+
+# --- Mobile Development ---
+alias androidUp='emulator -avd Pixel_2_API_28' # Open Emulator
+alias iosUp='open -a Simulator'                # Open Simulator
+
+# -- Dart & Flutter
+alias dart='fvm dart'
+alias flutter='fvm flutter'
+
+# --- Network Tools ---
+alias ngrok="$HOME/.ngrok" # add ngrok
+
+# --- Cleanup Commands ---
+alias rm_node='rm -rf node_modules package-lock.json'
+alias cleanupDS="find . -type f -name '*.DS_Store' -ls -delete" # Auto Clean DS
+alias cleadNODE="find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' \;"
+
+# Super Shell Yazi
+y() {
   local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
   yazi "$@" --cwd-file="$tmp"
   IFS= read -r -d '' cwd <"$tmp"
   [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
   rm -f -- "$tmp"
 }
+
+# Calculate file/directory sizes
+dsize() {
+  du -sh "${1:-.}"/* 2>/dev/null | sort -hr | head -n 20
+}
+
+# Find biggest files in current directory
+bigfiles() {
+  find . -type f -exec du -h {} + 2>/dev/null | sort -rh | head -n "${1:-10}"
+}
+
+# Open project directories with fzf
+proj() {
+  local dir
+  dir=$(find ~/Workspace -maxdepth 3 -type d 2>/dev/null | fzf --preview "ls -la {}")
+  [ -n "$dir" ] && cd "$dir"
+}
+
+# Get public IP address
+myip() {
+  curl -s https://api.ipify.org
+  echo ""
+}
+
+# Get local IP address
+localip() {
+  ipconfig getifaddr en0 || ipconfig getifaddr en1
+}
+
+# make and crete file
+cf() {
+  mkdir -p "$(dirname "$1")" && touch "$1"
+}
+
