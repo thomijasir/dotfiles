@@ -1,16 +1,61 @@
-#!/bin/zsh
-# =========================
-# ZSH CONFIGURATION
-# =========================
+export DOTFILES_ROOT="${HOME}/Workspace/dotfiles"
 
-# load env vars from .zprofile into the shells
-if [[ -z "$ZPROFILE_LOADED" && -r ~/.zprofile ]]; then
-  source ~/.zprofile
+# --- Homebrew Init ---
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
-# =========================
-# HISTORY SETTINGS
-# =========================
+# ---------------------------------------------------------------
+# PATH CONFIGURATION
+# ---------------------------------------------------------------
+
+# Custom Scripts dot files
+export PATH="$DOTFILES_ROOT/scripts:$PATH"
+
+# Library paths
+export LIBRARY_PATH="/opt/homebrew/lib:$LIBRARY_PATH"
+
+# General PATH improvements
+export PATH="/usr/local/git/bin:/sw/bin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:$PATH"
+
+# --- Java ---
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# --- Ruby (RVM) ---
+export PATH="$PATH:$HOME/.rvm/bin"
+function rvm() {
+  unset -f rvm
+  [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
+  rvm "$@"
+}
+
+#--- Node (NVM) Lazymode ---
+export NVM_DIR="$HOME/.nvm"
+function _load_nvm() {
+  unset -f nvm node npm npx
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+}
+function nvm() { _load_nvm; nvm "$@"; }
+function node() { _load_nvm; node "$@"; }
+function npm() { _load_nvm; npm "$@"; }
+function npx() { _load_nvm; npx "$@"; }
+
+# --- Android ---
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+
+# Default Terminal editor (helix or nvim)
+# export EDITOR=/opt/homebrew/bin/nvim
+export EDITOR=/opt/homebrew/bin/hx
+# Visual Studio Code
+export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
+# Windsurf (Added by Windsurf)
+export PATH="$HOME/.codeium/windsurf/bin:$PATH"
+export PATH="/opt/homebrew/opt/trash-cli/bin:$PATH"
 
 # History
 HISTFILE=~/.zsh_history
@@ -19,7 +64,6 @@ SAVEHIST=50000
 setopt SHARE_HISTORY HIST_IGNORE_DUPS
 
 # Performance tweaks
-export ZSH_DISABLE_COMPFIX=true
 zstyle ':completion:*' rehash true
 setopt AUTO_CD
 setopt AUTO_PUSHD
@@ -28,172 +72,49 @@ setopt PUSHD_IGNORE_DUPS
 # Make terminal snappier
 export KEYTIMEOUT=1
 
-# =============================================================================
+# Completion using arrow keys (based on history)
+bindkey '^[[A' history-search-backward
+bindkey '^[[B' history-search-forward
+
+# ---------------------------------------------------------------
 # PLUGIN CONFIGURATION
-# =============================================================================
+# ---------------------------------------------------------------
 
-# Antidote Plugin Manager
-# Load antidote
-if [[ -f /opt/homebrew/share/antidote/antidote.zsh ]]; then
-  source /opt/homebrew/share/antidote/antidote.zsh
-  antidote load
-elif [[ -f /usr/local/share/antidote/antidote.zsh ]]; then
-  source /usr/local/share/antidote/antidote.zsh
-  antidote load
+# --- START Antidote Plugin Manager ---
+source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
+
+# Generate new static antidote if .zsh_plugins has exists (follows symlink) and has no file .zsh_plugins.zsh or diff timestamps
+if [[ -e ~/.zsh_plugins ]] && { [[ ! -f ~/.zsh_plugins.zsh ]] || [[ ~/.zsh_plugins -nt ~/.zsh_plugins.zsh ]]; }; then
+  antidote bundle <~/.zsh_plugins >|~/.zsh_plugins.zsh
 fi
 
-# Zoxide (smart cd)
-eval "$(zoxide init zsh)"
+# Load the static bundle
+[[ -f ~/.zsh_plugins.zsh ]] && source ~/.zsh_plugins.zsh
 
-# FZF (fuzzy finder)
-# Cache fzf init
-if [[ ! -f ~/.fzf.zsh ]]; then
-  fzf --zsh > ~/.fzf.zsh
-fi
-source ~/.fzf.zsh
+# --- END Antidote Plugin Manager ---
+
+autoload -Uz compinit
+compinit -C
 
 # Prompt (fast & clean)
 autoload -Uz promptinit && promptinit
 prompt pure
 
-# Fix slow compinit (caching)
-autoload -Uz compinit
-compinit -C
+# Zoxide (smart cd)
+if command -v zoxide &>/dev/null; then
+  eval "$(zoxide init zsh)"
+fi
 
-# Completion using arrow keys (based on history)
-bindkey '^[[A' history-search-backward
-bindkey '^[[B' history-search-forward
+# --- python environment ---
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
 
-# =============================================================================
-# Helper Scripts
-# =============================================================================
+# --- Load Aliases ---
+[[ -f ~/.zsh_aliases ]] && source ~/.zsh_aliases
 
-# ZSH Configuration commad
-alias zsh_profile='hx ~/.zprofile'
-alias zsh_config='hx ~/.zshrc'
-# reload zsh config
-alias zsh_reload='source ~/.zshrc && source ~/.zprofile'
-
-# -- Development Tools Scripts
-alias react_tools='deno run --allow-read --allow-write $DOTFILES_ROOT/scripts/react-tools.ts'
-
-# --- MacOS Process ---
-alias appkill='f() {
-  local pid
-  pid=$(ps aux | sed 1d | fzf -m --header="[kill process]" --preview="echo {}" --preview-window=down:3:wrap | awk "{print \$2}")
-  if [ "x$pid" != "x" ]; then
-    echo $pid | xargs kill -9
-    echo "Killed process(es): $pid"
-  fi
-}; f'
-
-# --- File Operations ---
-alias cp='cp -iv'       # Preferred 'cp' implementation
-alias mv='mv -iv'       # Preferred 'mv' implementation
-alias mkdir='mkdir -pv' # Preferred 'mkdir' implementation
-
-# --- Directory Listing ---
-alias ll='ls -FGlAhp' # Preferred 'ls' implementation
-# options: --no-filesize --no-time --no-permissions
-alias ls="eza --no-filesize --long --color=always --icons=always --no-user"
-
-# --- Directory Navigation ---
-alias cd='z' # Use zoxide
-alias work='cd ~/Workspace'
-
-# --- Tree View ---
-alias tree="tree -L 3 -a -I '.git' --charset X "
-alias dtree="tree -L 3 -a -d -I '.git' --charset X "
-
-# --- Editor Aliases ---
-alias vim='nvim'
-alias temp='nvim ~/temp.md'
-
-# --- Development Tools ---
-alias lg="lazygit"
-alias ld="lazydocker"
-alias mdts="npx mdts . --silent"
-
-# --- Replace Script ---
-alias sr='replace-str.sh'
-alias sf='replace-file.sh'
-
-# --- Git Shortcuts ---
-alias ga='git add .'                        # Git Add
-alias gf='git fetch && git pull'            # Git Fetch And Pull
-alias gp='git push'                         # Git Push
-alias gs='git status'                       # Git Status
-alias gc='f() { git commit -m "$1"; }; f'   # Git Commit with message
-alias gb='f() { git checkout -b "$1"; }; f' # Git create new branch
-alias gdb='git-delete-branch.sh'
-
-# --- Open Files Script ---
-alias hzo='hx-zoxide.sh'
-alias fman="compgen -c | fzf | xargs man"
-
-# --- Configuration Files ---
-alias nvim_config='hx ~/.config/nvim'
-alias helix_config='hx ~/.config/helix'
-alias wezterm_config='hx ~/.wezterm.lua'
-
-# --- Development Environment ---
-alias crw='cargo watch -q -c -w src/ -x run' # Cargo watch and run
-
-# --- Mobile Development ---
-alias androidUp='emulator -avd Pixel_2_API_28' # Open Emulator
-alias iosUp='open -a Simulator'                # Open Simulator
-
-# -- Dart & Flutter
-alias dart='fvm dart'
-alias flutter='fvm flutter'
-
-# --- Network Tools ---
-alias ngrok="$HOME/.ngrok" # add ngrok
-
-# --- Cleanup Commands ---
-alias rm_node='rm -rf node_modules package-lock.json'
-alias cleanupDS="find . -type f -name '*.DS_Store' -ls -delete" # Auto Clean DS
-alias cleadNODE="find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' \;"
-
-# Super Shell Yazi
-y() {
-  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-  yazi "$@" --cwd-file="$tmp"
-  IFS= read -r -d '' cwd <"$tmp"
-  [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
-  rm -f -- "$tmp"
-}
-
-# Calculate file/directory sizes
-dsize() {
-  du -sh "${1:-.}"/* 2>/dev/null | sort -hr | head -n 20
-}
-
-# Find biggest files in current directory
-bigfiles() {
-  find . -type f -exec du -h {} + 2>/dev/null | sort -rh | head -n "${1:-10}"
-}
-
-# Open project directories with fzf
-proj() {
-  local dir
-  dir=$(find ~/Workspace -maxdepth 3 -type d 2>/dev/null | fzf --preview "ls -la {}")
-  [ -n "$dir" ] && cd "$dir"
-}
-
-# Get public IP address
-myip() {
-  curl -s https://api.ipify.org
-  echo ""
-}
-
-# Get local IP address
-localip() {
-  ipconfig getifaddr en0 || ipconfig getifaddr en1
-}
-
-# make and crete file
-cf() {
-  mkdir -p "$(dirname "$1")" && touch "$1"
-}
-
+# FZF (fuzzy finder)
+if [[ ! -f ~/.zsh_fzf ]]; then
+  fzf --zsh > ~/.zsh_fzf
+fi
+source ~/.zsh_fzf

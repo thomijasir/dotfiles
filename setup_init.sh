@@ -5,8 +5,6 @@ set -e
 # CONFIGURATION
 # ==============================================================================
 DOTFILES_ROOT=~/Workspace/dotfiles
-BACKUP_DIR=~/Workspace/dotfiles_backup_$(date +%Y%m%d_%H%M%S)
-
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -172,14 +170,11 @@ check_pyenv() {
 
 check_zsh_config_alignment() {
   # Check if .zprofile.default has necessary exports
-  local zprofile="$DOTFILES_ROOT/zshrc/.zprofile.default"
   local zshrc="$DOTFILES_ROOT/zshrc/.zshrc"
 
   # NVM Check
-  if ! grep -q "NVM_DIR" "$zprofile" && ! grep -q "NVM_DIR" "$zshrc"; then
+  if ! grep -q "NVM_DIR" "$zshrc"; then
     log_warn "NVM configuration missing in zsh files. Suggest adding lazy loading:"
-    echo 'export NVM_DIR="$HOME/.nvm"'
-    echo 'function nvm() { unset -f nvm node npm npx; [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"; nvm "$@"; }'
   fi
 
   # Pyenv Check
@@ -221,9 +216,10 @@ main() {
   check_directories
 
   # 2. Symlinks
-  check_symlinks "$DOTFILES_ROOT/zshrc/.zprofile.default" "~/.zprofile"
   check_symlinks "$DOTFILES_ROOT/zshrc/.zshrc" "~/.zshrc"
-  check_symlinks "$DOTFILES_ROOT/zshrc/.zsh_plugins.txt" "~/.zsh_plugins.txt"
+  check_symlinks "$DOTFILES_ROOT/zshrc/.zsh_plugins" "~/.zsh_plugins"
+  check_symlinks "$DOTFILES_ROOT/zshrc/.zsh_aliases" "~/.zsh_aliases"
+  
   check_symlinks "$DOTFILES_ROOT/wezterm/.wezterm.lua" "~/.wezterm.lua"
   check_symlinks "$DOTFILES_ROOT/yazi" "~/.config/yazi"
   # Ensure parent dir exists for lazygit
@@ -254,7 +250,7 @@ main() {
   local formulas=(
     "deno" "dart" "font-symbols-only-nerd-font"
     "harper" "shfmt" "yaml-language-server" "dprint"
-    "helix" "neovim" "zsh" "wget" "openjdk@17" "yazi" "sevenzip"
+    "helix" "neovim" "wget" "openjdk@17" "yazi" "sevenzip"
     "jq" "yq" "fd" "ripgrep" "fzf" "bat" "lazygit" "lazydocker"
     "lazysql" "tig" "eza" "zoxide" "fswatch" "htop" "antidote"
     "mozjpeg" "ffmpeg" "imagemagick" "pngquant" "poppler"
