@@ -117,8 +117,8 @@ fi
 # --- Load Aliases ---
 [[ -f ~/.zsh_aliases ]] && source ~/.zsh_aliases
 
-# FZF (fuzzy finder)
-if [[ ! -f ~/.zsh_fzf ]]; then
-  fzf --zsh > ~/.zsh_fzf
-fi
-source ~/.zsh_fzf
+# # FZF (fuzzy finder)
+# if [[ ! -f ~/.zsh_fzf ]]; then
+#   fzf --zsh > ~/.zsh_fzf
+# fi
+# source ~/.zsh_fzf

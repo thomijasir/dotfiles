@@ -1,7 +1,7 @@
 zsh-users/zsh-completions
 ajeetdsouza/zoxide path:zoxide.plugin.zsh
 sindresorhus/pure
-Aloxaf/fzf-tab
+junegunn/fzf path:shell kind:defer
 lukechilds/zsh-nvm kind:defer
-zsh-users/zsh-syntax-highlighting
 zsh-users/zsh-autosuggestions kind:defer
+zsh-users/zsh-syntax-highlighting kind:defer

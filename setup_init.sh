@@ -74,6 +74,34 @@ check_symlinks() {
   fi
 }
 
+safe_brew_install() {
+  local pkg="$1"
+  local is_cask="$2"
+
+  if [ "$is_cask" == "true" ]; then
+    # log_info "Installing Cask: $pkg" # Redundant with main execution log
+    brew install --cask "$pkg"
+    
+    # Verify installation
+    if ! brew list --cask "$pkg" &>/dev/null; then
+      log_error "Verification failed: $pkg (Cask) was not found after installation."
+      return 1
+    fi
+  else
+    # log_info "Installing Formula: $pkg" # Redundant with main execution log
+    brew install "$pkg"
+    
+    # Verify installation
+    if ! brew list "$pkg" &>/dev/null; then
+      log_error "Verification failed: $pkg (Formula) was not found after installation."
+      return 1
+    fi
+  fi
+  
+  log_success "Verified installation of $pkg"
+  sleep 2 # Brief pause to ensure system settles and release locks
+}
+
 check_brew_package() {
   local pkg="$1"
   local is_cask="$2"
@@ -81,17 +109,15 @@ check_brew_package() {
   log_info "Brew package check $pkg"
   if [ "$is_cask" == "true" ]; then
     if ! brew list --cask "$pkg" &>/dev/null; then
-      add_task "Install Cask: $pkg" "brew install --cask $pkg"
+      add_task "Install Cask: $pkg" "safe_brew_install \"$pkg\" \"true\""
     else
-      # Optional: Check for upgrades (brew upgrade --cask is often slow/manual, skipping for speed unless requested)
-      :
+     log_info "Package $pkg (Cask) was installed"
     fi
   else
     if ! brew list "$pkg" &>/dev/null; then
-      add_task "Install Formula: $pkg" "brew install $pkg"
+      add_task "Install Formula: $pkg" "safe_brew_install \"$pkg\" \"false\""
     else
-      # brew upgrade handles updates generally
-      :
+      log_info "Package $pkg (Formula) was installed"
     fi
   fi
 }
@@ -121,22 +147,17 @@ check_rvm() {
 
 check_nvm() {
   log_info "Checking node version manager"
-  # NVM is installed via brew in the original script, but usually it's better via curl script or brew.
-  # The user said "for node im using nvm".
-  # If installed via brew, nvm requires specific setup.
-
-  # We will use the brew installation as per the original script's intent (brew install nvm)
-  # But we need to ensure it's set up.
-
-  # Task to install latest node using nvm
-  # We need to source nvm to use it
   add_task "Install latest Node.js via NVM" '
-        export NVM_DIR="$HOME/.nvm" && (
-        git clone https://github.com/nvm-sh/nvm.git "$NVM_DIR"
-        cd "$NVM_DIR"
-        git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
-      ) && \. "$NVM_DIR/nvm.sh"
-    '
+    export NVM_DIR="$HOME/.nvm" && (
+    rm -rf "$NVM_DIR"
+    git clone https://github.com/nvm-sh/nvm.git "$NVM_DIR"
+    cd "$NVM_DIR"
+    git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
+    ) && \. "$NVM_DIR/nvm.sh"
+    nvm install node
+    nvm use node
+    nvm alias default node
+  '
 }
 
 check_fvm() {
@@ -173,7 +194,7 @@ check_zsh_config_alignment() {
   fi
 
   # Pyenv Check
-  if ! grep -q "pyenv init" "$zprofile" && ! grep -q "pyenv init" "$zshrc"; then
+  if ! grep -q "pyenv init" "$zshrc"; then
     log_warn "Pyenv configuration missing in zsh files. Suggest adding safe init:"
     echo 'if command -v pyenv 1>/dev/null 2>&1; then eval "$(pyenv init -)"; fi'
   fi
@@ -223,7 +244,6 @@ main() {
 
   # 3. Homebrew & Taps
   add_task "Update and Upgrade Homebrew" "brew update && brew upgrade"
-  add_task "Tap dart-lang/dart" "brew tap dart-lang/dart"
   add_task "Tap leoafarias/fvm" "brew tap leoafarias/fvm"
 
   # 4. Core Languages & Managers
@@ -243,7 +263,7 @@ main() {
   )
 
   local formulas=(
-    "deno" "dart" "font-symbols-only-nerd-font"
+    "deno" "font-symbols-only-nerd-font"
     "harper" "shfmt" "yaml-language-server" "dprint"
     "helix" "neovim" "wget" "openjdk@17" "yazi" "sevenzip"
     "jq" "yq" "fd" "ripgrep" "fzf" "bat" "lazygit" "lazydocker"
@@ -260,17 +280,13 @@ main() {
   fi
 
   # 7. NPM Global Packages (LSPs & Formatters)
-  local npm_pkgs=(
+  local npm_package=(
     "typescript-language-server" "typescript" "vscode-langservers-extracted"
     "emmet-ls" "prettier" "@postgrestools/postgrestools" "sql-formatter"
     "bash-language-server" "mdts" "@vlabo/cspell-lsp" "@tailwindcss/language-server"
     "eslint_d" "@google/gemini-cli" "@anthropic-ai/claude-code"
   )
-  add_task "Install Global NPM Packages" '
-        export NVM_DIR="$HOME/.nvm"
-        [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-        npm install -g "${npm_pkgs[@]}"
-    '
+  add_task "Install essential node package" 'npm install -g "${npm_package[@]}"'
 
   # ==========================================================================
   # DRY RUN
@@ -323,6 +339,8 @@ main() {
         exit 1
       fi
     fi
+    # 👇 Safe execution between task
+    sleep 0.5
   done
 
   echo -e "\n${GREEN}All tasks completed!${NC}"
