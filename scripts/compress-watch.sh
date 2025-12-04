@@ -49,7 +49,7 @@ echo "=================================================="
 fswatch -0 "$WATCH_DIR" | while read -d "" event; do
 
   FILENAME=$(basename "$event")
-
+  FOLDER=$(dirname "$event")
   # 1. Check if file exists (it might have been deleted or moved quickly)
   if [ ! -f "$event" ]; then
     continue
@@ -81,7 +81,7 @@ fswatch -0 "$WATCH_DIR" | while read -d "" event; do
   # 4. Wait for file to be ready
   # Screenshots/Recordings might be written progressively.
   # A simple sleep helps ensure the file handle is released by the OS.
-  sleep 3
+  sleep 2
 
   # 5. Process
   STATUS=1
@@ -102,6 +102,7 @@ fswatch -0 "$WATCH_DIR" | while read -d "" event; do
   if [ $STATUS -eq 0 ]; then
     mark_processed "$event"
     echo "Done."
+    terminal-notifier -title "Compression successful!" -message "$FILENAME" -sound default -open "file://$FOLDER"
   else
     echo "Error compressing $FILENAME"
   fi

@@ -81,7 +81,7 @@ safe_brew_install() {
   if [ "$is_cask" == "true" ]; then
     # log_info "Installing Cask: $pkg" # Redundant with main execution log
     brew install --cask "$pkg"
-    
+
     # Verify installation
     if ! brew list --cask "$pkg" &>/dev/null; then
       log_error "Verification failed: $pkg (Cask) was not found after installation."
@@ -90,14 +90,14 @@ safe_brew_install() {
   else
     # log_info "Installing Formula: $pkg" # Redundant with main execution log
     brew install "$pkg"
-    
+
     # Verify installation
     if ! brew list "$pkg" &>/dev/null; then
       log_error "Verification failed: $pkg (Formula) was not found after installation."
       return 1
     fi
   fi
-  
+
   log_success "Verified installation of $pkg"
   sleep 2 # Brief pause to ensure system settles and release locks
 }
@@ -111,7 +111,7 @@ check_brew_package() {
     if ! brew list --cask "$pkg" &>/dev/null; then
       add_task "Install Cask: $pkg" "safe_brew_install \"$pkg\" \"true\""
     else
-     log_info "Package $pkg (Cask) was installed"
+      log_info "Package $pkg (Cask) was installed"
     fi
   else
     if ! brew list "$pkg" &>/dev/null; then
@@ -235,7 +235,7 @@ main() {
   check_symlinks "$DOTFILES_ROOT/zshrc/.zshrc" "~/.zshrc"
   check_symlinks "$DOTFILES_ROOT/zshrc/.zsh_plugins" "~/.zsh_plugins"
   check_symlinks "$DOTFILES_ROOT/zshrc/.zsh_aliases" "~/.zsh_aliases"
-  
+
   check_symlinks "$DOTFILES_ROOT/wezterm/.wezterm.lua" "~/.wezterm.lua"
   check_symlinks "$DOTFILES_ROOT/yazi" "~/.config/yazi"
   # Ensure parent dir exists for lazygit
@@ -268,7 +268,7 @@ main() {
     "helix" "neovim" "wget" "openjdk@17" "yazi" "sevenzip"
     "jq" "yq" "fd" "ripgrep" "fzf" "bat" "lazygit" "lazydocker"
     "lazysql" "tig" "eza" "zoxide" "fswatch" "htop" "antidote"
-    "mozjpeg" "ffmpeg" "imagemagick" "pngquant" "poppler"
+    "mozjpeg" "ffmpeg" "imagemagick" "pngquant" "poppler" "terminal-notifier"
   )
 
   for cask in "${casks[@]}"; do check_brew_package "$cask" "true"; done
