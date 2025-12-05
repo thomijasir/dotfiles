@@ -214,11 +214,12 @@ skip-levels = 1
 "o" = ':sh open "$(dirname "%{buffer_name}:-.")"'
 "O" = ":sh open ."
 "v" = ":pipe-to echo 'Open terminal vertical';wezterm cli split-pane --right --percent 35 --cwd $PWD"
-"s" = ":pipe-to echo 'Replace string';wezterm cli split-pane --bottom --percent 45 --cwd $PWD -- zsh -i -c -lc 'sr; exec zsh'"
-"r" = ":pipe-to echo 'Replace folder and filename';wezterm cli split-pane --bottom --percent 45 --cwd $PWD -- zsh -i -c -lc 'sf; exec zsh'"
+"s" = ":pipe-to echo 'Replace string';wezterm cli split-pane --bottom --percent 95 --cwd $PWD -- zsh -fc 'replace-str.sh; exit'"
+"r" = ":pipe-to echo 'Replace folder and filename';wezterm cli split-pane --bottom --percent 95 --cwd $PWD -- zsh -fc 'replace-file.sh; exit'"
 
-# Harpoon CLI
-[keys.normal.space.m]
+
+# Harpoon Bookmark CLI
+[keys.normal."C-b"]
 "a" = ":sh hx-harpoon.sh add %{buffer_name} %{cursor_line}"
 "l" = ":pipe-to echo 'Harpoon Files'; wezterm cli split-pane --bottom -- zsh -fc 'hx-harpoon.sh list; exec zsh'"
 "o" = ":pipe-to echo 'Open Harpoon'; wezterm cli split-pane --bottom -- zsh -fc 'hx-harpoon.sh open'"

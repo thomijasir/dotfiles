@@ -38,7 +38,7 @@ function rvm() {
 #   unset -f nvm node npm npx
 #   [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
 #   # This loads nvm bash_completion
-#   [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" 
+#   [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
 # }
 # function nvm() { _load_nvm; nvm "$@"; }
 # function node() { _load_nvm; node "$@"; }
@@ -97,8 +97,15 @@ fi
 
 # --- END Antidote Plugin Manager ---
 
+# Smarter completion initialization
 autoload -Uz compinit
-compinit -C
+if [ "$(date +'%j')" != "$(stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null)" ]; then
+  compinit
+else
+  compinit -C
+fi
+# autoload -Uz compinit
+# compinit -C
 
 # Prompt (fast & clean)
 # autoload -Uz promptinit && promptinit

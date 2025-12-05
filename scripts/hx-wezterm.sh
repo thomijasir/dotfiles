@@ -77,13 +77,15 @@ case "$command_prompt" in
     echo "echo '$(pbpaste)' | jq" | $send_to_bottom_pane
     ;;
   "lazygit")
-    split_pane_down
-    program=$(wezterm cli list | awk -v pane_id="$pane_id" '$3==pane_id { print $6 }')
-    if [ "$program" = "lazygit" ]; then
-      wezterm cli activate-pane-direction down
-    else
-      echo "lazygit; exit" | $send_to_bottom_pane
-    fi
+    # Put 95 split from bottom means take whole screen
+    wezterm cli split-pane --bottom --percent 95 --cwd $PWD -- zsh -fc 'lazygit; exit'
+    # split_pane_down
+    # program=$(wezterm cli list | awk -v pane_id="$pane_id" '$3==pane_id { print $6 }')
+    # if [ "$program" = "lazygit" ]; then
+    #   wezterm cli activate-pane-direction down
+    # else
+    #   echo "lazygit; exit" | $send_to_bottom_pane
+    # fi
     ;;
   "run")
     split_pane_down
