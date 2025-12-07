@@ -197,33 +197,26 @@ skip-levels = 1
 "c" = ":append-output hx-snippet.sh clg"
 # --- Development Tools ---
 [keys.normal.";"]
-"a" = ":sh echo 'ai Assistance'; wezterm cli split-pane --right --percent 40 --cwd $PWD -- zsh -i -c -lc 'gemini; exec zsh'"
+"a" = ":pipe-to hx-wezterm.sh ai_gemini %{buffer_name} %{cursor_line}"
 "b" = ":pipe-to hx-wezterm.sh blame %{buffer_name} %{cursor_line}"
-"e" = ":pipe-to hx-wezterm.sh explorer"
-"c" = ":pipe-to echo 'Open vscode!';code ."
-# "d" = [":new", ":insert-output lazydocker", ":buffer-close!", ":redraw"]
-# "q" = [":new", ":insert-output lazysql", ":buffer-close!", ":redraw"]
-"g" = ":pipe-to hx-wezterm.sh lazygit"
+"e" = ":pipe-to hx-wezterm.sh explorer %{buffer_name} %{cursor_line}"
+"t" = ":pipe-to hx-wezterm.sh open_terminal_bottom;"
+"g" = ":pipe-to hx-wezterm.sh lazygit %{buffer_name} %{cursor_line}"
 "y" = ":pipe-to hx-wezterm.sh yazi %{buffer_name} %{cursor_line}"
-# "g" = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
-# "h" = ":sh hx-wezterm.sh howdoi"
-# r = ":sh hx-wezterm.sh run"
+"v" = ":pipe-to hx-wezterm.sh open_terminal_right"
+"s" = ":pipe-to hx-wezterm.sh string_replace"
+"r" = ":pipe-to hx-wezterm.sh file_replace"
+"c" = ":pipe-to code ."
+"O" = ":pipe-to open ."
+"o" = ':pipe-to open "$(dirname "%{buffer_name}:-.")"'
 "f" = ":sh echo 'Filename copied!';basename '%{buffer_name}' | pbcopy"
 "F" = ":sh echo 'Absolute path copied!';echo -n '%{buffer_name}' | pbcopy"
-"t" = ":pipe-to echo 'Open terminal horizontal';wezterm cli split-pane --bottom --percent 25 --cwd $PWD"
-"o" = ':sh open "$(dirname "%{buffer_name}:-.")"'
-"O" = ":sh open ."
-"v" = ":pipe-to echo 'Open terminal vertical';wezterm cli split-pane --right --percent 35 --cwd $PWD"
-"s" = ":pipe-to echo 'Replace string';wezterm cli split-pane --bottom --percent 95 --cwd $PWD -- zsh -fc 'replace-str.sh; exit'"
-"r" = ":pipe-to echo 'Replace folder and filename';wezterm cli split-pane --bottom --percent 95 --cwd $PWD -- zsh -fc 'replace-file.sh; exit'"
-
 
 # Harpoon Bookmark CLI
 [keys.normal."C-b"]
-"a" = ":sh hx-harpoon.sh add %{buffer_name} %{cursor_line}"
-"l" = ":pipe-to echo 'Harpoon Files'; wezterm cli split-pane --bottom --percent 95 -- zsh -fc 'hx-harpoon.sh list'"
-"o" = ":pipe-to echo 'Open Harpoon'; wezterm cli split-pane --bottom --percent 95 -- zsh -fc 'hx-harpoon.sh open'"
-"r" = ":pipe-to echo 'Remove Bookmark'; wezterm cli split-pane --bottom --percent 95 -- zsh -fc 'hx-harpoon.sh remove'"
+"a" = ":sh hx-bookmark.sh add %{buffer_name} %{cursor_line}"
+"o" = ":pipe-to hx-wezterm.sh bookmark_open"
+"r" = ":pipe-to hx-wezterm.sh bookmark_remove"
 
 # Buffer Control
 [keys.normal.space.b]
@@ -236,10 +229,3 @@ skip-levels = 1
 "A" = ":buffer-close-all!"
 "n" = ":bnext"
 "p" = ":bprev"
-# Window Control is not working due to helix limitation
-# [keys.normal.space.w]
-# "=" = "resize_pane_equal"
-# "+" = "resize_pane_increase"
-# "-" = "resize_pane_decrease"
-# ">" = "resize_pane_increase_horizontal"
-# "<" = "resize_pane_decrease_horizontal"

@@ -112,18 +112,17 @@ open_bookmark() {
   fi
 
   # Use fzf to select
-  selected=$(cat "$temp_file" | fzf -m --delimiter='|' --with-nth=1 --preview='bat --color=always {2} 2>/dev/null || cat {2}' --preview-window=right:60%)
+  selected=$(cat "$temp_file" | fzf -m --delimiter='|' --with-nth=1 --preview='bat --color=always {2} 2>/dev/null || cat {2}' --reverse --preview-window=right:60%)
   rm "$temp_file"
 
   if [ -n "$selected" ]; then
     selected_path=$(echo "$selected" | cut -d'|' -f2)
+    selected_paths=$(printf "%s\n" "$selected" | cut -d'|' -f2)
 
-    # Check if hx-yazi.sh exists, otherwise use default editor
-    if command -v hx-yazi.sh &>/dev/null; then
+    if command -v hx-open.sh &>/dev/null; then
       # open to top pane
-      pane_id=$(wezterm cli get-pane-direction up)
-      printf ":o '%s'\r" "$selected_path" | wezterm cli send-text --pane-id "$pane_id" --no-paste
-      wezterm cli activate-pane-direction --pane-id $pane_id up
+      # TODO: add capability to open multiple files
+      hx-open.sh $selected_paths
     elif [ -n "$EDITOR" ]; then
       $EDITOR "$selected_path"
     else
@@ -194,55 +193,3 @@ case $command_prompt in
     exit 1
     ;;
 esac
-
-# #!/bin/sh
-
-# # Original Scripts
-# # Author Thomi Jasir (thomijasir@gmail.com)
-
-# # set -x
-
-# # command_prompt="$1"
-# # file_path="$2"
-# # cursor_line="$3"
-# # hx_pane_id=$(echo $WEZTERM_PANE)
-# # pwd=$(PWD)
-# # basedir=$(dirname "$filename")
-# # basename=$(basename "$filename")
-# # basename_without_extension="${basename%.*}"
-# # extension="${filename##*.}"
-# # store_file=".harpoon.json"
-
-# # json management using jq
-# # format json for harppon file
-# # {
-# #   "your_base_dir": ["your_path_file"],
-# #   "other_workspace": ["src/component/index.tsx"]
-# # }
-# # json file will put in the home dir {$HOME}
-
-# case $command_prompt in
-#   "add")
-#     # TODO: add buffer filepath to list
-#     # echo "is works"
-#     # check is has .harpoon.json file in the root project
-#     # if dont have create file .harpoon.json
-#     # if user want to add path file check the exsisitng path file
-#     # if path available then replace previous one and move to latest order file on the end of file
-#     # everytime insert or replace always append make sure latest add is on below
-#     ;;
-#   "list")
-#     # TODO: open fzf and see list file that saved
-#     # check is has .harpoon.json file
-#     # if dont have you just saying you dont have bookmark list
-#     # if has then open fzf with format filname and 1st parent folder
-#     # example /src/component/card/propertyList.tsx then you should show on fzf card/propertyList.tsx
-#     ;;
-#   "open")
-#     # TODO: fzf slect and open to top
-#     # check is has .harpoon.json file in the root project
-#     # if dont have just echo "you dont have bookmark list"
-#     # execute command hx-yazi.sh following the path that we select on fzf example hx-yazi.sh {file_path} i have added to alias a
-#     hx-yazi.sh $file_path
-#     ;;
-# esac

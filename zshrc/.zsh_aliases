@@ -29,7 +29,7 @@ alias mkdir='mkdir -pv' # Preferred 'mkdir' implementation
 # --- Directory Listing ---
 alias ll='ls -FGlAhp' # Preferred 'ls' implementation
 # options: --no-filesize --no-time --no-permissions
-alias ls="eza --no-filesize --long --color=always --icons=always --no-user"
+alias ls="eza --no-filesize --no-permissions --long --color=always --icons=always --no-user"
 
 # --- Directory Navigation ---
 alias cd='z' # Use zoxide

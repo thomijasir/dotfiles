@@ -62,7 +62,8 @@ fswatch -0 "$WATCH_DIR" | while read -d "" event; do
 
   # Regex for macOS default naming convention
   # Example: "Screenshot 2023-12-01 at 10.00.00.png"
-  if [[ "$FILENAME" =~ ^Screenshot\ [0-9]{4}-[0-9]{2}-[0-9]{2}\ at\ .*\.png$ ]]; then
+  # if [[ "$FILENAME" =~ ^Screenshot\ [0-9]{4}-[0-9]{2}-[0-9]{2}\ at\ .*\.(jpg|jpeg|png)$ ]]; then
+  if [[ "$FILENAME" =~ ^.*\.(jpg|jpeg|png)$ ]]; then
     IS_SCREENSHOT=true
   # Example: "Screen Recording 2023-12-01 at 10.00.00.mov"
   elif [[ "$FILENAME" =~ ^Screen\ Recording\ [0-9]{4}-[0-9]{2}-[0-9]{2}\ at\ .*\.mov$ ]]; then

@@ -97,10 +97,19 @@ fi
 TARGET_DIR="${1:-.}"
 
 echo
-echo -e "Search is \033[1mLITERAL\033[0m by default.
-Use regex by starting your query with: r=<regex>
-(fd search is case-\033[1minsensitive\033[0m; replacement uses sed)."
-read -r -p "> " RAW_QUERY
+echo -e "# ---------------------------------------------------------------
+# 🔧 Rename Tool
+# - Rename files and folders interactively
+# - Preview changes before applying
+# - Supports literal and regex patterns
+#
+# Modes:
+#   • Literal (default)
+#   • Regex: prefix query with r=<pattern>
+#
+# Dependencies: fzf, sed, (optional) bat for preview
+# ---------------------------------------------------------------"
+read -e -r -p "> " RAW_QUERY
 [[ -z "${RAW_QUERY}" ]] && {
   echo "Empty query. Exiting."
   exit 0
@@ -124,7 +133,7 @@ if [[ ! -s "$CAND_FILE" ]]; then
 fi
 
 fzf --multi \
-  --preview "$PREVIEW_CMD" \
+  --reverse --preview "$PREVIEW_CMD" \
   --preview-window 'right:60%' \
   --bind 'ctrl-a:toggle-all' \
   --header $'Ctrl-A: Toggle all \nEnter: Confirm \nEsc: Cancel' \
@@ -143,7 +152,7 @@ cat "$SEL_FILE"
 # --- replacement text ---------------------------------------------------------
 echo
 echo -e "Enter the \033[1mreplacement\033[0m text (what to change \033[1m${RAW_QUERY}\033[0m into):"
-read -r -p "> " RAW_REPL
+read -e -r -p "> " RAW_REPL
 REPL_ESC="$(escape_sed_replacement "$RAW_REPL")"
 FROM_ESC="$(escape_regex_literal "$PATTERN")"
 

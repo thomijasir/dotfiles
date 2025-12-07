@@ -34,38 +34,60 @@ split_pane_down() {
   fi
 }
 
+split_pane_down_full() {
+  wezterm cli split-pane --bottom --percent 95 --cwd $PWD -- zsh -fc "$1; exit"
+}
+
+split_pane_down_half() {
+  wezterm cli split-pane --bottom --cwd $PWD -- zsh -fc "$1; exit"
+}
+
 case "$command_prompt" in
-  "blame")
-    split_pane_down
-    echo "tig blame $file_path +$cursor_line; exit" | $send_to_bottom_pane
+  "ai_gemini")
+    # Note: you can configure for claude, open code and any other ai tools
+    wezterm cli split-pane --right --percent 40 --cwd $PWD -- zsh -i -c -lc 'gemini; exit'
     ;;
-  "check")
-    split_pane_down
-    case "$extension" in
-      "rs")
-        run_command="cd $pwd/$(echo $filename | sed 's|src/.*$||'); cargo check; if [ \$status = 0 ]; wezterm cli activate-pane-direction up; end;"
-        ;;
-    esac
-    echo "$run_command" | $send_to_bottom_pane
+  "blame")
+    split_pane_down_half "tig blame $file_path +$cursor_line"
     ;;
   "yazi")
-    split_pane_down
-    run_command='tmp="$(mktemp -t yazi-chooser.XXXXXX)"; yazi "$PWD" --chooser-file="$tmp"; [ -s "$tmp" ] && hx-yazi.sh "$(head -n1 "$tmp")"; rm -rf "$tmp"'
-    echo "$run_command; exit" | $send_to_bottom_pane
+    run_cmd='tmp="$(mktemp -t yazi-chooser.XXXXXX)"; yazi "$PWD" --chooser-file="$tmp"; [ -s "$tmp" ] && hx-open.sh "$(head -n1 "$tmp")"; rm -rf "$tmp"'
+    split_pane_down_full "$run_cmd"
+    ;;
+  "lazygit")
+    split_pane_down_full "lazygit"
+    ;;
+  "open_terminal_bottom")
+    wezterm cli split-pane --bottom --percent 25 --cwd $PWD
+    ;;
+  "open_terminal_right")
+    wezterm cli split-pane --right --percent 35 --cwd $PWD
+    ;;
+  "string_replace")
+    split_pane_down_full "replace-str.sh"
+    ;;
+  "file_replace")
+    split_pane_down_full "replace-file.sh"
+    ;;
+  "bookmark_add")
+    hx-bookmark.sh add $file_path $cursor_line
+    ;;
+  "bookmark_open")
+    split_pane_down_full "hx-bookmark.sh open"
+    ;;
+  "bookmark_remove")
+    split_pane_down_full "hx-bookmark.sh remove"
     ;;
   "explorer")
     wezterm cli activate-pane-direction up
-
     left_pane_id=$(wezterm cli get-pane-direction left)
     if [ -z "${left_pane_id}" ]; then
       left_pane_id=$(wezterm cli split-pane --left --percent 20)
     fi
-
     left_program=$(wezterm cli list | awk -v pane_id="$left_pane_id" '$3==pane_id { print $6 }')
     if [ "$left_program" != "br" ]; then
-      echo "br; exit" | wezterm cli send-text --pane-id $left_pane_id --no-paste
+      echo "broot; exit" | wezterm cli send-text --pane-id $left_pane_id --no-paste
     fi
-
     wezterm cli activate-pane-direction left
     ;;
   "fzf")
@@ -75,17 +97,6 @@ case "$command_prompt" in
   "jq")
     split_pane_down
     echo "echo '$(pbpaste)' | jq" | $send_to_bottom_pane
-    ;;
-  "lazygit")
-    # Put 95 split from bottom means take whole screen
-    wezterm cli split-pane --bottom --percent 95 --cwd $PWD -- zsh -fc 'lazygit; exit'
-    # split_pane_down
-    # program=$(wezterm cli list | awk -v pane_id="$pane_id" '$3==pane_id { print $6 }')
-    # if [ "$program" = "lazygit" ]; then
-    #   wezterm cli activate-pane-direction down
-    # else
-    #   echo "lazygit; exit" | $send_to_bottom_pane
-    # fi
     ;;
   "run")
     split_pane_down
@@ -107,42 +118,6 @@ case "$command_prompt" in
         ;;
       "sh")
         run_command="sh $filename"
-        ;;
-    esac
-    echo "$run_command" | $send_to_bottom_pane
-    ;;
-  "generate_tests")
-    split_pane_down
-    case "$extension" in
-      "go")
-        echo "gotests -w -all $filename" | $send_to_bottom_pane
-        run_command="echo -e \":open $basedir/${basename_without_extension}_test.go\\\r\" | $send_to_hx_pane; $switch_to_hx_pane_and_zoom"
-        echo "$run_command" | $send_to_bottom_pane
-        ;;
-    esac
-    ;;
-  "test_all")
-    split_pane_down
-    case "$extension" in
-      "go")
-        run_command="go test -v ./...; if [ \$status = 0 ]; wezterm cli activate-pane-direction up; end;"
-        ;;
-      "rs")
-        run_command="cd $pwd/$(echo $filename | sed 's|src/.*$||'); cargo test; if [ \$status = 0 ]; wezterm cli activate-pane-direction up; end;"
-        ;;
-    esac
-    echo "$run_command" | $send_to_bottom_pane
-    ;;
-  "test_single")
-    split_pane_down
-    case "$extension" in
-      "go")
-        test_name=$(head -$line_number $filename | tail -1 | sed -n 's/func \([^(]*\).*/\1/p')
-        run_command="go test -run=$test_name -v ./$basedir/...; if [ \$status = 0 ]; wezterm cli activate-pane-direction up; end;"
-        ;;
-      "rs")
-        test_name=$(head -$line_number $filename | tail -1 | sed -n 's/^.*fn \([^ ]*\)().*$/\1/p')
-        run_command="cd $pwd/$(echo $filename | sed 's|src/.*$||'); cargo test $test_name; if [ \$status = 0 ]; wezterm cli activate-pane-direction up; end;"
         ;;
     esac
     echo "$run_command" | $send_to_bottom_pane

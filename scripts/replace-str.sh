@@ -20,8 +20,20 @@ fi
 # --- inputs -------------------------------------------------------------------
 TARGET_DIR="${1:-.}"
 echo
-echo -e "Search is literal by default.\nUse regex by starting your query with: r=<regex>"
-read -r -p "> " RAW_QUERY
+echo -e "# ---------------------------------------------------------------
+# 🔧 Search & Replace Tool STRING
+# - Search project files using ripgrep
+# - Select matches interactively with fzf
+# - Preview and apply replacements safely with sed
+#
+# Search modes:
+#   • Literal (default)
+#   • Regex: prefix query with r=<pattern>
+#
+# Dependencies: rg, fzf, sed, (optional) bat
+# ---------------------------------------------------------------
+"
+read -e -r -p "> " RAW_QUERY
 if [ -z "${RAW_QUERY}" ]; then
   echo "Empty query. Exiting."
   exit 0
@@ -55,7 +67,7 @@ MATCHES="$(echo "$MATCHES" | awk -F: '{print $1 ":" $2}' | sort -u)"
 SELECTED="$(
   printf '%s\n' "$MATCHES" |
     fzf --multi \
-      --delimiter ':' \
+      --reverse --delimiter ':' \
       --preview "$PREVIEW_CMD" \
       --preview-window 'right:60%' \
       --bind 'ctrl-a:toggle-all' \
@@ -109,7 +121,7 @@ escape_replacement() {
 
 # --- replacement input --------------------------------------------------------
 echo -e "Replacement string (only matched portion will be replaced):"
-read -r -p "> " REPLACEMENT
+read -e -r -p "> " REPLACEMENT
 
 # Prepare sed components consistently
 if [ "$IS_REGEX" -eq 1 ]; then
