@@ -1,4 +1,11 @@
-// deno-lint-ignore-file no-explicit-any
+declare global {
+  const Deno: any;
+  // This tells TypeScript that the `import.meta` object can have any properties.
+  interface ImportMeta {
+    [key: string]: any;
+  }
+}
+export {};
 /**
  * react_tools.ts — Interactive React component/layout scaffolder for Deno.
  * Author Thomi Jasir<thomijasir@gmail.com>

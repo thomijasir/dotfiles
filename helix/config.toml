@@ -108,6 +108,8 @@ skip-levels = 1
   ':open %sh{cat /tmp/unique-file}',
   ':redraw',
 ]
+# Interactive search FZF
+"C-/" = ":pipe-to hx-wezterm.sh fzf"
 
 # Yank to system clipboard
 "y" = ["yank","yank_to_clipboard", "collapse_selection"]

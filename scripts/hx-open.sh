@@ -2,15 +2,18 @@
 
 pane_id=$(wezterm cli get-pane-direction up)
 
-# Build command: :o 'file1' 'file2' 'file3'
-cmd=":o"
-for path in "$@"; do
-  cmd="$cmd '$path'"
-done
-cmd="$cmd\r"
+cmd=""
+if [ "$#" -gt 0 ]; then
+  # Build command: :o 'file1' 'file2' 'file3'
+  cmd=":o"
+  for path in "$@"; do
+    cmd="$cmd '$path'"
+  done
+  cmd="${cmd}\r"
 
-# send to WezTerm
-printf "%b" "$cmd" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+  # send to WezTerm only if command is not empty
+  printf "%b" "$cmd" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+fi
 
 wezterm cli activate-pane-direction --pane-id "$pane_id" up
 

@@ -91,8 +91,11 @@ case "$command_prompt" in
     wezterm cli activate-pane-direction left
     ;;
   "fzf")
-    split_pane_down
-    echo "hx-fzf.sh \$(rg --line-number --column --no-heading --smart-case . | fzf --delimiter : --preview 'bat --style=full --color=always --highlight-line {2} {1}' --preview-window '~3,+{2}+3/2' | awk '{ print \$1 }' | cut -d: -f1,2,3)" | $send_to_bottom_pane
+    run_cmd="hx-open.sh \$(hx-ripgrep.sh | fzf --bind 'change:reload:hx-ripgrep.sh {q}' --delimiter : --reverse --preview 'bat --style=full --color=always --highlight-line {2} {1}' --preview-window '~3,+{2}+3/2' | awk '{print \$1}' | cut -d: -f1,2,3)"
+    # run_cmd="hx-open.sh \$(fzf --bind 'change:reload:hx-ripgrep.sh \"{q}\"' --bind 'start:reload:hx-ripgrep.sh \"\"' --delimiter : --reverse --preview 'bat --style=full --color=always --highlight-line {2} {1}' --preview-window '~3,+{2}+3/2' | awk '{ print \$1 }' | cut -d: -f1,2,3)"
+    # run_cmd="hx-open.sh \$(rg --line-number --column --no-heading --smart-case . | fzf --delimiter : --reverse --preview 'bat --style=full --color=always --highlight-line {2} {1}' --preview-window '~3,+{2}+3/2' | awk '{ print \$1 }' | cut -d: -f1,2,3)"
+
+    split_pane_down_full "$run_cmd"
     ;;
   "jq")
     split_pane_down
