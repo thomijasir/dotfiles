@@ -1,8 +1,11 @@
+os:
+  edit: "hx {{filename}}"
+  open: "open $(dirname {{filename}})"
 gui:
   language: "en"
   sidePanelWidth: 0.3
   commandLogSize: 1
-  # Use the mocha catppuccin theme
+  # sUse the mocha catppuccin theme
   theme:
     activeBorderColor:
       - "#8aadf4"
