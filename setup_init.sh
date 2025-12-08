@@ -235,6 +235,7 @@ main() {
   check_symlinks "$DOTFILES_ROOT/zshrc/.zshrc" "~/.zshrc"
   check_symlinks "$DOTFILES_ROOT/zshrc/.zsh_plugins" "~/.zsh_plugins"
   check_symlinks "$DOTFILES_ROOT/zshrc/.zsh_aliases" "~/.zsh_aliases"
+  check_symlinks "$DOTFILES_ROOT/zshrc/.zsh_help" "~/.zsh_help"
 
   check_symlinks "$DOTFILES_ROOT/wezterm/.wezterm.lua" "~/.wezterm.lua"
   check_symlinks "$DOTFILES_ROOT/yazi" "~/.config/yazi"

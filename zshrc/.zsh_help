@@ -1,0 +1,111 @@
+
+# ------------------------------------------------------------------------------
+# Single-list Aliases: Pretty print + FZF Search
+# ------------------------------------------------------------------------------
+
+alias help='alias_help_list'
+alias helpx='alias_help_fzf_list'
+
+# Single source of truth: "command|description"
+alias_help_items() {
+  local -a ITEMS=(
+    "q|Quit shell"
+    "zsh_aliases|Open alias file in Helix"
+    "zsh_config|Open ZSH config in Helix"
+    "zsh_reload|Reload ZSH configuration"
+    "react_tools|React toolkit (Deno)"
+    "appkill|Kill process via fzf"
+    "cp|Copy with prompt"
+    "mv|Move with prompt"
+    "mkdir|Create directories"
+    "ll|List (classic ls, detailed)"
+    "ls|Pretty list (eza)"
+    "cd|Jump via zoxide"
+    "work|Go to ~/Workspace"
+    "tree|Tree view with files (depth 3)"
+    "dtree|Tree view dirs only (depth 3)"
+    "vim|Open Neovim"
+    "temp|Open temp note in Neovim"
+    "lg|LazyGit UI"
+    "ld|LazyDocker UI"
+    "mdts|Run mdts silently"
+    "sr|Replace string in files"
+    "sf|Replace files by pattern"
+    "ga|Git add all"
+    "gf|Git fetch & pull"
+    "gp|Git push"
+    "gs|Git status"
+    "gc|Git commit with message"
+    "gb|Git create branch"
+    "gdb|Delete branches safely"
+    "hzo|Open via hx-zoxide helper"
+    "fman|Fuzzy pick command → man page"
+    "nvim_config|Open Neovim config"
+    "helix_config|Open Helix config"
+    "wezterm_config|Open WezTerm config"
+    "crw|Rust: watch & run"
+    "androidUp|Start Android emulator"
+    "iosUp|Open iOS Simulator"
+    "dart|Dart via FVM"
+    "flutter|Flutter via FVM"
+    "ngrok|Run ngrok from home bin"
+    "myip|Show public IP"
+    "localip|Show local IP (en0/en1)"
+    "rm_node|Remove node_modules + package-lock.json"
+    "cleanupDS|Remove .DS_Store files"
+    "cleadNODE|Remove node_modules directories"
+    "y|Yazi with cwd sync back to shell"
+    "dsize|Top 20 entries by size"
+    "bigfiles|Top N biggest files"
+    "proj|Fuzzy open project directory"
+    "cf|Create file ensuring parent dir"
+    "auto-translate|Auto translate video (Python)"
+    "auto-transcribe|Auto transcribe video (Python)"
+    "video-compress|Compress video (Python)"
+    "tencent_sg|SSH to Tencent SG"
+    "tencent_hk|SSH to Tencent HK"
+    "aliyun|SSH to Aliyun"
+  )
+  print -l -- "${ITEMS[@]}"
+}
+
+# Pretty list printer (bold yellow command, green description)
+alias_help_list() {
+  emulate -L zsh
+  local BOLD=$'\033[1m' YELLOW=$'\033[33m' GREEN=$'\033[32m' RESET=$'\033[0m'
+  local -a rows; rows=("${(@f)$(alias_help_items)}")
+
+  echo ""
+  echo "${BOLD}Aliases:${RESET}"
+  echo "---------------------------------------------"
+
+  local r cmd desc
+  for r in "${rows[@]}"; do
+    cmd=" - ${r%%|*}"
+    desc="${r#*|}"
+    printf "%b%b%s%b → %b%s%b\n" "$BOLD" "$YELLOW" "$cmd" "$RESET" "$GREEN" "$desc" "$RESET"
+  done
+
+  echo "----------------------------------------------"
+  echo "${BOLD}Tip:${RESET} Use ${YELLOW}helpx${RESET} to fuzzy-search and copy commands."
+}
+
+# FZF searchable list (Enter copies command)
+alias_help_fzf_list() {
+  emulate -L zsh
+  command -v fzf >/dev/null 2>&1 || { echo "fzf is not installed."; return 1; }
+
+  local -a rows; rows=("${(@f)$(alias_help_items)}")
+
+  print -l -- "${rows[@]}" | \
+    fzf --ansi \
+        --header="Search alias (Enter: copy command)" \
+        --preview '
+          line="{}"
+          cmd="${line%%|*}"
+          desc="${line#*|}"
+          Y="\033[33m"; G="\033[32m"; BOLD="\033[1m"; RESET="\033[0m"
+          printf "%b%s%b → %b%s%b\n" "$BOLD$Y" "$cmd" "$RESET" "$G" "$desc" "$RESET"
+        ' \
+        --bind 'enter:execute-silent(echo {} | sed "s/|.*$//" | pbcopy)+abort'
+}

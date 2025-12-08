@@ -1,17 +1,24 @@
-
-# --- CLI Shortcut
+#!/bin/bash
+# --- CLI Shortcut ---
+# @desc: Quit the shell
 alias q='exit;'
 
-# ZSH Configuration commad
+# --- ZSH Configuration ---
+# @desc: Open alias file in Helix
 alias zsh_aliases='hx ~/.zsh_aliases'
+
+# @desc: Open ZSH config in Helix
 alias zsh_config='hx ~/.zshrc'
-# reload zsh config
+
+# @desc: Reload ZSH configuration
 alias zsh_reload='source ~/.zshrc'
 
-# -- Development Tools Scripts
+# --- Development Tools Scripts ---
+# @desc: React toolkit (Deno)
 alias react_tools='deno run --allow-read --allow-write $DOTFILES_ROOT/scripts/react-tools.ts'
 
-# --- MacOS Process ---
+# --- macOS Process ---
+# @desc: Fuzzy kill processes (multi-select)
 alias appkill='f() {
   local pid
   pid=$(ps aux | sed 1d | fzf -m --header="[kill process]" --preview="echo {}" --preview-window=down:3:wrap | awk "{print \$2}")
@@ -22,74 +29,144 @@ alias appkill='f() {
 }; f'
 
 # --- File Operations ---
-alias cp='cp -iv'       # Preferred 'cp' implementation
-alias mv='mv -iv'       # Preferred 'mv' implementation
-alias mkdir='mkdir -pv' # Preferred 'mkdir' implementation
+# @desc: Copy with prompt & verbose
+alias cp='cp -iv'
+
+# @desc: Move with prompt & verbose
+alias mv='mv -iv'
+
+# @desc: Create directories (parents) and verbose
+alias mkdir='mkdir -pv'
 
 # --- Directory Listing ---
-alias ll='ls -FGlAhp' # Preferred 'ls' implementation
-# options: --no-filesize --no-time --no-permissions
+# @desc: List (classic ls, detailed)
+alias ll='ls -FGlAhp'
+
+# @desc: List (eza, pretty)
 alias ls="eza --no-filesize --no-permissions --long --color=always --icons=always --no-user"
 
 # --- Directory Navigation ---
-alias cd='z' # Use zoxide
+# @desc: Jump to frecent dirs (zoxide)
+alias cd='z'
+
+# @desc: Go to Workspace directory
 alias work='cd ~/Workspace'
 
 # --- Tree View ---
+# @desc: Tree with files (depth 3)
 alias tree="tree -L 3 -a -I '.git' --charset X "
+
+# @desc: Tree dirs only (depth 3)
 alias dtree="tree -L 3 -a -d -I '.git' --charset X "
 
 # --- Editor Aliases ---
+# @desc: Open Neovim
 alias vim='nvim'
+
+# @desc: Open temp note in Neovim
 alias temp='nvim ~/temp.md'
 
 # --- Development Tools ---
+# @desc: LazyGit UI
 alias lg="lazygit"
+
+# @desc: LazyDocker UI
 alias ld="lazydocker"
+
+# @desc: Run mdts silently
 alias mdts="npx mdts . --silent"
 
-# --- Replace Script ---
+# --- Replace Scripts ---
+# @desc: Replace string in files
 alias sr='replace-str.sh'
+
+# @desc: Replace files by pattern
 alias sf='replace-file.sh'
 
 # --- Git Shortcuts ---
-alias ga='git add .'                        # Git Add
-alias gf='git fetch && git pull'            # Git Fetch And Pull
-alias gp='git push'                         # Git Push
-alias gs='git status'                       # Git Status
-alias gc='f() { git commit -m "$1"; }; f'   # Git Commit with message
-alias gb='f() { git checkout -b "$1"; }; f' # Git create new branch
+# @desc: Git add all
+alias ga='git add .'
+
+# @desc: Git fetch & pull
+alias gf='git fetch && git pull'
+
+# @desc: Git push
+alias gp='git push'
+
+# @desc: Git status
+alias gs='git status'
+
+# @desc: Commit with message (gc "msg")
+alias gc='f() { git commit -m "$1"; }; f'
+
+# @desc: Create & switch to new branch (gb "branch")
+alias gb='f() { git checkout -b "$1"; }; f'
+
+# @desc: Delete branches safely
 alias gdb='git-delete-branch.sh'
 
 # --- Open Files Script ---
+# @desc: Open files via zoxide helper
 alias hzo='hx-zoxide.sh'
+
+# @desc: Fuzzy pick a command → man page
 alias fman="compgen -c | fzf | xargs man"
 
 # --- Configuration Files ---
+# @desc: Open Neovim config
 alias nvim_config='hx ~/.config/nvim'
+
+# @desc: Open Helix config
 alias helix_config='hx ~/.config/helix'
+
+# @desc: Open WezTerm config
 alias wezterm_config='hx ~/.wezterm.lua'
 
 # --- Development Environment ---
-alias crw='cargo watch -q -c -w src/ -x run' # Cargo watch and run
+# @desc: Rust: watch and run
+alias crw='cargo watch -q -c -w src/ -x run'
 
 # --- Mobile Development ---
-alias androidUp='emulator -avd Pixel_2_API_28' # Open Emulator
-alias iosUp='open -a Simulator'                # Open Simulator
+# @desc: Start Android emulator
+alias androidUp='emulator -avd Pixel_2_API_28'
 
-# -- Dart & Flutter
+# @desc: Open iOS Simulator
+alias iosUp='open -a Simulator'
+
+# --- Dart & Flutter ---
+# @desc: Dart via FVM
 alias dart='fvm dart'
+
+# @desc: Flutter via FVM
 alias flutter='fvm flutter'
 
 # --- Network Tools ---
-alias ngrok="$HOME/.ngrok" # add ngrok
+# @desc: Run ngrok from home bin
+alias ngrok="$HOME/.ngrok"
+
+# @desc: Print public IP
+myip() {
+  curl -s https://api.ipify.org
+  echo ""
+}
+
+# @desc: Print local IP (en0/en1)
+localip() {
+  ipconfig getifaddr en0 || ipconfig getifaddr en1
+}
 
 # --- Cleanup Commands ---
+# @desc: Remove node deps and lock file
 alias rm_node='rm -rf node_modules package-lock.json'
-alias cleanupDS="find . -type f -name '*.DS_Store' -ls -delete" # Auto Clean DS
+
+# @desc: Clean .DS_Store files
+alias cleanupDS="find . -type f -name '*.DS_Store' -ls -delete"
+
+# @desc: Remove node_modules directories
 alias cleadNODE="find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' \;"
 
-# Super Shell Yazi
+# --- Super Shell Yazi ---
+# @desc: Open Yazi and return to new dir
 y() {
   local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
   yazi "$@" --cwd-file="$tmp"
@@ -98,46 +175,47 @@ y() {
   rm -f -- "$tmp"
 }
 
-# Calculate file/directory sizes
+# --- Size/Find Helpers ---
+# @desc: Top 20 by size
 dsize() {
   du -sh "${1:-.}"/* 2>/dev/null | sort -hr | head -n 20
 }
 
-# Find biggest files in current directory
+# @desc: Top N biggest files
 bigfiles() {
   find . -type f -exec du -h {} + 2>/dev/null | sort -rh | head -n "${1:-10}"
 }
 
-# Open project directories with fzf
+# --- Projects ---
+# @desc: Fuzzy open project directory
 proj() {
   local dir
   dir=$(find ~/Workspace -maxdepth 3 -type d 2>/dev/null | fzf --preview "ls -la {}")
   [ -n "$dir" ] && cd "$dir"
 }
 
-# Get public IP address
-myip() {
-  curl -s https://api.ipify.org
-  echo ""
-}
-
-# Get local IP address
-localip() {
-  ipconfig getifaddr en0 || ipconfig getifaddr en1
-}
-
-# make and crete file
+# --- File Creation ---
+# @desc: Create file ensuring parent dir
 cf() {
   mkdir -p "$(dirname "$1")" && touch "$1"
 }
 
-
 # --- Python Scripts ---
+# @desc: Auto translate video
 alias auto-translate='python ~/Workspace/minootube/scripts/auto-translate.py'
+
+# @desc: Auto transcribe video
 alias auto-transcribe='python ~/Workspace/minootube/scripts/auto-transcribe.py'
+
+# @desc: Compress video
 alias video-compress='python ~/Workspace/minootube/scripts/auto-compress.py'
 
 # --- SSH Connections ---
+# @desc: SSH Tencent SG
 alias tencent_sg='ssh -i ~/.ssh-keys/tencent_sg_key.pem root@43.134.91.33'
+
+# @desc: SSH Tencent HK
 alias tencent_hk='ssh -i ~/.ssh-keys/tencent_hk_key.pem root@43.159.230.62'
-alias aliyun='ssh root@8.219.9.110 -i ~/aliyun-key.pem' # Aliyun SSH
+
+# @desc: SSH Aliyun
+alias aliyun='ssh root@8.219.9.110 -i ~/aliyun-key.pem'

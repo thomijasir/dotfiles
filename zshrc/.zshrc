@@ -123,6 +123,7 @@ fi
 
 # --- Load Aliases ---
 [[ -f ~/.zsh_aliases ]] && source ~/.zsh_aliases
+[[ -f ~/.zsh_help ]] && source ~/.zsh_help
 
 # # FZF (fuzzy finder)
 # if [[ ! -f ~/.zsh_fzf ]]; then
