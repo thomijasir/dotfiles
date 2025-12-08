@@ -10,8 +10,8 @@ file_path="$2"
 cursor_line="$3"
 hx_pane_id=$(echo $WEZTERM_PANE)
 pwd=$(PWD)
-basedir=$(dirname "$filename")
-basename=$(basename "$filename")
+basedir=$(dirname "$file_path")
+basename=$(basename "$file_path")
 basename_without_extension="${basename%.*}"
 extension="${filename##*.}"
 
@@ -47,6 +47,9 @@ case "$command_prompt" in
     # Note: you can configure for claude, open code and any other ai tools
     wezterm cli split-pane --right --percent 40 --cwd $PWD -- zsh -i -c -lc 'gemini; exit'
     ;;
+  "ai_claude")
+    wezterm cli split-pane --right --percent 40 --cwd $PWD -- zsh -i -c -lc 'claude; exit'
+    ;;
   "blame")
     split_pane_down_half "tig blame $file_path +$cursor_line"
     ;;
@@ -77,6 +80,15 @@ case "$command_prompt" in
     ;;
   "bookmark_remove")
     split_pane_down_full "hx-bookmark.sh remove"
+    ;;
+  "reveal_workspace")
+    open .
+    ;;
+  "reveal_current_folder")
+    open $basedir
+    ;;
+  "open_in_vscode")
+    code .
     ;;
   "explorer")
     wezterm cli activate-pane-direction up

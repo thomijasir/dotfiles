@@ -148,7 +148,7 @@ skip-levels = 1
 "X" = ["extend_line_above"]
 
 # Selection change without copy to register 
-"d" = ["change_selection", "yank_to_clipboard"]
+"d" = ["delete_selection", "yank","yank_to_clipboard"]
 "c" = "delete_selection"
 
 # Selection object
@@ -188,6 +188,8 @@ skip-levels = 1
 "l" = ":toggle lsp.display-inlay-hints"
 "q" = "wclose"
 "," = "buffer_picker"
+# Replace Global Search With FZF
+"/" = ":pipe-to hx-wezterm.sh fzf"
 
 # --- Tools ---
 [keys.normal."'"]
@@ -197,20 +199,22 @@ skip-levels = 1
 [keys.normal."'".s]
 "r" = ":append-output hx-snippet.sh rct"
 "c" = ":append-output hx-snippet.sh clg"
+
 # --- Development Tools ---
 [keys.normal.";"]
-"a" = ":pipe-to hx-wezterm.sh ai_gemini %{buffer_name} %{cursor_line}"
+"a" = ":pipe-to hx-wezterm.sh ai_gemini"
+"A" = ":pipe-to hx-wezterm.sh ai_claude"
 "b" = ":pipe-to hx-wezterm.sh blame %{buffer_name} %{cursor_line}"
-"e" = ":pipe-to hx-wezterm.sh explorer %{buffer_name} %{cursor_line}"
-"t" = ":pipe-to hx-wezterm.sh open_terminal_bottom;"
-"g" = ":pipe-to hx-wezterm.sh lazygit %{buffer_name} %{cursor_line}"
-"y" = ":pipe-to hx-wezterm.sh yazi %{buffer_name} %{cursor_line}"
+"e" = ":pipe-to hx-wezterm.sh explorer"
+"t" = ":pipe-to hx-wezterm.sh open_terminal_bottom"
+"g" = ":pipe-to hx-wezterm.sh lazygit"
+"y" = ":pipe-to hx-wezterm.sh yazi"
 "v" = ":pipe-to hx-wezterm.sh open_terminal_right"
 "s" = ":pipe-to hx-wezterm.sh string_replace"
 "r" = ":pipe-to hx-wezterm.sh file_replace"
-"c" = ":pipe-to code ."
-"O" = ":pipe-to open ."
-"o" = ':pipe-to open "$(dirname "%{buffer_name}:-.")"'
+"c" = ":pipe-to hx-wezterm.sh open_in_vscode"
+"O" = ":pipe-to hx-wezterm.sh reveal_workspace"
+"o" = ":pipe-to hx-wezterm.sh reveal_current_folder %{buffer_name}"
 "f" = ":sh echo 'Filename copied!';basename '%{buffer_name}' | pbcopy"
 "F" = ":sh echo 'Absolute path copied!';echo -n '%{buffer_name}' | pbcopy"
 
