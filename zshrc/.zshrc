@@ -30,21 +30,6 @@ function rvm() {
   rvm "$@"
 }
 
-#--- Node (NVM) Lazymode ---
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
-# [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
-# function _load_nvm() {
-#   unset -f nvm node npm npx
-#   [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
-#   # This loads nvm bash_completion
-#   [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
-# }
-# function nvm() { _load_nvm; nvm "$@"; }
-# function node() { _load_nvm; node "$@"; }
-# function npm() { _load_nvm; npm "$@"; }
-# function npx() { _load_nvm; npx "$@"; }
-
 # --- Android ---
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
@@ -116,6 +101,8 @@ fi
 #   eval "$(zoxide init zsh)"
 # fi
 
+[[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+
 # --- python environment ---
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
@@ -124,9 +111,3 @@ fi
 # --- Load Aliases ---
 [[ -f ~/.zsh_aliases ]] && source ~/.zsh_aliases
 [[ -f ~/.zsh_help ]] && source ~/.zsh_help
-
-# # FZF (fuzzy finder)
-# if [[ ! -f ~/.zsh_fzf ]]; then
-#   fzf --zsh > ~/.zsh_fzf
-# fi
-# source ~/.zsh_fzf

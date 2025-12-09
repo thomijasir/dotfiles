@@ -249,7 +249,7 @@ main() {
 
   # 4. Core Languages & Managers
   check_rust
-  check_rvm
+  # check_rvm
   check_nvm
   check_fvm
   check_pyenv
