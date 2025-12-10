@@ -103,7 +103,7 @@ case "$command_prompt" in
     wezterm cli activate-pane-direction left
     ;;
   "fzf")
-    run_cmd="hx-open.sh \$(hx-ripgrep.sh | fzf --disabled --bind 'change:reload:hx-ripgrep.sh {q}' --delimiter : --reverse --preview 'bat --style=full --color=always --highlight-line {2} {1}' --preview-window '~3,+{2}+3/2' | awk '{print \$1}' | cut -d: -f1,2,3)"
+    run_cmd="hx-open.sh \$(hx-ripgrep.sh | fzf --disabled --bind 'change:reload:hx-ripgrep.sh {q}' --delimiter : --reverse --preview 'bat --style=full --color=always --theme=\"Catppuccin Macchiato\" --highlight-line {2} {1}' --preview-window '~3,+{2}+3/2' | awk '{print \$1}' | cut -d: -f1,2,3)"
     split_pane_down_full "$run_cmd"
     ;;
   "jq")

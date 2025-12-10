@@ -232,13 +232,15 @@ main() {
   check_directories
 
   # 2. Symlinks
+  # --- config files ---
   check_symlinks "$DOTFILES_ROOT/zshrc/.zshrc" "~/.zshrc"
   check_symlinks "$DOTFILES_ROOT/zshrc/.zsh_plugins" "~/.zsh_plugins"
   check_symlinks "$DOTFILES_ROOT/zshrc/.zsh_aliases" "~/.zsh_aliases"
   check_symlinks "$DOTFILES_ROOT/zshrc/.zsh_help" "~/.zsh_help"
-
   check_symlinks "$DOTFILES_ROOT/wezterm/.wezterm.lua" "~/.wezterm.lua"
+  # --- config folder ---
   check_symlinks "$DOTFILES_ROOT/yazi" "~/.config/yazi"
+  check_symlinks "$DOTFILES_ROOT/bat" "~./config/bat"
   # Ensure parent dir exists for lazygit
   add_task "Ensure lazygit config dir exists" "mkdir -p ~/Library/Application\ Support/lazygit"
   check_symlinks "$DOTFILES_ROOT/lazygit/config.yml" "~/Library/Application\ Support/lazygit/config.yml"

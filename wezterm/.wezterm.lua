@@ -49,8 +49,9 @@ config.default_cursor_style = "BlinkingBlock"
 -- config.color_scheme = "Homebrew"
 -- config.color_scheme = "Greenscreen (dark) (terminal.sexy)"
 -- config.color_scheme = "GitHub Dark"
-config.color_scheme = "Galaxy"
+-- config.color_scheme = "Galaxy"
 -- config.color_scheme = "Monokai Pro (Gogh)"
+config.color_scheme = "Catppuccin Macchiato"
 -- TMUX Alternative
 config.leader = { key = "a", mods = "ALT", timeout_milliseconds = 2500 }
 
