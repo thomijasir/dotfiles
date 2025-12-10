@@ -119,6 +119,7 @@ skip-levels = 1
 # "P" = "paste_clipboard_before"
 
 # Extend  and selection
+"d" = ["yank","yank_to_clipboard", "delete_selection"]
 "D" = ["extend_to_line_bounds", "yank","yank_to_clipboard", "delete_selection"]
 "V" = ["select_mode", "extend_line"]
 # Line select extend plus
@@ -148,7 +149,7 @@ skip-levels = 1
 "X" = ["extend_line_above"]
 
 # Selection change without copy to register 
-"d" = ["delete_selection", "yank","yank_to_clipboard"]
+"d" = ["yank","yank_to_clipboard", "delete_selection"]
 "c" = "delete_selection"
 
 # Selection object
