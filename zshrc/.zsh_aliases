@@ -102,9 +102,6 @@ alias gc='f() { git commit -m "$1"; }; f'
 # @desc: Create & switch to new branch (gb "branch")
 alias gb='f() { git checkout -b "$1"; }; f'
 
-# @desc: Delete branches safely
-alias gdb='git-delete-branch.sh'
-
 # --- Open Files Script ---
 # @desc: Open files via zoxide helper
 alias hzo='hx-zoxide.sh'

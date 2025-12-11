@@ -60,6 +60,9 @@ case "$command_prompt" in
   "lazygit")
     split_pane_down_full "lazygit"
     ;;
+  "git_branch_delete")
+    split_pane_down_full "hx-branch-delete.sh"
+    ;;
   "open_terminal_bottom")
     wezterm cli split-pane --bottom --percent 25 --cwd $PWD
     ;;
@@ -67,7 +70,7 @@ case "$command_prompt" in
     wezterm cli split-pane --right --percent 35 --cwd $PWD
     ;;
   "string_replace")
-    split_pane_down_full "replace-str.sh"
+    split_pane_down_full "fzf-rg-replace.sh"
     ;;
   "file_replace")
     split_pane_down_full "replace-file.sh"
@@ -103,7 +106,20 @@ case "$command_prompt" in
     wezterm cli activate-pane-direction left
     ;;
   "fzf")
-    run_cmd="hx-open.sh \$(hx-ripgrep.sh | fzf --disabled --bind 'change:reload:hx-ripgrep.sh {q}' --delimiter : --reverse --preview 'bat --style=full --color=always --theme=\"Catppuccin Macchiato\" --highlight-line {2} {1}' --preview-window '~3,+{2}+3/2' | awk '{print \$1}' | cut -d: -f1,2,3)"
+    FZF_ARGS=(
+      "--prompt='Search> '"
+      --disabled
+      --reverse
+      "--delimiter :"
+      "--bind 'change:reload:fzf-rg.sh {q}'"
+      "--bind 'ctrl-r:execute(fzf-rg-replace.sh)'"
+      "--bind 'ctrl-f:execute(fzf-fd-replace.sh)'"
+      "--preview 'fzf-bat.sh {2} {1}'"
+      "--preview-window '~3,+{2}+3/2'"
+      "--border=bottom"
+      "--header=$'CTRL-R: replace string | CTRL-F replace files and folder \nENTER: open | -p <path> to scope'"
+    )
+    run_cmd="hx-open.sh \$(fzf-rg.sh | fzf ${FZF_ARGS[@]} | awk '{print \$1}' | cut -d: -f1,2,3)"
     split_pane_down_full "$run_cmd"
     ;;
   "jq")
