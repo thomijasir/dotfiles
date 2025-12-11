@@ -1,94 +1,123 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Original Scripts
 # Author Thomi Jasir (thomijasir@gmail.com)
 
-set -x
+# Exit on error, undefined var, or pipe fail (optional, but good for robustness)
+# set -e
+
+# Turn off debug mode for production use
+# set -x
 
 command_prompt="$1"
 file_path="$2"
 cursor_line="$3"
-hx_pane_id=$(echo $WEZTERM_PANE)
-pwd=$(PWD)
+
+# Define missing variables
+filename="$file_path"
+hx_pane_id="${WEZTERM_PANE}"
+current_dir="$PWD"
 basedir=$(dirname "$file_path")
 basename=$(basename "$file_path")
-basename_without_extension="${basename%.*}"
+# Safe way to get extension in bash
 extension="${filename##*.}"
+basename_without_extension="${basename%.*}"
 
-send_to_hx_pane="wezterm cli send-text --pane-id $hx_pane_id --no-paste"
-switch_to_hx_pane_and_zoom="if [ \$status = 0 ]; wezterm cli activate-pane-direction up; wezterm cli zoom-pane --pane-id $hx_pane_id --zoom; end"
+# Helper for sending text to a pane
+send_to_pane() {
+  local pane_id="$1"
+  local text="$2"
+  echo "$text" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+}
+
+# Helper to activate a pane
+activate_pane() {
+  local direction="$1"
+  local pane_id="$2"
+  if [ -n "$pane_id" ]; then
+    wezterm cli activate-pane-direction --pane-id "$pane_id" "$direction"
+  else
+    wezterm cli activate-pane-direction "$direction"
+  fi
+}
 
 split_pane_down() {
+  # Check if a pane exists down
   bottom_pane_id=$(wezterm cli get-pane-direction down)
+  
   if [ -z "${bottom_pane_id}" ]; then
-    # minimum load zsh to fast open
+    # Open zsh if no pane exists
     bottom_pane_id=$(wezterm cli split-pane -- zsh -f)
   fi
 
-  wezterm cli activate-pane-direction --pane-id $bottom_pane_id down
-
-  send_to_bottom_pane="wezterm cli send-text --pane-id $bottom_pane_id --no-paste"
+  activate_pane "down" "$bottom_pane_id"
+  
+  # Check if running lazygit to quit it before sending new commands
   program=$(wezterm cli list | awk -v pane_id="$bottom_pane_id" '$3==pane_id { print $6 }')
   if [ "$program" = "lazygit" ]; then
-    echo "q" | $send_to_bottom_pane
+    send_to_pane "$bottom_pane_id" "q"
   fi
+  
+  # Return the pane ID for further use
+  echo "$bottom_pane_id"
 }
 
-split_pane_down_full() {
-  wezterm cli split-pane --bottom --percent 95 --cwd $PWD -- zsh -fc "$1; exit"
-}
-
-split_pane_down_half() {
-  wezterm cli split-pane --bottom --cwd $PWD -- zsh -fc "$1; exit"
+split_pane_run() {
+  local direction="$1" # --bottom or --right
+  local percent="$2"
+  local cmd="$3"
+  
+  # Use zsh interactive login shell to ensure environment is loaded
+  wezterm cli split-pane "$direction" --percent "$percent" --cwd "$current_dir" -- zsh -i -c -lc "$cmd"
 }
 
 case "$command_prompt" in
   "ai_gemini")
-    # Note: you can configure for claude, open code and any other ai tools
-    wezterm cli split-pane --right --percent 40 --cwd $PWD -- zsh -i -c -lc 'gemini; exit'
+    split_pane_run "--right" "40" "gemini; exit"
     ;;
   "ai_claude")
-    wezterm cli split-pane --right --percent 40 --cwd $PWD -- zsh -i -c -lc 'claude; exit'
+    split_pane_run "--right" "40" "claude; exit"
     ;;
   "blame")
-    split_pane_down_half "tig blame $file_path +$cursor_line"
+    split_pane_run "--bottom" "50" "tig blame $file_path +$cursor_line; exit"
     ;;
   "yazi")
+    # Complex command needs proper quoting
     run_cmd='tmp="$(mktemp -t yazi-chooser.XXXXXX)"; yazi "$PWD" --chooser-file="$tmp"; [ -s "$tmp" ] && hx-open.sh "$(head -n1 "$tmp")"; rm -rf "$tmp"'
-    split_pane_down_full "$run_cmd"
+    split_pane_run "--bottom" "95" "$run_cmd; exit"
     ;;
   "lazygit")
-    split_pane_down_full "lazygit"
+    split_pane_run "--bottom" "95" "lazygit; exit"
     ;;
   "git_branch_delete")
-    split_pane_down_full "hx-branch-delete.sh"
+    split_pane_run "--bottom" "95" "hx-branch-delete.sh; exit"
     ;;
   "open_terminal_bottom")
-    wezterm cli split-pane --bottom --percent 25 --cwd $PWD
+    wezterm cli split-pane --bottom --percent 25 --cwd "$current_dir"
     ;;
   "open_terminal_right")
-    wezterm cli split-pane --right --percent 35 --cwd $PWD
+    wezterm cli split-pane --right --percent 35 --cwd "$current_dir"
     ;;
   "string_replace")
-    split_pane_down_full "fzf-rg-replace.sh"
+    split_pane_run "--bottom" "95" "fzf-rg-replace.sh; exit"
     ;;
   "file_replace")
-    split_pane_down_full "fzf-fd-replace.sh"
+    split_pane_run "--bottom" "95" "fzf-fd-replace.sh; exit"
     ;;
   "bookmark_add")
-    hx-bookmark.sh add $file_path $cursor_line
+    hx-bookmark.sh add "$file_path" "$cursor_line"
     ;;
   "bookmark_open")
-    split_pane_down_full "hx-bookmark.sh open"
+    split_pane_run "--bottom" "95" "hx-bookmark.sh open; exit"
     ;;
   "bookmark_remove")
-    split_pane_down_full "hx-bookmark.sh remove"
+    split_pane_run "--bottom" "95" "hx-bookmark.sh remove; exit"
     ;;
   "reveal_workspace")
     open .
     ;;
   "reveal_current_folder")
-    open $basedir
+    open "$basedir"
     ;;
   "open_in_vscode")
     code .
@@ -96,16 +125,21 @@ case "$command_prompt" in
   "explorer")
     wezterm cli activate-pane-direction up
     left_pane_id=$(wezterm cli get-pane-direction left)
+    
     if [ -z "${left_pane_id}" ]; then
       left_pane_id=$(wezterm cli split-pane --left --percent 20)
     fi
+    
     left_program=$(wezterm cli list | awk -v pane_id="$left_pane_id" '$3==pane_id { print $6 }')
+    
     if [ "$left_program" != "br" ]; then
-      echo "broot; exit" | wezterm cli send-text --pane-id $left_pane_id --no-paste
+      send_to_pane "$left_pane_id" "broot; exit"
     fi
-    wezterm cli activate-pane-direction left
+    
+    activate_pane "left" "$left_pane_id"
     ;;
   "fzf")
+    # Bash array syntax requires #!/bin/bash
     FZF_ARGS=(
       "--prompt='Search> '"
       --disabled
@@ -119,15 +153,17 @@ case "$command_prompt" in
       "--border=bottom"
       "--header=$'CTRL-R: replace string | CTRL-F replace files and folder \nENTER: open | -p <path> to scope'"
     )
-    run_cmd="hx-open.sh \$(fzf-rg.sh | fzf ${FZF_ARGS[@]} | awk '{print \$1}' | cut -d: -f1,2,3)"
-    split_pane_down_full "$run_cmd"
+    # Join array arguments safely
+    run_cmd="hx-open.sh \$(fzf-rg.sh | fzf ${FZF_ARGS[*]} | awk '{print \$1}' | cut -d: -f1,2,3)"
+    split_pane_run "--bottom" "95" "$run_cmd; exit"
     ;;
   "jq")
-    split_pane_down
-    echo "echo '$(pbpaste)' | jq" | $send_to_bottom_pane
+    bottom_pane_id=$(split_pane_down)
+    send_to_pane "$bottom_pane_id" "echo '$(pbpaste)' | jq"
     ;;
   "run")
-    split_pane_down
+    bottom_pane_id=$(split_pane_down)
+    
     case "$extension" in
       "c")
         run_command="clang -lcmocka -lmpfr -Wall -g -O1 $filename -o $basedir/$basename_without_extension && $basedir/$basename_without_extension"
@@ -142,12 +178,21 @@ case "$command_prompt" in
         run_command="racket $filename"
         ;;
       "rs")
-        run_command="cd $pwd/$(echo $filename | sed 's|src/.*$||'); cargo run; if [ \$status = 0 ]; wezterm cli activate-pane-direction up; end"
+        # Fixed logic: Use Zsh syntax for the check (if [ $? -eq 0 ]; then ... fi) instead of Fish syntax
+        # Also fixed the sed logic to ensure it cd's correctly
+        project_root=$(echo "$filename" | sed 's|src/.*$||')
+        run_command="cd \"$current_dir/$project_root\" && cargo run && wezterm cli activate-pane-direction up"
         ;;
       "sh")
         run_command="sh $filename"
         ;;
+      *)
+        run_command="echo 'No runner configured for .$extension extension'"
+        ;;
     esac
-    echo "$run_command" | $send_to_bottom_pane
+    
+    if [ -n "$run_command" ]; then
+        send_to_pane "$bottom_pane_id" "$run_command"
+    fi
     ;;
 esac

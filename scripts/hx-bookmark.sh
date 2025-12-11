@@ -20,6 +20,21 @@ init_harpoon_file() {
   fi
 }
 
+# Helper to add or move a bookmark to the front of the list
+upsert_bookmark() {
+  local p_key="$1"
+  local f_path="$2"
+  local temp_json=$(mktemp)
+
+  jq --arg key "$p_key" --arg path "$f_path" '
+        if has($key) then
+            .[$key] = ([$path] + (.[$key] | map(select(. != $path))))
+        else
+            .[$key] = [$path]
+        end
+    ' "$store_file" >"$temp_json" && mv "$temp_json" "$store_file"
+}
+
 # Add file to bookmarks
 add_bookmark() {
   init_harpoon_file
@@ -33,25 +48,7 @@ add_bookmark() {
   abs_path=$(realpath "$file_path" 2>/dev/null || echo "$file_path")
   project_key=$(get_project_key)
 
-  # Check if project key exists in JSON
-  has_project=$(jq -r --arg key "$project_key" 'has($key)' "$store_file")
-
-  if [ "$has_project" = "true" ]; then
-    # Remove file if it exists (to move it to the end)
-    jq --arg key "$project_key" --arg path "$abs_path" '
-            .[$key] = (.[$key] | map(select(. != $path)))
-        ' "$store_file" >"$store_file.tmp" && mv "$store_file.tmp" "$store_file"
-
-    # Add file to the end
-    jq --arg key "$project_key" --arg path "$abs_path" '
-            .[$key] += [$path]
-        ' "$store_file" >"$store_file.tmp" && mv "$store_file.tmp" "$store_file"
-  else
-    # Create new project key with file
-    jq --arg key "$project_key" --arg path "$abs_path" '
-            .[$key] = [$path]
-        ' "$store_file" >"$store_file.tmp" && mv "$store_file.tmp" "$store_file"
-  fi
+  upsert_bookmark "$project_key" "$abs_path"
 
   echo "✓ Bookmarked: $abs_path"
 }
@@ -116,17 +113,23 @@ open_bookmark() {
   rm "$temp_file"
 
   if [ -n "$selected" ]; then
-    selected_path=$(echo "$selected" | cut -d'|' -f2)
-    selected_paths=$(printf "%s\n" "$selected" | cut -d'|' -f2)
+    # Read selected paths into an array to handle spaces correctly
+    paths=()
+    while IFS= read -r line; do
+      paths+=("$line")
+    done < <(echo "$selected" | cut -d'|' -f2)
+
+    # Update MRU: move opened files to the front
+    for path in "${paths[@]}"; do
+      upsert_bookmark "$project_key" "$path"
+    done
 
     if command -v hx-open.sh &>/dev/null; then
-      # open to top pane
-      # TODO: add capability to open multiple files
-      hx-open.sh $selected_paths
+      hx-open.sh "${paths[@]}"
     elif [ -n "$EDITOR" ]; then
-      $EDITOR "$selected_path"
+      $EDITOR "${paths[0]}"
     else
-      hx "$selected_path"
+      hx "${paths[0]}"
     fi
   fi
 }
@@ -160,9 +163,10 @@ remove_bookmark() {
   if [ -n "$selected" ]; then
     selected_path=$(echo "$selected" | cut -d'|' -f2)
 
+    temp_json=$(mktemp)
     jq --arg key "$project_key" --arg path "$selected_path" '
             .[$key] = (.[$key] | map(select(. != $path)))
-        ' "$store_file" >"$store_file.tmp" && mv "$store_file.tmp" "$store_file"
+        ' "$store_file" >"$temp_json" && mv "$temp_json" "$store_file"
 
     echo "✓ Removed bookmark: $selected_path"
   fi
