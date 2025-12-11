@@ -73,7 +73,7 @@ case "$command_prompt" in
     split_pane_down_full "fzf-rg-replace.sh"
     ;;
   "file_replace")
-    split_pane_down_full "replace-file.sh"
+    split_pane_down_full "fzf-fd-replace.sh"
     ;;
   "bookmark_add")
     hx-bookmark.sh add $file_path $cursor_line

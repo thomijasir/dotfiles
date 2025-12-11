@@ -201,7 +201,7 @@ while true; do
 
   echo
   read -r -p "Confirm exit? [y/N]: " choice
-  if [[ ! "$choice" =~ ^[Yy]$ ]]; then
+  if [[ ! "$choice" =~ ^[Nn]$ ]]; then
     echo "Bye."
     break
   fi

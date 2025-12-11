@@ -206,18 +206,17 @@ skip-levels = 1
 "a" = ":pipe-to hx-wezterm.sh ai_gemini"
 "A" = ":pipe-to hx-wezterm.sh ai_claude"
 "b" = ":pipe-to hx-wezterm.sh blame %{buffer_name} %{cursor_line}"
-"e" = ":pipe-to hx-wezterm.sh explorer"
 "t" = ":pipe-to hx-wezterm.sh open_terminal_bottom"
 "g" = ":pipe-to hx-wezterm.sh lazygit"
-"y" = ":pipe-to hx-wezterm.sh yazi"
+"e" = ":pipe-to hx-wezterm.sh yazi"
 "v" = ":pipe-to hx-wezterm.sh open_terminal_right"
-"s" = ":pipe-to hx-wezterm.sh string_replace"
-"r" = ":pipe-to hx-wezterm.sh file_replace"
+"r" = ":pipe-to hx-wezterm.sh string_replace"
+"f" = ":pipe-to hx-wezterm.sh file_replace"
 "c" = ":pipe-to hx-wezterm.sh open_in_vscode"
 "O" = ":pipe-to hx-wezterm.sh reveal_workspace"
 "o" = ":pipe-to hx-wezterm.sh reveal_current_folder %{buffer_name}"
-"f" = ":sh echo 'Filename copied!';basename '%{buffer_name}' | pbcopy"
-"F" = ":sh echo 'Absolute path copied!';echo -n '%{buffer_name}' | pbcopy"
+"y" = ":sh echo 'Filename copied!';basename '%{buffer_name}' | pbcopy"
+"Y" = ":sh echo 'Absolute path copied!';echo -n '%{buffer_name}' | pbcopy"
 
 # Harpoon Bookmark CLI
 [keys.normal."C-b"]
