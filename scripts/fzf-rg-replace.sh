@@ -21,6 +21,10 @@ if [[ "$OS" == "Darwin" ]]; then
   SED_INPLACE=("-i" "")
 fi
 
+# Capture initial query passed from arguments (e.g. from fzf binding)
+INITIAL_QUERY="${1:-}"
+SINGLE_RUN="${2:-}"
+
 # --- Helper Functions ---------------------------------------------------------
 
 # Escape replacement string for sed (escape \ / &)
@@ -36,9 +40,16 @@ escape_pattern() {
 # --- Core Logic ---------------------------------------------------------------
 
 select_matches() {
+  local fzf_args=()
+  if [[ -n "$INITIAL_QUERY" ]]; then
+    fzf_args+=(--query "$INITIAL_QUERY")
+  fi
+
   # Run fzf with preview and reload capability
   # --print-query: Print the query as the first line of output
-  fzf-rg.sh | fzf --disabled --reverse --print-query --multi \
+  # Pass INITIAL_QUERY to fzf-rg.sh so we start with results
+  fzf-rg.sh "$INITIAL_QUERY" | fzf --disabled --reverse --print-query --multi \
+    "${fzf_args[@]}" \
     --prompt='Replace> ' \
     --delimiter ':' \
     --bind="change:reload:fzf-rg.sh {q}" \
@@ -46,6 +57,9 @@ select_matches() {
     --preview-window "right,60%,+{2}+3/3,~3" \
     --bind 'ctrl-a:toggle-all' \
     --header $'Ctrl-A: Toggle all | Enter: Confirm | Esc: Cancel\nAutomatic and smart string replacement tool'
+
+  # Clear INITIAL_QUERY so subsequent runs in the loop don't reuse it
+  INITIAL_QUERY=""
 }
 
 perform_replacement_cycle() {
@@ -197,6 +211,10 @@ while true; do
     # If function returns 1 (error/cancel early), we assume user might want to stop or retry
     # But usually perform_replacement_cycle prints its own status.
     :
+  fi
+
+  if [[ -n "$SINGLE_RUN" ]]; then
+    break
   fi
 
   echo

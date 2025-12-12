@@ -36,6 +36,7 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
+export NDK_HOME="$ANDROID_HOME/ndk/$(ls -1 $ANDROID_HOME/ndk)"
 
 # Default Terminal editor (helix or nvim)
 # export EDITOR=/opt/homebrew/bin/nvim
@@ -47,6 +48,8 @@ export PATH="$HOME/.codeium/windsurf/bin:$PATH"
 export PATH="/opt/homebrew/opt/trash-cli/bin:$PATH"
 
 # History
+# compaudit | xargs chmod g-w,o-w
+ZSH_DISABLE_COMPFIX=true
 HISTFILE=~/.zsh_history
 HISTSIZE=50000
 SAVEHIST=50000

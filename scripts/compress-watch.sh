@@ -21,6 +21,10 @@ if ! command -v xattr &>/dev/null; then
   exit 1
 fi
 
+if ! command -v lsof &>/dev/null; then
+  echo "Warning: 'lsof' is not found. Readiness checks will rely on file size, which might timeout for very long recordings."
+fi
+
 # --- Helper Functions ---
 is_processed() {
   # Check for the custom attribute 'com.user.compressed'
@@ -31,6 +35,69 @@ is_processed() {
 mark_processed() {
   # Set the custom attribute 'com.user.compressed' to 'true'
   xattr -w com.user.compressed true "$1"
+}
+
+wait_file_ready() {
+  local file="$1"
+  local last_size=-1
+  local current_size=-1
+  local stable_cycles=0
+  local required_stable_cycles=3
+  local loop_count=0
+  local max_loops=300 # 5 minutes timeout
+
+  echo "Waiting for file to stabilize: $(basename "$file")"
+
+  while true; do
+    # 0. Check for timeout
+    ((loop_count++))
+    if [ "$loop_count" -gt "$max_loops" ]; then
+      echo "Timeout waiting for file: $(basename "$file"). Skipping."
+      return 1
+    fi
+
+    # 1. Check if file exists
+    if [ ! -f "$file" ]; then
+      echo "File disappeared."
+      return 1
+    fi
+
+    # 2. Check if file is open (using lsof if available)
+    if command -v lsof &>/dev/null; then
+      if lsof "$file" &>/dev/null; then
+        # File is open, reset stability and wait
+        # We reset loop_count because if the file is open, it's actively being worked on (e.g. long recording)
+        # and we shouldn't timeout.
+        stable_cycles=0
+        loop_count=0
+        sleep 1
+        continue
+      fi
+    fi
+
+    # 3. Check file size stability
+    current_size=$(wc -c < "$file" 2>/dev/null)
+    if [ -z "$current_size" ]; then
+       sleep 1
+       continue
+    fi
+    
+    if [ "$current_size" -eq "$last_size" ]; then
+      ((stable_cycles++))
+    else
+      stable_cycles=0
+      last_size="$current_size"
+    fi
+
+    if [ $stable_cycles -ge $required_stable_cycles ]; then
+      break
+    fi
+
+    sleep 1
+  done
+  
+  echo "File is ready."
+  return 0
 }
 
 # --- Main Loop ---
@@ -52,6 +119,12 @@ fswatch -0 "$WATCH_DIR" | while read -d "" event; do
   FOLDER=$(dirname "$event")
   # 1. Check if file exists (it might have been deleted or moved quickly)
   if [ ! -f "$event" ]; then
+    continue
+  fi
+
+  # 1b. Ignore temporary files to prevent infinite loops
+  # compress-video.sh creates files like "*.tmp.mov" which match the regex below
+  if [[ "$FILENAME" == *".tmp."* ]]; then
     continue
   fi
 
@@ -81,14 +154,15 @@ fswatch -0 "$WATCH_DIR" | while read -d "" event; do
 
   # 4. Wait for file to be ready
   # Screenshots/Recordings might be written progressively.
-  # A simple sleep helps ensure the file handle is released by the OS.
-  sleep 2
+  if ! wait_file_ready "$event"; then
+    continue
+  fi
 
   # 5. Process
   STATUS=1
   if [ "$IS_RECORDING" = true ]; then
     echo "[$(date '+%H:%M:%S')] Detected Recording: $FILENAME"
-    "$COMPRESS_VIDEO" -r "$event"
+    "$COMPRESS_VIDEO" -d "$event"
     STATUS=$?
   elif [ "$IS_SCREENSHOT" = true ]; then
     echo "[$(date '+%H:%M:%S')] Detected Screenshot: $FILENAME"
@@ -101,9 +175,12 @@ fswatch -0 "$WATCH_DIR" | while read -d "" event; do
   # The replacement triggers a new fswatch event.
   # By marking it immediately, the next loop iteration will see the mark and skip it.
   if [ $STATUS -eq 0 ]; then
-    mark_processed "$event"
-    echo "Done."
-    terminal-notifier -title "Compression successful!" -message "$FILENAME" -sound default -open "file://$FOLDER"
+    if mark_processed "$event"; then
+      echo "Done."
+      terminal-notifier -title "Compression successful!" -message "$FILENAME" -sound default -open "file://$FOLDER"
+    else
+      echo "Error: Failed to mark file as processed. This may cause a loop."
+    fi
   else
     echo "Error compressing $FILENAME"
   fi

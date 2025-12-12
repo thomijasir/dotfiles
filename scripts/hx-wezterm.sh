@@ -146,8 +146,8 @@ case "$command_prompt" in
       --reverse
       "--delimiter :"
       "--bind 'change:reload:fzf-rg.sh {q}'"
-      "--bind 'ctrl-r:execute(fzf-rg-replace.sh)'"
-      "--bind 'ctrl-f:execute(fzf-fd-replace.sh)'"
+      "--bind 'ctrl-r:execute(fzf-rg-replace.sh {q} 1)'"
+      "--bind 'ctrl-f:execute(fzf-fd-replace.sh {q} 1)'"
       "--preview 'fzf-bat.sh {2} {1}'"
       "--preview-window '~3,+{2}+3/2'"
       "--border=bottom"

@@ -24,6 +24,10 @@ OS="$(uname -s)"
 # MacOS sed handles -E, but inplace is different. We are not using inplace for file renaming (mv).
 # We only use sed for string manipulation here.
 
+# Capture initial query passed from arguments (e.g. from fzf binding)
+INITIAL_QUERY="${1:-}"
+SINGLE_RUN="${2:-}"
+
 # --- Helper Functions ---------------------------------------------------------
 
 # Escape replacement string for sed (escape \ / &)
@@ -39,15 +43,25 @@ escape_pattern() {
 # --- Core Logic ---------------------------------------------------------------
 
 select_matches() {
+  local fzf_args=()
+  if [[ -n "$INITIAL_QUERY" ]]; then
+    fzf_args+=(--query "$INITIAL_QUERY")
+  fi
+
   # Run fzf with preview and reload capability
   # --print-query: Print the query as the first line of output
-  fzf-fd.sh | fzf --disabled --reverse --print-query --multi \
+  # Pass INITIAL_QUERY to fzf-fd.sh so we start with results
+  fzf-fd.sh "$INITIAL_QUERY" | fzf --disabled --reverse --print-query --multi \
+    "${fzf_args[@]}" \
     --prompt='Rename> ' \
     --bind="change:reload:fzf-fd.sh {q}" \
     --preview "bat --style=numbers --color=always {} 2>/dev/null || ls -F --color=always {}" \
     --preview-window "right,60%,~3" \
     --bind 'ctrl-a:toggle-all' \
     --header $'Ctrl-A: Toggle all | Enter: Confirm | Esc: Cancel\nAutomatic and smart file folder replace tool'
+
+  # Clear INITIAL_QUERY so subsequent runs in the loop don't reuse it
+  INITIAL_QUERY=""
 }
 
 perform_replacement_cycle() {
@@ -196,6 +210,10 @@ perform_replacement_cycle() {
 while true; do
   if ! perform_replacement_cycle; then
     :
+  fi
+
+  if [[ -n "$SINGLE_RUN" ]]; then
+    break
   fi
 
   echo
