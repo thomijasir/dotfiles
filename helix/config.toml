@@ -196,6 +196,10 @@ skip-levels = 1
 [keys.normal."'"]
 # --- automatic run and open pane
 "r" = ":pipe-to hx-run.sh"
+"c" = ":pipe awk 'BEGIN {print \"{/*\"} {print} END {print \"*/}\"}'"
+
+[keys.select."'"]
+"c" = ":pipe awk 'BEGIN {print \"{/*\"} {print} END {print \"*/}\"}'"
 
 [keys.normal."'".s]
 "r" = ":append-output hx-snippet.sh rct"
@@ -205,7 +209,8 @@ skip-levels = 1
 [keys.normal.";"]
 "a" = ":pipe-to hx-wezterm.sh ai_gemini"
 "A" = ":pipe-to hx-wezterm.sh ai_claude"
-"b" = ":pipe-to hx-wezterm.sh blame %{buffer_name} %{cursor_line}"
+"b" = ":echo %sh{hx-wezterm.sh git_blame %{buffer_name} %{cursor_line}}"
+"B" = ":pipe-to hx-wezterm.sh blame %{buffer_name} %{cursor_line}"
 "t" = ":pipe-to hx-wezterm.sh open_terminal_bottom"
 "g" = ":pipe-to hx-wezterm.sh lazygit"
 "e" = ":pipe-to hx-wezterm.sh yazi"
@@ -215,18 +220,18 @@ skip-levels = 1
 "c" = ":pipe-to hx-wezterm.sh open_in_vscode"
 "O" = ":pipe-to hx-wezterm.sh reveal_workspace"
 "o" = ":pipe-to hx-wezterm.sh reveal_current_folder %{buffer_name}"
-"y" = ":sh echo 'Filename copied!';basename '%{buffer_name}' | pbcopy"
-"Y" = ":sh echo 'Absolute path copied!';echo -n '%{buffer_name}' | pbcopy"
+"y" = ":echo %sh{hx-wezterm.sh copy_filename %{buffer_name}}"
+"Y" = ":echo %sh{hx-wezterm.sh copy_abs_path %{buffer_name}}"
 
 # Harpoon Bookmark CLI
 [keys.normal."C-b"]
-"a" = ":sh hx-bookmark.sh add %{buffer_name} %{cursor_line}"
+"a" = ":echo %sh{hx-bookmark.sh add %{buffer_name} %{cursor_line}}"
 "o" = ":pipe-to hx-wezterm.sh bookmark_open"
 "r" = ":pipe-to hx-wezterm.sh bookmark_remove"
 
 # Buffer Control
 [keys.normal.space.b]
-"b" = "buffer_picker"
+"b" = ":echo %sh{hx-bookmark.sh add %{buffer_name} %{cursor_line}}"
 "d" = ":buffer-close"
 "D" = ":buffer-close!"
 "o" = ":buffer-close-others"

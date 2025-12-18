@@ -50,7 +50,7 @@ add_bookmark() {
 
   upsert_bookmark "$project_key" "$abs_path"
 
-  echo "✓ Bookmarked: $abs_path"
+  echo "✅ Bookmarked: $abs_path"
 }
 
 # List bookmarks with fzf

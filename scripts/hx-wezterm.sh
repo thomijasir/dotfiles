@@ -44,20 +44,17 @@ activate_pane() {
 split_pane_down() {
   # Check if a pane exists down
   bottom_pane_id=$(wezterm cli get-pane-direction down)
-  
   if [ -z "${bottom_pane_id}" ]; then
     # Open zsh if no pane exists
     bottom_pane_id=$(wezterm cli split-pane -- zsh -f)
   fi
 
   activate_pane "down" "$bottom_pane_id"
-  
   # Check if running lazygit to quit it before sending new commands
   program=$(wezterm cli list | awk -v pane_id="$bottom_pane_id" '$3==pane_id { print $6 }')
   if [ "$program" = "lazygit" ]; then
     send_to_pane "$bottom_pane_id" "q"
   fi
-  
   # Return the pane ID for further use
   echo "$bottom_pane_id"
 }
@@ -66,7 +63,6 @@ split_pane_run() {
   local direction="$1" # --bottom or --right
   local percent="$2"
   local cmd="$3"
-  
   # Use zsh interactive login shell to ensure environment is loaded
   wezterm cli split-pane "$direction" --percent "$percent" --cwd "$current_dir" -- zsh -i -c -lc "$cmd"
 }
@@ -80,6 +76,23 @@ case "$command_prompt" in
     ;;
   "blame")
     split_pane_run "--bottom" "50" "tig blame $file_path +$cursor_line; exit"
+    ;;
+  "git_blame")
+    # Base Command
+    # git blame -L $cursor_line,+1 $file_path
+    git blame -L $cursor_line,+1 $file_path | awk '{
+        icon = ($1 ~ /^0+$/) ? "✎" : "";
+        sub(/\).*/, ")");
+        print icon, $0;
+      }'
+    ;;
+  "copy_filename")
+    basename '%{buffer_name}' | pbcopy
+    echo '✅ Filename copied!'
+    ;;
+  "copy_abs_path")
+    echo -n '%{buffer_name}' | pbcopy
+    echo '✅ Absolute path copied!'
     ;;
   "yazi")
     # Complex command needs proper quoting
@@ -125,17 +138,13 @@ case "$command_prompt" in
   "explorer")
     wezterm cli activate-pane-direction up
     left_pane_id=$(wezterm cli get-pane-direction left)
-    
     if [ -z "${left_pane_id}" ]; then
       left_pane_id=$(wezterm cli split-pane --left --percent 20)
     fi
-    
     left_program=$(wezterm cli list | awk -v pane_id="$left_pane_id" '$3==pane_id { print $6 }')
-    
     if [ "$left_program" != "br" ]; then
       send_to_pane "$left_pane_id" "broot; exit"
     fi
-    
     activate_pane "left" "$left_pane_id"
     ;;
   "fzf")
@@ -163,7 +172,6 @@ case "$command_prompt" in
     ;;
   "run")
     bottom_pane_id=$(split_pane_down)
-    
     case "$extension" in
       "c")
         run_command="clang -lcmocka -lmpfr -Wall -g -O1 $filename -o $basedir/$basename_without_extension && $basedir/$basename_without_extension"
@@ -190,9 +198,8 @@ case "$command_prompt" in
         run_command="echo 'No runner configured for .$extension extension'"
         ;;
     esac
-    
     if [ -n "$run_command" ]; then
-        send_to_pane "$bottom_pane_id" "$run_command"
+      send_to_pane "$bottom_pane_id" "$run_command"
     fi
     ;;
 esac
