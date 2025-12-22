@@ -87,11 +87,11 @@ case "$command_prompt" in
       }'
     ;;
   "copy_filename")
-    basename '%{buffer_name}' | pbcopy
+    basename "$file_path" | pbcopy
     echo '✅ Filename copied!'
     ;;
   "copy_abs_path")
-    echo -n '%{buffer_name}' | pbcopy
+    echo -n "$file_path" | pbcopy
     echo '✅ Absolute path copied!'
     ;;
   "yazi")
