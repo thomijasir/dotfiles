@@ -106,6 +106,11 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 
+# Added by `rbenv init` on Thu  8 Jan 2026 14:20:45 +08
+if command -v rbenv 1>/dev/null 2>&1; then
+  eval "$(rbenv init - --no-rehash zsh)"
+fi
+
 # --- Load Aliases ---
 [[ -f ~/.zsh_aliases ]] && source ~/.zsh_aliases
 [[ -f ~/.zsh_help ]] && source ~/.zsh_help

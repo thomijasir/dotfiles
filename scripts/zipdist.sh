@@ -16,9 +16,11 @@ TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 ZIP_NAME="${PARENT_DIR}_${TIMESTAMP}.zip"
 
 # Zip the 'dist' folder
-zip -r "$ZIP_NAME" dist
+# zip -r "$ZIP_NAME" dist
+mv dist "$PARENT_DIR"
+zip -r "$ZIP_NAME" "$PARENT_DIR"
 
 # delete folder
-rm -rf dist
+rm -rf "$PARENT_DIR"
 
 echo "✅ Successfully created: $ZIP_NAME"

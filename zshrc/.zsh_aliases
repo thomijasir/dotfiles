@@ -228,3 +228,6 @@ alias diskusage="gdu-go"
 
 # @desc: open my notes
 alias note="hx /Users/venobi/Library/CloudStorage/GoogleDrive-thomijasir@gmail.com/My\ Drive/My\ Note/notes.md"
+
+# @desc: Alias Video Compress
+alias vcp="compress-video.sh"
