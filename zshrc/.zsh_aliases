@@ -197,6 +197,9 @@ cf() {
   mkdir -p "$(dirname "$1")" && touch "$1"
 }
 
+# @desc: youtube download best usage ytdl "youtube.com/url"
+alias ytdl='yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"'
+
 # --- Python Scripts ---
 # @desc: Auto translate video
 alias auto-translate='python ~/Workspace/minootube/scripts/auto-translate.py'
@@ -214,5 +217,14 @@ alias tencent_sg='ssh -i ~/.ssh-keys/tencent_sg_key.pem root@43.134.91.33'
 # @desc: SSH Tencent HK
 alias tencent_hk='ssh -i ~/.ssh-keys/tencent_hk_key.pem root@43.159.230.62'
 
+# @desc: SSH Tencent SG New
+alias sersg='ssh -i ~/.ssh-keys/sersg.pem root@43.160.253.244'
+
 # @desc: SSH Aliyun
 alias aliyun='ssh root@8.219.9.110 -i ~/aliyun-key.pem'
+
+# @desc: disk analyzer
+alias diskusage="gdu-go"
+
+# @desc: open my notes
+alias note="hx /Users/venobi/Library/CloudStorage/GoogleDrive-thomijasir@gmail.com/My\ Drive/My\ Note/notes.md"

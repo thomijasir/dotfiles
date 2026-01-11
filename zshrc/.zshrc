@@ -23,12 +23,7 @@ export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
 export PATH="$JAVA_HOME/bin:$PATH"
 
 # --- Ruby (RVM) ---
-export PATH="$PATH:$HOME/.rvm/bin"
-function rvm() {
-  unset -f rvm
-  [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
-  rvm "$@"
-}
+# RVM MANAGE BY ANTIDOTE
 
 # --- Android ---
 export ANDROID_HOME=$HOME/Library/Android/sdk

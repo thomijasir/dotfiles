@@ -135,16 +135,6 @@ check_rust() {
   add_task "Install cargo-watch" "cargo install cargo-watch"
 }
 
-check_rvm() {
-  log_info "Checking ruby manager"
-  if [ ! -d "$HOME/.rvm" ]; then
-    add_task "Install GPG Keys" "sudo gpg --keyserver keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB"
-    add_task "Install RVM (Ruby Version Manager)" "curl -sSL https://get.rvm.io | bash -s stable"
-  else
-    add_task "Update RVM" "rvm get stable"
-  fi
-}
-
 check_nvm() {
   log_info "Checking node version manager"
   add_task "Install latest Node.js via NVM" '
@@ -251,7 +241,6 @@ main() {
 
   # 4. Core Languages & Managers
   check_rust
-  # check_rvm
   check_nvm
   check_fvm
   check_pyenv
@@ -259,13 +248,14 @@ main() {
   # 5. Brew Packages
   # Basic Tools
   local casks=(
-    "wezterm" "google-chrome" "visual-studio-code" "bruno" "pgadmin4"
+    "wezterm" "google-chrome" "visual-studio-code" "bruno" "google-drive"
     "notion" "microsoft-teams" "obs" "audacity" "android-studio"
     "zoom" "whatsapp" "docker" "font-jetbrains-mono-nerd-font"
     "font-fira-code-nerd-font"
   )
 
   local formulas=(
+    "gdu"
     "deno" "font-symbols-only-nerd-font"
     "harper" "shfmt" "yaml-language-server" "dprint"
     "helix" "neovim" "wget" "openjdk@17" "yazi" "sevenzip"
