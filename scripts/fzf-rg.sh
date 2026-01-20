@@ -19,4 +19,4 @@ RG_ARGS=(
   --smart-case
 )
 # echo "Command  : rg ${RG_ARGS[@]} '${SEARCH_PATTERN}' '${SEARCH_PATH}'" >&2
-rg ${RG_ARGS[@]} "$SEARCH_PATTERN" "$SEARCH_PATH" || true
+rg ${RG_ARGS[@]} -- "$SEARCH_PATTERN" "$SEARCH_PATH" || true

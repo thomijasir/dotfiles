@@ -9,6 +9,15 @@ command = "vscode-eslint-language-server"
 args = ["--stdio"]
 except-features = ["format"]
 
+[language-server.eslint.config]
+codeAction = {showDocumentation = { enable = true }}
+codeActionOnSave = {enable = true, mode = "all"}
+experimental = {useFlatConfig = true}
+nodePath = ""
+quiet = false
+run = "onType"
+validate = "on"
+
 [language-server.emmet]
 command = "emmet-ls"
 args = [ "--stdio" ]
