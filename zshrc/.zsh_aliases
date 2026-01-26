@@ -224,7 +224,7 @@ alias sersg='ssh -i ~/.ssh-keys/sersg.pem root@43.160.253.244'
 alias aliyun='ssh root@8.219.9.110 -i ~/aliyun-key.pem'
 
 # @desc: disk analyzer
-alias diskusage="gdu-go"
+alias diskusage="gdu-go /"
 
 # @desc: open my notes
 alias note="hx /Users/venobi/Library/CloudStorage/GoogleDrive-thomijasir@gmail.com/My\ Drive/My\ Note/notes.md"

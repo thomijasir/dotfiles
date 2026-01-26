@@ -1,0 +1,81 @@
+#!/bin/bash
+# ==========================================
+#  AUTO-DETECT PROJECT RUNNER
+#  Author: Thomi Jasir <thomijasir@gmail.com>
+#  Usage: run [command]
+#  Default: 'run' -> 'run start'
+# ==========================================
+run() {
+  # 1. SET DEFAULT COMMAND
+  # If no argument provided, default to "start"
+  local cmd="$1"
+  if [ -z "$cmd" ]; then
+    cmd="start"
+  else
+    shift # Remove the command from args so we can pass the rest
+  fi
+
+  # 2. PRIORITY 1: Custom "run.sh"
+  # This overrides everything else.
+  if [ -f "./run.sh" ]; then
+    # Ensure it is executable
+    if [ ! -x "./run.sh" ]; then chmod +x ./run.sh; fi
+
+    # Execute
+    ./run.sh "$cmd" "$@"
+    return
+  fi
+
+  # 3. PRIORITY 2: Rust Project (Cargo.toml)
+  if [ -f "Cargo.toml" ]; then
+    # Fallback logic for Rust projects without run.sh
+    case "$cmd" in
+      "dev")
+        # Auto-install cargo-watch if missing
+        if ! command -v cargo-watch &>/dev/null; then
+          echo -e "\033[1;33m[RUST]\033[0m cargo-watch not found. Installing..."
+          cargo install cargo-watch
+        fi
+        echo -e "\033[0;34m[RUST]\033[0m Starting Watch Mode..."
+        cargo watch -x run
+        ;;
+      "start")
+        echo -e "\033[0;34m[RUST]\033[0m Running..."
+        cargo run "$@"
+        ;;
+      "test")
+        echo -e "\033[0;34m[RUST]\033[0m Testing..."
+        cargo test "$@"
+        ;;
+      "build")
+        echo -e "\033[0;34m[RUST]\033[0m Building Release..."
+        cargo build --release "$@"
+        ;;
+      "check")
+        cargo check "$@"
+        ;;
+      *)
+        # Pass generic commands (e.g., 'run install' -> 'cargo install')
+        cargo "$cmd" "$@"
+        ;;
+    esac
+    return
+  fi
+
+  # 4. PRIORITY 3: Node.js Project (package.json)
+  if [ -f "package.json" ]; then
+    # Use BUN if installed (faster), fallback to NPM
+    if command -v bun &>/dev/null; then
+      echo -e "\033[0;34m[NODE]\033[0m Detected package.json -> Using \033[1;33mBun\033[0m"
+      bun run "$cmd" "$@"
+    else
+      echo -e "\033[0;34m[NODE]\033[0m Detected package.json -> Using \033[1;31mnpm\033[0m"
+      npm run "$cmd" "$@"
+    fi
+    return
+  fi
+
+  # 5. NO MATCH
+  echo "No project detected."
+  echo "(Checked for: ./run.sh, Cargo.toml, package.json)"
+}

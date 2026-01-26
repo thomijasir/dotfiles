@@ -22,9 +22,6 @@ export PATH="/usr/local/git/bin:/sw/bin:/usr/local/bin:/usr/local/sbin:/usr/loca
 export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
 export PATH="$JAVA_HOME/bin:$PATH"
 
-# --- Ruby (RVM) ---
-# RVM MANAGE BY ANTIDOTE
-
 # --- Android ---
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
@@ -36,11 +33,26 @@ export NDK_HOME="$ANDROID_HOME/ndk/$(ls -1 $ANDROID_HOME/ndk)"
 # Default Terminal editor (helix or nvim)
 # export EDITOR=/opt/homebrew/bin/nvim
 export EDITOR=/opt/homebrew/bin/hx
-# Visual Studio Code
-export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
+
+# --- START APPLICATION ---
+# Added by Antigravity
+export PATH="~/.antigravity/antigravity/bin:$PATH"
+
+# bun completions
+# [ -s "~/.bun/_bun" ] && source "~/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
 # Windsurf (Added by Windsurf)
 export PATH="$HOME/.codeium/windsurf/bin:$PATH"
+
+# Visual Studio Code
+export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 export PATH="/opt/homebrew/opt/trash-cli/bin:$PATH"
+
+# --- END APPLICATION ---
 
 # History
 # compaudit | xargs chmod g-w,o-w
@@ -114,3 +126,4 @@ fi
 # --- Load Aliases ---
 [[ -f ~/.zsh_aliases ]] && source ~/.zsh_aliases
 [[ -f ~/.zsh_help ]] && source ~/.zsh_help
+[[ -f ~/.zsh_run ]] && source ~/.zsh_run
