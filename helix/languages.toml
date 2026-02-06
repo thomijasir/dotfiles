@@ -45,6 +45,12 @@ command = "tailwindcss-language-server"
 args = ["--stdio"]
 config = { userLanguages = { astro = "html", "*.astro" = "html" } }
 
+[language-server.astro-ls]
+command = "astro-ls"
+args = ["--stdio"]
+config = { typescript = { tsdk = "./node_modules/typescript/lib/", environment = "node" }}
+
+
 # --- Language Configurations ---
 
 [[language]]
@@ -54,6 +60,16 @@ formatter = { command = "fvm", args = ["dart", "format", "-l", "120"] }
 scope = "source.dart"
 file-types = ["dart"]
 roots = ["pubspec.yaml"]
+auto-format = true
+
+[[language]]
+name = "astro"
+scope = "source.astro"
+injection-regex = "astro"
+file-types = ["astro"]
+roots = ["package.json", "astro.config.mjs"]
+language-servers = ["astro-ls", "codebook"]
+formatter = { command = "prettier", args = ["--parser", "astro"] }
 auto-format = true
 
 
@@ -111,7 +127,7 @@ auto-format = true
 
 [[language]]
 name = "javascript"
-language-servers = ["typescript-language-server", "eslint", "cspell"]
+language-servers = ["typescript-language-server", "eslint", "codebook"]
 formatter = { command = "prettier", args = ["--parser", "babel"] }
 auto-format = true
 # formatter = { command = "dprint", args = ["fmt", "--stdin", "javascript"] }
@@ -156,9 +172,10 @@ auto-format = true
 [[language]]
 name = "html"
 language-servers = ["vscode-html-language-server", "codebook"]
-formatter = { command = "dprint", args = ["fmt", "--stdin", "html"] }
+formatter = { command = "prettier", args = ["--parser", "html"] }
 auto-format = true
-# formatter = { command = "prettier", args = ["--parser", "html"] }
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "html"] }
+
 
 [[language]]
 name = "sql"
