@@ -43,7 +43,7 @@ escape_pattern() {
 # --- Core Logic ---------------------------------------------------------------
 
 select_matches() {
-  local fzf_args=()
+  local fzf_args=(--prompt='Rename> ')
   if [[ -n "$INITIAL_QUERY" ]]; then
     fzf_args+=(--query "$INITIAL_QUERY")
   fi
@@ -53,7 +53,6 @@ select_matches() {
   # Pass INITIAL_QUERY to fzf-fd.sh so we start with results
   fzf-fd.sh "$INITIAL_QUERY" | fzf --disabled --reverse --print-query --multi \
     "${fzf_args[@]}" \
-    --prompt='Rename> ' \
     --bind="change:reload:fzf-fd.sh {q}" \
     --preview "bat --style=numbers --color=always {} 2>/dev/null || ls -F --color=always {}" \
     --preview-window "right,60%,~3" \

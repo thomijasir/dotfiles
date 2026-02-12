@@ -40,7 +40,7 @@ escape_pattern() {
 # --- Core Logic ---------------------------------------------------------------
 
 select_matches() {
-  local fzf_args=()
+  local fzf_args=(--prompt='Replace> ')
   if [[ -n "$INITIAL_QUERY" ]]; then
     fzf_args+=(--query "$INITIAL_QUERY")
   fi
@@ -50,7 +50,6 @@ select_matches() {
   # Pass INITIAL_QUERY to fzf-rg.sh so we start with results
   fzf-rg.sh "$INITIAL_QUERY" | fzf --disabled --reverse --print-query --multi \
     "${fzf_args[@]}" \
-    --prompt='Replace> ' \
     --delimiter ':' \
     --bind="change:reload:fzf-rg.sh {q}" \
     --preview "fzf-bat.sh {2} {1}" \

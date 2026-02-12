@@ -207,6 +207,8 @@ skip-levels = 1
 # --- automatic run and open pane
 "r" = ":pipe-to hx-run.sh"
 "c" = ":pipe awk 'BEGIN {print \"{/*\"} {print} END {print \"*/}\"}'"
+"n" = ":pipe-to hx-wezterm.sh new_file %{buffer_name}"
+"N" = ":pipe-to hx-wezterm.sh new_file_root %{buffer_name}"
 
 [keys.select."'"]
 "c" = ":pipe awk 'BEGIN {print \"{/*\"} {print} END {print \"*/}\"}'"
@@ -217,8 +219,8 @@ skip-levels = 1
 
 # --- Development Tools ---
 [keys.normal.";"]
-"a" = ":pipe-to hx-wezterm.sh ai_gemini"
-"A" = ":pipe-to hx-wezterm.sh ai_claude"
+"a" = ":pipe-to hx-wezterm.sh ai_kilo"
+"A" = ":pipe-to hx-wezterm.sh ai_gemini"
 "b" = ":echo %sh{hx-wezterm.sh git_blame %{buffer_name} %{cursor_line}}"
 "B" = ":pipe-to hx-wezterm.sh blame %{buffer_name} %{cursor_line}"
 "t" = ":pipe-to hx-wezterm.sh open_terminal_bottom"

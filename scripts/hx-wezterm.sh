@@ -71,6 +71,9 @@ case "$command_prompt" in
   "ai_gemini")
     split_pane_run "--right" "40" "gemini; exit"
     ;;
+  "ai_kilo")
+    split_pane_run "--right" "40" "kilo; exit"
+    ;;
   "ai_claude")
     split_pane_run "--right" "40" "claude; exit"
     ;;
@@ -134,6 +137,12 @@ case "$command_prompt" in
     ;;
   "open_in_vscode")
     code .
+    ;;
+  "new_file")
+    split_pane_run "--bottom" "95" "file-util.sh --down --path $file_path; exit"
+    ;;
+  "new_file_root")
+    split_pane_run "--bottom" "95" "file-util.sh --root --path $file_path; exit"
     ;;
   "explorer")
     wezterm cli activate-pane-direction up
