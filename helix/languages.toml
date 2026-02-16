@@ -10,9 +10,9 @@ args = ["--stdio"]
 except-features = ["format"]
 
 [language-server.eslint.config]
-codeAction = {showDocumentation = { enable = true }}
-codeActionOnSave = {enable = true, mode = "all"}
-experimental = {useFlatConfig = true}
+codeAction = { showDocumentation = { enable = true } }
+codeActionOnSave = { enable = true, mode = "all" }
+experimental = { useFlatConfig = true }
 nodePath = ""
 quiet = false
 run = "onType"
@@ -20,7 +20,7 @@ validate = "on"
 
 [language-server.emmet]
 command = "emmet-ls"
-args = [ "--stdio" ]
+args = ["--stdio"]
 
 [language-server.harper-ls]
 command = "harper-ls"
@@ -48,7 +48,7 @@ config = { userLanguages = { astro = "html", "*.astro" = "html" } }
 [language-server.astro-ls]
 command = "astro-ls"
 args = ["--stdio"]
-config = { typescript = { tsdk = "./node_modules/typescript/lib/", environment = "node" }}
+config = { typescript = { tsdk = "./node_modules/typescript/lib/", environment = "node" } }
 
 
 # --- Language Configurations ---
@@ -81,8 +81,9 @@ auto-format = true
 [[language]]
 name = "markdown"
 language-servers = ["marksman", "harper-ls"]
-formatter = { command = "dprint", args = ["fmt", "--stdin", "md"]}
+formatter = { command = "prettier", args = ["--parser", "markdown"] }
 auto-format = true
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "md"]}
 
 # [[language]]
 # name = "typescript"
@@ -111,7 +112,13 @@ auto-format = true
 
 [[language]]
 name = "tsx"
-language-servers = ["typescript-language-server", "eslint", "codebook", "emmet", "tailwind-ls"]
+language-servers = [
+  "typescript-language-server",
+  "eslint",
+  "codebook",
+  "emmet",
+  "tailwind-ls",
+]
 formatter = { command = "prettier", args = ["--parser", "typescript"] }
 auto-format = true
 # formatter = { command = "dprint", args = ["fmt", "--stdin", "tsx"] }
@@ -151,16 +158,23 @@ auto-format = true
 [[language]]
 name = "json"
 language-servers = ["harper-ls", "codebook"]
-formatter = { command = "dprint", args = ["fmt", "--stdin", "json"] }
+formatter = { command = "prettier", args = ["--parser", "json"] }
 auto-format = true
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "json"] }
 # formatter = { command = "biome", args = ["format", "--stdin-file-path", "file.json"] }
-# formatter = { command = "prettiercodebookargs = ["--parser", "json"] }
+
+[[language]]
+name = "jsonc"
+language-servers = ["harper-ls", "codebook"]
+formatter = { command = "prettier", args = ["--parser", "json"] }
+auto-format = true
 
 [[language]]
 name = "yaml"
 language-servers = ["yaml-language-server"]
-formatter = { command = "dprint", args = ["fmt", "--stdin", "yaml"] }
+formatter = { command = "prettier", args = ["--parser", "yaml"] }
 auto-format = true
+# formatter = { command = "dprint", args = ["fmt", "--stdin", "yaml"] }
 # formatter = { command = "prettier", args = ["--stdin-filepath", "file.yaml"] }
 
 [[language]]
@@ -176,9 +190,13 @@ formatter = { command = "prettier", args = ["--parser", "html"] }
 auto-format = true
 # formatter = { command = "dprint", args = ["fmt", "--stdin", "html"] }
 
-
 [[language]]
 name = "sql"
 language-servers = ["sql-lsp", "codebook"]
 formatter = { command = "sql-formatter", args = ["-l", "postgresql"] }
+auto-format = true
+
+[[language]]
+name = "toml"
+formatter = { command = "taplo", args = ["fmt", "-"] }
 auto-format = true
