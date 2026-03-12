@@ -34,6 +34,11 @@ check_dependency() {
 check_dependency ffmpeg
 check_dependency ffprobe
 
+# portable realpath (works without coreutils on macOS)
+realpath_portable() {
+  ( cd "$(dirname "$1")" && echo "$(pwd)/$(basename "$1")" )
+}
+
 # --- Default Settings ---
 COMPRESSION_MODE="maximum"
 REPLACE=false
@@ -87,6 +92,14 @@ if [ ! -f "$INPUT_FILE" ]; then
   echo -e "${RED}${ICON_ERROR} Error: File '$INPUT_FILE' not found.${NC}"
   exit 1
 fi
+
+# --- File Format Validation ---
+INPUT_EXT="${INPUT_FILE##*.}"
+INPUT_EXT_LOWER=$(echo "$INPUT_EXT" | tr '[:upper:]' '[:lower:]')
+case "$INPUT_EXT_LOWER" in
+  mov|mp4|avi|mkv) ;;
+  *) echo -e "${RED}${ICON_ERROR} Unsupported file format: .${INPUT_EXT_LOWER}${NC} (supported: mov, mp4, avi, mkv)"; exit 1 ;;
+esac
 
 # --- Path and Filename Logic ---
 DIRNAME=$(dirname "$INPUT_FILE")
@@ -226,7 +239,7 @@ if [ $STATUS -eq 0 ]; then
 
   # Handle Delete Mode
   if [ "$DELETE_ORIGINAL" = true ]; then
-    if [ "$INPUT_FILE" != "$OUTPUT_FILE" ]; then
+    if [ "$(realpath_portable "$INPUT_FILE")" != "$(realpath_portable "$OUTPUT_FILE")" ]; then
       rm "$INPUT_FILE"
       echo -e "${BOLD}Status:${NC}        ${RED}${ICON_TRASH} Original file deleted.${NC}"
     else
