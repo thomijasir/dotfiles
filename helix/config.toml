@@ -1,3 +1,11 @@
+#
+# Config Name : Helix Pro
+# Author      : Thomi Jasir
+# Email       : thomijasir@gmail.com
+# Created     : 2025-03-18
+# Description : Helix configuration easy improve workflow and full feature IDE
+#
+
 theme = "catppuccin_macchiato"
 
 # --- EDITOR CONFIG ---
@@ -93,13 +101,24 @@ skip-levels = 1
 "C-r" = [":rla", ":echo 'Reload and discrad all buffer from source ✅'"]
 
 # Open Current Buffer Project
+# "C-e" = [
+#   ':sh rm -f /tmp/unique-file',
+#   ':insert-output yazi "$(dirname "%{buffer_name}:-.")" --chooser-file=/tmp/unique-file',
+#   ':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty',
+#   ':open %sh{cat /tmp/unique-file}',
+#   ':redraw',
+# ]
+
 "C-e" = [
+  # Clean the chooser file first
   ':sh rm -f /tmp/unique-file',
-  ':insert-output yazi "$(dirname "%{buffer_name}:-.")" --chooser-file=/tmp/unique-file',
-  ':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty',
+  ':insert-output hx-yazi.sh "%{buffer_name}" /tmp/unique-file',
+  ':sh printf "\x1b[?1049h\x1b[?2004h" > /dev/tty',
   ':open %sh{cat /tmp/unique-file}',
+  # Redraw
   ':redraw',
 ]
+
 # Open Current Workspace
 "C-E" = [
   ':sh rm -f /tmp/unique-file',

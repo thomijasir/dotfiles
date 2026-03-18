@@ -18,6 +18,7 @@ config.tab_bar_at_bottom = true
 config.tab_and_split_indices_are_zero_based = true
 -- Enable enhanced keyboard protocol for better key handling
 config.enable_kitty_keyboard = true
+config.enable_scroll_bar = true
 
 -- Window
 -- config.initial_cols = 180

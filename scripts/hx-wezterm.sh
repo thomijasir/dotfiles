@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 
-# Original Scripts
-# Author Thomi Jasir (thomijasir@gmail.com)
-
-# Exit on error, undefined var, or pipe fail (optional, but good for robustness)
-# set -e
-
-# Turn off debug mode for production use
-# set -x
+#
+# Script Name : hx-wezterm.sh
+# Author      : Thomi Jasir
+# Email       : thomijasir@gmail.com
+# Created     : 2025-03-18
+# Description : Deep integration between helix editor and wezterm terminal scripts
+#
 
 command_prompt="$1"
 file_path="$2"
@@ -90,11 +89,12 @@ case "$command_prompt" in
       }'
     ;;
   "copy_filename")
-    basename "$file_path" | pbcopy
+    printf %s "$(basename -- "$file_path")" | pbcopy
     echo '✅ Filename copied!'
     ;;
   "copy_abs_path")
-    echo -n "$file_path" | pbcopy
+    # echo -n "$file_path" | pbcopy
+    printf %s "$file_path" | pbcopy
     echo '✅ Absolute path copied!'
     ;;
   "yazi")

@@ -17,6 +17,7 @@ RG_ARGS=(
   --column
   --no-heading
   --smart-case
+  --fixed-strings
 )
 # echo "Command  : rg ${RG_ARGS[@]} '${SEARCH_PATTERN}' '${SEARCH_PATH}'" >&2
 rg ${RG_ARGS[@]} -- "$SEARCH_PATTERN" "$SEARCH_PATH" || true

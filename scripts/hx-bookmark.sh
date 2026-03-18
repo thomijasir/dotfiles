@@ -1,7 +1,11 @@
-#!/bin/bash
-
-# Harpoon-like Bookmark Script
-# Author: Thomi Jasir (thomijasir@gmail.com)
+#!/usr/bin/env bash
+#
+# Script Name : hx-bookmark.sh
+# Author      : Thomi Jasir
+# Email       : thomijasir@gmail.com
+# Created     : 2025-03-18
+# Description : Harpoon-like Bookmark Script
+#
 
 command_prompt="$1"
 file_path="$2"

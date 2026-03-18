@@ -26,9 +26,18 @@ args = ["--stdio"]
 command = "harper-ls"
 args = ["--stdio"]
 
-[language-server.sql-lsp]
+[language-server.pgsql]
 command = "postgrestools"
 args = ["lsp-proxy"]
+
+[language-server.sqls]
+command = "sql-language-server"
+args = ["up", "--method", "stdio"]
+
+[language-server.sqruff]
+command = "sqruff"
+args = ["lsp"]
+
 
 [language-server.dart-ls]
 command = "fvm"
@@ -192,8 +201,13 @@ auto-format = true
 
 [[language]]
 name = "sql"
-language-servers = ["sql-lsp", "codebook"]
-formatter = { command = "sql-formatter", args = ["-l", "postgresql"] }
+language-servers = ["codebook"]
+scope = "source.sql"
+injection-regex = "sql"
+file-types = ["sql"]
+indent = { tab-width = 2, unit = "  " }
+formatter = { command = "sql-formatter" }
+# formatter = { command = "sqruff", args = ["fix", "-"] }
 auto-format = true
 
 [[language]]
