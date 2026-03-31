@@ -18,14 +18,30 @@ Opinionated macOS development environment powered by zsh, WezTerm, Neovim, Helix
    git clone git@github.com:<you>/dotfiles.git ~/Workspace/dotfiles
    cd ~/Workspace/dotfiles
    ```
-2. Inspect and run `./setup_env.sh` (macOS only). It will:
-   - reveal hidden files in Finder;
-   - create `~/.config` if needed and symlink zsh, WezTerm, Yazi, and the LazyVim Neovim profile;
-   - install Homebrew, Rust (plus `cargo-watch`), bun, NVM, WezTerm, Nerd Fonts, and zsh autosuggestion/highlighting plugins.
-3. Run `./setup_nvim.sh` to pull in the CLI tools that Neovim depends on: `ripgrep`, `fd`, `fzf`, `lazygit`, `lazydocker`, `jq`, `zoxide`, `imagemagick`, `yazi`, etc.
-4. Restart the terminal (or run `source ~/.zshrc`) so the new PATH entries, completions, and aliases take effect.
+2. Choose your platform and run the appropriate setup script:
+   - **macOS**: Run `./mac/setup.sh` - interactive menu-driven setup
+   - **Linux**: Run `./linux/setup.sh` - interactive menu-driven setup
 
-> **Note**: Both setup scripts use `curl` and `brew` installers. Review before running if you prefer to execute each command manually.
+### macOS Setup (`mac/setup.sh`)
+Interactive setup utility with the following options:
+- Install Homebrew
+- Install Essential CLI Tools (fzf, jq, fd, ripgrep, bat, eza, zoxide, yazi, lazygit, helix, etc.)
+- Install GUI Applications (wezterm, chrome, vscode, docker, fonts)
+- Install Development Environments (Rust, Node.js, Flutter, Python, Ruby via rbenv)
+- Setup Config Symlinks
+- Apply macOS Settings
+- Full Setup (all components)
+
+### Linux Setup (`linux/setup.sh`)
+Interactive setup utility with the following options:
+- Install Essential Packages (curl, wget, git, build-essential, fzf, tig, jq, ripgrep, fd)
+- Select & Install Applications (zsh, docker, rust, helix, lazygit, yazi, eza, bat, zoxide)
+- Full Setup (essentials + all apps)
+- Setup Config Symlinks
+
+### Legacy Setup (macOS)
+- `setup_env.sh`: Reveals hidden files, creates symlinks, installs Homebrew, Rust, bun, NVM, WezTerm, Nerd Fonts
+- `setup_nvim.sh`: Installs Neovim dependencies (ripgrep, fd, fzf, lazygit, lazydocker, jq, zoxide, etc.)
 
 ## Switching Neovim profiles
 `setup_env.sh` links `~/.config/nvim` to the LazyVim configuration by default. To swap to the minimal profile or back again:
@@ -59,8 +75,13 @@ Running `setup_env.sh` installs JetBrains Mono Nerd, Fira Code Nerd, and Symbols
 - For Neovim or Helix updates, relaunch the editor to let plugin managers sync.
 
 ## Troubleshooting
-- If Homebrew paths differ (e.g., on Intel macOS), adjust the exports in `zshrc/.zshrc`.
+- **macOS**: If Homebrew paths differ (e.g., on Intel macOS), adjust the exports in `zshrc/.zshrc`.
+- **Linux**: Ensure `apt` is available (Debian/Ubuntu or compatible distribution).
 - Ensure the repo remains at `~/Workspace/dotfiles` so the symlinks created by the scripts stay valid.
 - When switching Neovim profiles, remove the existing symlink before creating a new one to avoid `File exists` errors.
+
+## Platform-Specific Notes
+- **macOS**: Uses Homebrew for package management. Docker is installed as a cask (GUI app).
+- **Linux**: Uses `apt` for package management. Applications like Helix, Lazygit, and Yazi are installed via GitHub releases or compiled from source.
 
 Happy hacking!
