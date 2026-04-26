@@ -1,5 +1,5 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 echo "📦 Installing bat..."
 if command -v bat &>/dev/null; then
 	echo "  bat is already installed"

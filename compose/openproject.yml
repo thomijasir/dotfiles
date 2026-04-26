@@ -1,0 +1,28 @@
+name: openproject
+services:
+  app:
+    image: openproject/openproject:17
+    container_name: openproject
+    restart: unless-stopped
+    environment:
+      # SECURITY: Change this to a random string!
+      - SECRET_KEY_BASE=super_secret_random_key_replace_me
+      - OPENPROJECT_HOST__NAME=jira.referror.com
+      - OPENPROJECT_HTTPS=true
+      - OPENPROJECT_DEFAULT__LANGUAGE=en
+    volumes:
+      - openproject_pgdata:/var/openproject/pgdata
+      - openproject_assets:/var/openproject/assets
+      # Map ONLY the enterprise token file using the absolute path
+      - /root/work/openproject/enterprise_token.rb:/app/app/models/enterprise_token.rb:ro
+
+    networks:
+      - web_network
+
+volumes:
+  openproject_pgdata:
+  openproject_assets:
+
+networks:
+  web_network:
+    external: true

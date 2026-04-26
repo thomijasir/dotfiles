@@ -1,5 +1,5 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
 check_distro() {
 	if [[ ! -f /etc/debian_version ]]; then
@@ -119,7 +119,7 @@ install_selected() {
 			echo "Installing $app..."
 			echo "========================================"
 			if [[ -f "$PACKAGES_DIR/$app.sh" ]]; then
-				. "$PACKAGES_DIR/$app.sh"
+				bash "$PACKAGES_DIR/$app.sh"
 			else
 				echo "⚠️  $app.sh not found, skipping..."
 			fi

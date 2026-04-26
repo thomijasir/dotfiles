@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 setup_symlinks() {
 	echo "🔗 Creating Linux config symlinks..."

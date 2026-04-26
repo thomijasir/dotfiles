@@ -211,17 +211,15 @@ alias auto-transcribe='python ~/Workspace/minootube/scripts/auto-transcribe.py'
 alias video-compress='python ~/Workspace/minootube/scripts/auto-compress.py'
 
 # --- SSH Connections ---
-# @desc: SSH Tencent SG
-alias tencent_sg='ssh -i ~/.ssh-keys/tencent_sg_key.pem root@43.134.91.33'
-
-# @desc: SSH Tencent HK
-alias tencent_hk='ssh -i ~/.ssh-keys/tencent_hk_key.pem root@43.159.230.62'
 
 # @desc: SSH Tencent SG New
-alias sersg='ssh -i ~/.ssh-keys/sersg.pem root@43.160.253.244'
+alias sersg="ssh root@43.160.253.244 -i ~/.ssh-keys/sersg.pem"
 
-# @desc: SSH Aliyun
-alias aliyun='ssh root@8.219.9.110 -i ~/aliyun-key.pem'
+# @desc: SSH vent
+alias vent="ssh root@43.159.48.43 -i ~/.ssh-keys/vent.pem"
+
+# @desc: SSH venb
+alias venb="ssh root@43.159.171.15 -i ~/.ssh-keys/venb.pem"
 
 # @desc: disk analyzer
 alias diskusage="gdu-go /"

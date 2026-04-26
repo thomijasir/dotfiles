@@ -1,0 +1,28 @@
+name: nocodb
+services:
+  app:
+    image: nocodb/nocodb:latest
+    container_name: nocodb
+    restart: always
+    ports:
+      - "8010:8010"
+    environment:
+      PORT: 8010
+      # Required PUBLI URL
+      NC_PUBLIC_URL: "http://rct.referror.com"
+      # Connection string to the Postgres service defined below
+      NC_DB: "pg://pgdb:5432?u=postgres&p=adminportal&d=nocodb"
+      # Random string for security (Change this for production!)
+      NC_AUTH_JWT_SECRET: "super-secrets-nocodb"
+    volumes:
+      - nocodb_data:/usr/app/data/
+    networks:
+      - web_network
+
+volumes:
+  nocodb_data:
+
+networks:
+  web_network:
+    name: web_network
+    external: true

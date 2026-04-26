@@ -1,0 +1,32 @@
+name: postgis
+services:
+  # 1. The Database
+  pgdb:
+    image: postgis/postgis:17-3.6-alpine
+    container_name: pgdb
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: adminportal
+      POSTGRES_DB: postgres
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - web_network
+
+  # 2. Web UI for Database (pgAdmin)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: dev@referror.com
+      PGADMIN_DEFAULT_PASSWORD: egzH1K5o8W2q
+    volumes:
+      - ./pgadmin_data:/var/lib/pgadmin
+    networks:
+      - web_network
+
+networks:
+  web_network:
+    external: true

@@ -1,0 +1,28 @@
+name: nginxm
+services:
+  # Nginx Proxy Manager (With JWT Support)
+  nginxm:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginxm
+    restart: unless-stopped
+    ports:
+      - "80:80" # Public Web
+      - "443:443" # Public SSL
+      - "81:81" # NPM Admin Panel
+    volumes:
+      # Using Docker named volumes instead of local directories
+      - nginxm_data:/data
+      - nginxm_letsencrypt:/etc/letsencrypt
+    networks:
+      - web_network
+
+networks:
+  web_network:
+    external: true
+
+# Declare the named volumes so Docker knows to create and manage them
+volumes:
+  nginxm_data:
+    name: nginxm_data
+  nginxm_letsencrypt:
+    name: nginxm_letsencrypt
