@@ -27,3 +27,7 @@ services:
 
 volumes:
   wiki-data:
+
+networks:
+  web_network:
+    external: true
