@@ -216,7 +216,7 @@ alias video-compress='python ~/Workspace/minootube/scripts/auto-compress.py'
 alias sersg="ssh root@43.160.253.244 -i ~/.ssh-keys/sersg.pem"
 
 # @desc: SSH vent
-alias vent="ssh root@43.159.48.43 -i ~/.ssh-keys/vent.pem"
+alias vent="ssh vent@43.159.48.43 -i ~/.ssh-keys/vent.pem"
 
 # @desc: SSH venb
 alias venb="ssh root@43.159.171.15 -i ~/.ssh-keys/venb.pem"

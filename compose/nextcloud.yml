@@ -1,0 +1,32 @@
+services:
+  nextcloud-aio-mastercontainer:
+    image: nextcloud/all-in-one:latest
+    init: true
+    restart: always
+    container_name: nextcloud-aio-mastercontainer
+    networks:
+      - web_network
+    volumes:
+      # This volume stores the master container configuration
+      - nextcloud_aio_mastercontainer:/mnt/docker-aio-config
+      # Required so the master container can spawn the other AIO containers
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    expose:
+      - "8080"
+    environment:
+      # Tells AIO to listen on port 11000 for the proxy
+      - APACHE_PORT=11000
+      # Binds the apache container to all interfaces on its docker network
+      - APACHE_IP_BINDING=0.0.0.0
+      # CRITICAL: Tells the Master Container to attach the Nextcloud web server
+      # (that it will create later) to your existing NPM network.
+      - APACHE_ADDITIONAL_NETWORK=web_network
+
+volumes:
+  nextcloud_aio_mastercontainer:
+    name: nextcloud_aio_mastercontainer
+
+networks:
+  # References your existing NPM network
+  web_network:
+    external: true
