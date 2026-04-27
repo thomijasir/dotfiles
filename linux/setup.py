@@ -17,8 +17,9 @@ menu_list = [
     {"id": "9", "label": "Install rust", "script": "rust.sh"},
     {"id": "10", "label": "Install Helix Editor", "script": "helix.sh"},
     {"id": "11", "label": "Install Lazygit", "script": "lazygit.sh"},
-    {"id": "12", "label": "Install Yazi", "script": "yazi.sh"},
-    {"id": "13", "label": "Setup Symlinks system", "script": "symlink.sh"}
+    {"id": "12", "label": "Install Lazydocker", "script": "lazydocker.sh"},
+    {"id": "13", "label": "Install Yazi", "script": "yazi.sh"},
+    {"id": "14", "label": "Setup Symlinks system", "script": "symlink.sh"}
 ]
 
 def check_os():

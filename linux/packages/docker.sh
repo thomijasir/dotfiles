@@ -8,6 +8,7 @@ if command -v docker &>/dev/null; then
 else
   curl -fsSL https://get.docker.com -o get-docker.sh
   sudo sh get-docker.sh && rm -rf get-docker.sh
+  sudo chmod 666 /var/run/docker.sock
   echo "Create default network.."
   docker network create web_network
 fi
