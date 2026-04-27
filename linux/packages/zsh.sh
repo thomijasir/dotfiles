@@ -151,5 +151,6 @@ fi
 # ================================
 # DONE
 # ================================
+source ~/.zshrc
 echo "✅ Zsh installation complete!"
 echo "➡️ Log out and log back in to start using zsh."
