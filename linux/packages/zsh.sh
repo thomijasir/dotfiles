@@ -54,6 +54,7 @@ if [[ ! -f "$ZSHRC" ]]; then
 # ZSH CONFIG
 # ================================
 # Path Variable
+export DOTFILES="\$HOME/dotfiles"
 export ZDOTDIR=\$HOME
 export ZSH_DIR="\$HOME/.zsh"
 export ANTIDOTE_DIR="\$ZSH_DIR/antidote"
