@@ -6,16 +6,17 @@ import shutil
 
 # Your dynamic list mapping to the scripts inside the 'packages' folder
 menu_list = [
-    {"id": "1", "label": "Setup debian essentials", "script": "essential.sh"},
+    {"id": "1", "label": "Setup system essentials", "script": "essential.sh"},
     {"id": "2", "label": "Setup memory swap for server", "script": "swap.sh"},
-    {"id": "3", "label": "Setup Zsh", "script": "zsh.sh"},
-    {"id": "4", "label": "Install docker server", "script": "docker.sh"},
-    {"id": "5", "label": "Install bat", "script": "bat.sh"},
-    {"id": "6", "label": "Install eza", "script": "eza.sh"},
-    {"id": "7", "label": "Install rust", "script": "rust.sh"},
-    {"id": "8", "label": "Install Helix Editor", "script": "helix.sh"},
-    {"id": "9", "label": "Install lazygit", "script": "lazygit.sh"},
-    {"id": "10", "label": "Install Yazi", "script": "yazi.sh"},
+    {"id": "3", "label": "Setup User disable Root", "script": "setup_user.sh"},
+    {"id": "4", "label": "Setup Zsh", "script": "zsh.sh"},
+    {"id": "5", "label": "Install docker server", "script": "docker.sh"},
+    {"id": "6", "label": "Install bat", "script": "bat.sh"},
+    {"id": "7", "label": "Install eza", "script": "eza.sh"},
+    {"id": "8", "label": "Install rust", "script": "rust.sh"},
+    {"id": "9", "label": "Install Helix Editor", "script": "helix.sh"},
+    {"id": "10", "label": "Install Lazygit", "script": "lazygit.sh"},
+    {"id": "11", "label": "Install Yazi", "script": "yazi.sh"},
     {"id": "11", "label": "Install Zoxide", "script": "zoxide.sh"},
     {"id": "12", "label": "Setup Symlinks system", "script": "symlink.sh"}
 ]

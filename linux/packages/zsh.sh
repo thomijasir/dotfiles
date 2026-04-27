@@ -155,3 +155,4 @@ fi
 # ================================
 echo "✅ Zsh installation complete!"
 echo "➡️ Log out and log back in to start using zsh."
+exit 0
