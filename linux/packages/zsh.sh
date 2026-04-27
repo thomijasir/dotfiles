@@ -143,9 +143,10 @@ fi
 if [[ "$FORCE_REPLACE_SH" == true ]]; then
   echo "⚠️⚠️⚠️ FORCING /bin/sh to use zsh ⚠️⚠️⚠️"
   echo "This may BREAK system scripts."
-
   sudo ln -sf "$(which zsh)" /bin/sh
 else
+  echo "Set ZSH as default while keeping safe"
+  sudo chsh -s $(which zsh)
   echo "✅ Keeping /bin/sh as system default (recommended)"
 fi
 
