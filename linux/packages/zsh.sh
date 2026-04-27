@@ -28,7 +28,7 @@ sudo apt install -y zsh git curl
 # ================================
 if [[ "$SHELL" != "$(which zsh)" ]]; then
   echo "🔁 Setting zsh as default shell..."
-  chsh -s "$(which zsh)"
+  sudo chsh -s "$(which zsh)"
 fi
 
 # ================================
@@ -145,8 +145,6 @@ if [[ "$FORCE_REPLACE_SH" == true ]]; then
   echo "This may BREAK system scripts."
   sudo ln -sf "$(which zsh)" /bin/sh
 else
-  echo "Set ZSH as default while keeping safe"
-  sudo chsh -s $(which zsh)
   echo "✅ Keeping /bin/sh as system default (recommended)"
 fi
 
