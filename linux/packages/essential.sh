@@ -2,7 +2,7 @@
 set -euo pipefail
 
 echo "📦 Installing essential packages..."
-sudo apt update && apt upgrade -y
+sudo apt update && sudo apt upgrade -y
 sudo apt install -y sudo pkg-config libssl-dev ca-certificates build-essential
 sudo apt install -y curl wget git unzip tar btop iotop iftop ncdu
 sudo apt install -y fzf tig jq ripgrep fd-find
