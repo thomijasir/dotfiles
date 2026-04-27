@@ -3,9 +3,6 @@ set -euo pipefail
 
 echo "📦 Installing Rust..."
 
-sudo apt update
-sudo apt install -y curl build-essential pkg-config libssl-dev ca-certificates
-
 if command -v rustup >/dev/null 2>&1; then
   echo "Rustup already installed, updating..."
   rustup update

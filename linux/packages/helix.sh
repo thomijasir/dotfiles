@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+echo "📦 Installing Helix Editor.."
+
 VERSION="25.07.1"
 ARCHIVE="helix-${VERSION}-x86_64-linux.tar.xz"
 DIR="helix-${VERSION}-x86_64-linux"
-
-sudo apt update
-sudo apt install -y curl tar xz-utils ca-certificates
-
 cd /tmp
 
 curl -fL -o "$ARCHIVE" \
