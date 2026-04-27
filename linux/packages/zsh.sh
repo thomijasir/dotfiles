@@ -54,7 +54,7 @@ if [[ ! -f "$ZSHRC" ]]; then
 # ZSH CONFIG
 # ================================
 # Path Variable
-export DOTFILES="\$HOME/dotfiles"
+export DOTFILES_ROOT="\$HOME/dotfiles"
 export ZDOTDIR=\$HOME
 export ZSH_DIR="\$HOME/.zsh"
 export ANTIDOTE_DIR="\$ZSH_DIR/antidote"
@@ -62,6 +62,8 @@ export ANTIDOTE_DIR="\$ZSH_DIR/antidote"
 # Path Export
 export PATH="\$HOME/bin:\$PATH"
 export PATH="\$HOME/.local/bin:\$PATH"
+export PATH="\$DOTFILES_ROOT/scripts:\$PATH"
+
 
 # History
 ZSH_DISABLE_COMPFIX=true
@@ -109,6 +111,7 @@ alias cd='z'
 alias lg="lazygit"
 alias ld="lazydocker"
 alias rm_node='rm -rf node_modules package-lock.json'
+alias zsh_reload='source ~/.zshrc'
 
 EOF
 fi

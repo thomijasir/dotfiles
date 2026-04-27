@@ -5,6 +5,11 @@ echo "📦 Setting up swapfile..."
 
 SWAPFILE="/swapfile"
 MAX_SWAP_MB=8192
+SUDO=()
+
+if [[ "$EUID" -ne 0 ]]; then
+  SUDO=(sudo)
+fi
 
 DETECTED_RAM_MB=$(awk '/MemTotal/ {print int($2 / 1024)}' /proc/meminfo)
 
@@ -46,36 +51,36 @@ if swapon --show | awk '{print $1}' | grep -qx "$SWAPFILE"; then
     exit 0
   else
     echo "Recreating swapfile with correct size..."
-    swapoff "$SWAPFILE"
+    "${SUDO[@]}" swapoff "$SWAPFILE"
   fi
 fi
 
 if [ -f "$SWAPFILE" ]; then
-  rm -f "$SWAPFILE"
+  "${SUDO[@]}" rm -f "$SWAPFILE"
 fi
 
 if command -v fallocate >/dev/null 2>&1; then
-  fallocate -l "${SWAP_MB}M" "$SWAPFILE"
+  "${SUDO[@]}" fallocate -l "${SWAP_MB}M" "$SWAPFILE"
 else
-  dd if=/dev/zero of="$SWAPFILE" bs=1M count="$SWAP_MB"
+  "${SUDO[@]}" dd if=/dev/zero of="$SWAPFILE" bs=1M count="$SWAP_MB"
 fi
 
-chmod 600 "$SWAPFILE"
-mkswap "$SWAPFILE"
-swapon "$SWAPFILE"
+"${SUDO[@]}" chmod 600 "$SWAPFILE"
+"${SUDO[@]}" mkswap "$SWAPFILE"
+"${SUDO[@]}" swapon "$SWAPFILE"
 
 if ! grep -qE "^${SWAPFILE}[[:space:]]" /etc/fstab; then
-  echo "$SWAPFILE none swap sw 0 0" >>/etc/fstab
+  echo "$SWAPFILE none swap sw 0 0" | "${SUDO[@]}" tee -a /etc/fstab >/dev/null
 fi
 
-sysctl vm.swappiness=10
-sysctl vm.vfs_cache_pressure=50
+"${SUDO[@]}" sysctl vm.swappiness=10
+"${SUDO[@]}" sysctl vm.vfs_cache_pressure=50
 
-sed -i '/^vm.swappiness=/d' /etc/sysctl.conf
-sed -i '/^vm.vfs_cache_pressure=/d' /etc/sysctl.conf
+"${SUDO[@]}" sed -i '/^vm.swappiness=/d' /etc/sysctl.conf
+"${SUDO[@]}" sed -i '/^vm.vfs_cache_pressure=/d' /etc/sysctl.conf
 
-echo "vm.swappiness=10" >>/etc/sysctl.conf
-echo "vm.vfs_cache_pressure=50" >>/etc/sysctl.conf
+echo "vm.swappiness=10" | "${SUDO[@]}" tee -a /etc/sysctl.conf >/dev/null
+echo "vm.vfs_cache_pressure=50" | "${SUDO[@]}" tee -a /etc/sysctl.conf >/dev/null
 
 echo "✅ Swap setup complete!"
 free -h
