@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:10.11
+    container_name: wp_fpm_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: secure_root_password
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wp_user
+      MYSQL_PASSWORD: secure_wp_password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - wp_internal
+
+  wordpress:
+    image: wordpress:fpm-alpine
+    container_name: wp_fpm_app
+    restart: unless-stopped
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wp_user
+      WORDPRESS_DB_PASSWORD: secure_wp_password
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - wp_internal
+
+  # use this wp_fpm_nginx:80 on Nginx Proxy Manager
+  web:
+    image: nginx:alpine
+    container_name: wp_fpm_nginx
+    restart: unless-stopped
+    depends_on:
+      - wordpress
+    volumes:
+      # Mount the same WP data volume so Nginx can serve the static files
+      - wp_data:/var/www/html
+      # Mount the custom Nginx config
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - wp_internal
+      - web_network # This connects it to Nginx Proxy Manager
+
+volumes:
+  db_data:
+  wp_data:
+
+networks:
+  wp_internal:
+    # Internal network for DB, App, and local Web to communicate
+    driver: bridge
+  web_network:
+    # Your existing external network for Nginx Proxy Manager
+    external: true

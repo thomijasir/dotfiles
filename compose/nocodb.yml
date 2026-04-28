@@ -4,8 +4,8 @@ services:
     image: nocodb/nocodb:latest
     container_name: nocodb
     restart: always
-    ports:
-      - "8010:8010"
+    expose:
+      - 8010
     environment:
       PORT: 8010
       # Required PUBLI URL

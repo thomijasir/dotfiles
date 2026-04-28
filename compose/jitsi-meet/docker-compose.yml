@@ -1,0 +1,64 @@
+services:
+  # Frontend UI & Nginx
+  web:
+    image: jitsi/web:latest
+    container_name: jitsi_web
+    restart: unless-stopped
+    volumes:
+      - ~/.jitsi-meet-cfg/web:/config
+      - ~/.jitsi-meet-cfg/transcripts:/usr/share/jitsi-meet/transcripts
+    env_file:
+      - .env
+    networks:
+      - jitsi_internal
+      - web_network # Connects to your Nginx Proxy Manager
+
+  # XMPP Server
+  prosody:
+    image: jitsi/prosody:latest
+    container_name: jitsi_prosody
+    restart: unless-stopped
+    volumes:
+      - ~/.jitsi-meet-cfg/prosody/config:/config
+      - ~/.jitsi-meet-cfg/prosody/plugins:/prosody-plugins-custom
+    env_file:
+      - .env
+    networks:
+      - jitsi_internal
+
+  # Conference Focus
+  jicofo:
+    image: jitsi/jicofo:latest
+    container_name: jitsi_jifoco
+    restart: unless-stopped
+    volumes:
+      - ~/.jitsi-meet-cfg/jicofo:/config
+    env_file:
+      - .env
+    networks:
+      - jitsi_internal
+
+  # Video Bridge (Handles Media)
+  jvb:
+    image: jitsi/jvb:latest
+    container_name: jitsi_jvb
+    restart: unless-stopped
+    ports:
+      # CRITICAL: NPM cannot proxy UDP WebRTC traffic. 
+      # This port must be exposed directly on the host.
+      - '10000:10000/udp' 
+    volumes:
+      - ~/.jitsi-meet-cfg/jvb:/config
+    env_file:
+      - .env
+    networks:
+      - jitsi_internal
+
+networks:
+  jitsi_internal:
+    driver: bridge
+  web_network:
+    external: true # Your existing NPM network
+
+# Setup NPM
+# use jitsi_web:80 for http on nginx proxy manager 

@@ -28,6 +28,10 @@ alias appkill='f() {
   fi
 }; f'
 
+# --- Generate Random ---
+# @desc: generate random string with 32 length
+alias random32='openssl rand -hex 32'
+
 # --- File Operations ---
 # @desc: Copy with prompt & verbose
 alias cp='cp -iv'
