@@ -8,6 +8,7 @@ FORCE_REPLACE_SH=false # ⚠️ VERY DANGEROUS — READ BELOW
 
 ZSH_DIR="$HOME/.zsh"
 ANTIDOTE_DIR="$ZSH_DIR/antidote"
+LOGIN_USER="${SUDO_USER:-$(id -un)}"
 
 # ================================
 # ROOT CHECK
@@ -28,7 +29,7 @@ sudo apt install -y zsh git curl
 # ================================
 if [[ "$SHELL" != "$(which zsh)" ]]; then
   echo "🔁 Setting zsh as default shell..."
-  sudo chsh -s "$(which zsh)"
+  sudo chsh -s "$(which zsh)" "$LOGIN_USER"
 fi
 
 # ================================
@@ -151,6 +152,6 @@ fi
 # ================================
 # DONE
 # ================================
-source ~/.zshrc
+zsh -n ~/.zshrc
 echo "✅ Zsh installation complete!"
 echo "➡️ Log out and log back in to start using zsh."

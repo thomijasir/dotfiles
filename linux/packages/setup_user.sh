@@ -3,6 +3,12 @@ set -euo pipefail
 
 echo "=== Secure Ubuntu/Debian VPS User Setup ==="
 
+if [[ "$EUID" -ne 0 ]]; then
+  echo "❌ This script must be run as root."
+  echo "Run it from a root session because it changes users, sudoers, and SSH settings."
+  exit 1
+fi
+
 read -rp "Enter new sudo username: " USERNAME
 
 if id "$USERNAME" &>/dev/null; then
@@ -17,7 +23,7 @@ adduser "$USERNAME" --disabled-password --gecos ""
 usermod -aG sudo "$USERNAME"
 
 # Setup SSH keys
-mkdir -p /home/$USERNAME/.ssh
+mkdir -p "/home/$USERNAME/.ssh"
 
 ROOT_KEYS=$(ls /root/.ssh/authorized_keys 2>/dev/null || true)
 
@@ -26,11 +32,11 @@ if [ -z "$ROOT_KEYS" ]; then
   exit 1
 fi
 
-cp "$ROOT_KEYS" /home/$USERNAME/.ssh/authorized_keys
+cp "$ROOT_KEYS" "/home/$USERNAME/.ssh/authorized_keys"
 
-chown -R $USERNAME:$USERNAME /home/$USERNAME/.ssh
-chmod 700 /home/$USERNAME/.ssh
-chmod 600 /home/$USERNAME/.ssh/authorized_keys
+chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.ssh"
+chmod 700 "/home/$USERNAME/.ssh"
+chmod 600 "/home/$USERNAME/.ssh/authorized_keys"
 
 # Passwordless sudo with validation
 SUDO_FILE="/etc/sudoers.d/$USERNAME"
@@ -62,7 +68,13 @@ set_sshd_option "UsePAM" "yes"
 sshd -t
 
 # Restart SSH safely
-systemctl restart ssh || systemctl restart sshd
+if [ "$(ps -p 1 -o comm=)" = "systemd" ]; then
+  systemctl restart ssh || systemctl restart sshd
+elif command -v service >/dev/null 2>&1; then
+  service ssh restart || service sshd restart
+else
+  echo "⚠️  Could not restart SSH automatically; restart it manually before relying on the new config."
+fi
 
 # Lock root password
 passwd -l root

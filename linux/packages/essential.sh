@@ -9,6 +9,10 @@ sudo apt install -y fzf tig jq ripgrep fd-find
 sudo apt install -y gnupg lsb-release xz-utils fail2ban
 
 # Enable Configuration
-sudo systemctl enable --now fail2ban
+if [ "$(ps -p 1 -o comm=)" = "systemd" ]; then
+  sudo systemctl enable --now fail2ban
+else
+  echo "ℹ️  systemd is not running; skipping fail2ban service start."
+fi
 
 echo "✅ Essential packages installed!"

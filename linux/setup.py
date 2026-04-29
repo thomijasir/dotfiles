@@ -4,6 +4,8 @@ import sys
 import os
 import shutil
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Your dynamic list mapping to the scripts inside the 'packages' folder
 menu_list = [
     {"id": "1", "label": "Setup system essentials", "script": "essential.sh"},
@@ -47,7 +49,7 @@ def check_os():
 def execute_install_script(script_name):
     """Executes the shell script from the packages directory."""
     
-    script_path = os.path.join("packages", script_name)
+    script_path = os.path.join(BASE_DIR, "packages", script_name)
     
     if not os.path.exists(script_path):
         print(f"\n[ERROR] Could not find '{script_path}'. Make sure it exists in the packages directory.\n")
