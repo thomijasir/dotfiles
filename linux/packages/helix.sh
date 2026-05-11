@@ -6,12 +6,13 @@ echo "📦 Installing Helix Editor.."
 VERSION="25.07.1"
 ARCHIVE="helix-${VERSION}-x86_64-linux.tar.xz"
 DIR="helix-${VERSION}-x86_64-linux"
-cd /tmp
+TMP_DIR="$(mktemp -d)"
+trap 'rm -rf "$TMP_DIR"' EXIT
+cd "$TMP_DIR"
 
 curl -fL -o "$ARCHIVE" \
   "https://github.com/helix-editor/helix/releases/download/${VERSION}/${ARCHIVE}"
 
-rm -rf "$DIR"
 tar -xf "$ARCHIVE"
 
 sudo install -Dm755 "$DIR/hx" /usr/local/bin/hx
