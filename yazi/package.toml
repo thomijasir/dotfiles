@@ -23,5 +23,10 @@ use = "boydaihungst/restore"
 rev = "2161735"
 hash = "901741afba1979739b4650324265162e"
 
+[[plugin.deps]]
+use = "DreamMaoMao/fg"
+rev = "b9fb819"
+hash = "7d62f2eae04f77d13a21917c169b151b"
+
 [flavor]
 deps = []

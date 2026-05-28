@@ -3,6 +3,9 @@
 # @desc: Quit the shell
 alias q='exit;'
 
+# @desc: Clear the shell
+alias c='clear'
+
 # --- ZSH Configuration ---
 # @desc: Open alias file in Helix
 alias zsh_aliases='hx ~/.zsh_aliases'
@@ -88,23 +91,24 @@ alias sr='replace-str.sh'
 alias sf='replace-file.sh'
 
 # --- Git Shortcuts ---
-# @desc: Git add all
-alias ga='git add .'
+alias gaa='git add .'
+alias gfp='git fetch && git pull'
+alias gpp='git push'
+alias gss='git status'
+alias gst='git stash'
+alias gsp='git stash pop'
+alias gcm='f() { git commit -m "$1"; }; f'
+alias gcb='f() { git checkout -b "$1"; }; f'
+alias gco='f() { git checkout "$1"; }; f'
+alias gpsu='git push -u origin'
+alias glog='git log --oneline --graph --decorate --all'
 
-# @desc: Git fetch & pull
-alias gf='git fetch && git pull'
-
-# @desc: Git push
-alias gp='git push'
-
-# @desc: Git status
-alias gs='git status'
-
-# @desc: Commit with message (gc "msg")
-alias gc='f() { git commit -m "$1"; }; f'
-
-# @desc: Create & switch to new branch (gb "branch")
-alias gb='f() { git checkout -b "$1"; }; f'
+# @desc: alias info
+gl() {
+  echo "Available Git aliases:"
+  echo
+  alias | grep -E "^gaa|^gfp|^gpp|^gss|^gst|^gsp|^gcm|^gcb|^gco|^gpsu|^glog" | sort
+}
 
 # --- Open Files Script ---
 # @desc: Open files via zoxide helper
