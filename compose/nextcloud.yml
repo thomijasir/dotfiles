@@ -14,29 +14,53 @@ services:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
 
+  redis:
+    image: redis:alpine
+    container_name: nextcloud_redis
+    restart: unless-stopped
+
   app:
     # on nginx proxy manager nexcloud_app:80
-    image: nextcloud:latest
+    image: nextcloud:33-apache
     container_name: nextcloud_app
     restart: unless-stopped
     depends_on:
       - db
+      - redis
     networks:
       - default
       - web_network
     volumes:
       - nextcloud_data:/var/www/html
     environment:
-      - MYSQL_PASSWORD=secure_database_password # Must match the db password above
+      - MYSQL_PASSWORD=secure_database_password
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_HOST=db
+
       - NEXTCLOUD_TRUSTED_DOMAINS=drive.domain.com
       - OVERWRITEPROTOCOL=https
-      - PHP_MEMORY_LIMIT=4G # Crucial for large video workflows
-      - PHP_UPLOAD_LIMIT=50G # Set this to handle your largest raw files
-      - UPLOAD_MAX_FILESIZE=50G
-      - POST_MAX_SIZE=50G
+      - OVERWRITEHOST=drive.domain.com
+      - OVERWRITECLIURL=https://drive.domain.com
+      # add your reverse proxy IP/CIDR here if needed
+      # - TRUSTED_PROXIES=172.20.0.0/16
+      - REDIS_HOST=redis
+      - REDIS_HOST_PORT=6379
+
+      - PHP_MEMORY_LIMIT=4G
+      - PHP_UPLOAD_LIMIT=50G
+
+    cron:
+      # use the SAME tag as app
+      image: nextcloud:33-apache
+      container_name: nextcloud_cron
+      restart: unless-stopped
+      entrypoint: /cron.sh
+      depends_on:
+        - db
+        - redis
+      volumes:
+        - nextcloud_data:/var/www/html
 
 volumes:
   nextcloud_db:
@@ -45,3 +69,21 @@ volumes:
 networks:
   web_network:
     external: true
+
+# Note
+# if you use Nginx Proxy Manager to manage service please add this on npm advance tab
+# it will match with configuration docker above
+
+# client_max_body_size 50G;
+# client_body_timeout 3600s;
+# proxy_read_timeout 3600s;
+# proxy_send_timeout 3600s;
+# send_timeout 3600s;
+
+# location = /.well-known/carddav {
+#     return 301 https://$host/remote.php/dav;
+# }
+# location = /.well-known/caldav {
+#     return 301 https://$host/remote.php/dav;
+# }
+
