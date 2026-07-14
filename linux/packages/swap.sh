@@ -4,7 +4,7 @@ set -euo pipefail
 echo "📦 Setting up swapfile..."
 
 SWAPFILE="/swapfile"
-MAX_SWAP_MB=8192
+MAX_SWAP_MB=16384
 SUDO=()
 
 if [[ "$EUID" -ne 0 ]]; then
