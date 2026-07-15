@@ -5,24 +5,33 @@ import os
 import shutil
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PACKAGES_DIR = os.path.join(BASE_DIR, "packages")
 
-# Your dynamic list mapping to the scripts inside the 'packages' folder
-menu_list = [
-    {"id": "1", "label": "Setup system essentials", "script": "essential.sh"},
-    {"id": "2", "label": "Setup memory swap for server", "script": "swap.sh"},
-    {"id": "3", "label": "Setup User disable Root", "script": "setup_user.sh"},
-    {"id": "4", "label": "Install Zoxide", "script": "zoxide.sh"},
-    {"id": "5", "label": "Setup Zsh", "script": "zsh.sh"},
-    {"id": "6", "label": "Install docker server", "script": "docker.sh"},
-    {"id": "7", "label": "Install bat", "script": "bat.sh"},
-    {"id": "8", "label": "Install eza", "script": "eza.sh"},
-    {"id": "9", "label": "Install rust", "script": "rust.sh"},
-    {"id": "10", "label": "Install Helix Editor", "script": "helix.sh"},
-    {"id": "11", "label": "Install Lazygit", "script": "lazygit.sh"},
-    {"id": "12", "label": "Install Lazydocker", "script": "lazydocker.sh"},
-    {"id": "13", "label": "Install Yazi", "script": "yazi.sh"},
-    {"id": "14", "label": "Setup Symlinks system", "script": "symlink.sh"}
-]
+
+def build_menu_list():
+    """Builds the menu dynamically from the scripts in the packages folder.
+
+    Scripts must be named with a leading numeric prefix (e.g. `01-essential.sh`)
+    so they are ordered deterministically. The label is derived from the part
+    after the prefix: hyphens become spaces and words are title-cased.
+    """
+    scripts = [
+        f for f in os.listdir(PACKAGES_DIR)
+        if f.endswith(".sh") and os.path.isfile(os.path.join(PACKAGES_DIR, f))
+    ]
+
+    # Sort by the leading numeric prefix (e.g. "01", "02", ... "20")
+    scripts.sort(key=lambda name: int(name.split("-", 1)[0]))
+
+    menu_list = []
+    for index, script in enumerate(scripts, start=1):
+        # "01-essential.sh" -> "essential" -> "Essential"
+        # "03-setup-user.sh" -> "setup-user" -> "Setup User"
+        name = script.split("-", 1)[1].rsplit(".sh", 1)[0]
+        label = " ".join(part.capitalize() for part in name.split("-"))
+        menu_list.append({"id": str(index), "label": label, "script": script})
+
+    return menu_list
 
 def check_os():
     """Checks if the current operating system is Debian or Ubuntu and has apt installed."""
@@ -49,7 +58,7 @@ def check_os():
 def execute_install_script(script_name):
     """Executes the shell script from the packages directory."""
     
-    script_path = os.path.join(BASE_DIR, "packages", script_name)
+    script_path = os.path.join(PACKAGES_DIR, script_name)
     
     if not os.path.exists(script_path):
         print(f"\n[ERROR] Could not find '{script_path}'. Make sure it exists in the packages directory.\n")
@@ -66,6 +75,12 @@ def execute_install_script(script_name):
         return False
 
 def main():
+    menu_list = build_menu_list()
+
+    if not menu_list:
+        print("\n[!] No package scripts found in the 'packages' directory. Exiting.")
+        sys.exit(1)
+
     try:
         while True:
             print("\n====================================")

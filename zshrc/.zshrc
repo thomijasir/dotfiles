@@ -127,3 +127,10 @@ fi
 [[ -f ~/.zsh_aliases ]] && source ~/.zsh_aliases
 [[ -f ~/.zsh_help ]] && source ~/.zsh_help
 [[ -f ~/.zsh_run ]] && source ~/.zsh_run
+export PATH="$HOME/.local/bin:$PATH"
+
+# kilo
+export PATH=/Users/venobi/.kilo/bin:$PATH
+
+# opencode
+export PATH=/Users/venobi/.opencode/bin:$PATH
