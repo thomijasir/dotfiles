@@ -27,7 +27,9 @@ if [ "$(id -u)" -eq 0 ]; then
 else
   command -v sudo >/dev/null 2>&1 || die "sudo is required. Install it or run this script as root."
   SUDO="sudo"
-  $SUDO -v
+  # Prefer passwordless (NOPASSWD) sudo: validate without prompting. Only
+  # fall back to an interactive prompt when a password is actually required.
+  $SUDO -n true 2>/dev/null || $SUDO -v
   TARGET_USER="$(id -un)"
 fi
 
