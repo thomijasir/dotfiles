@@ -11,8 +11,16 @@ from pathlib import Path
 
 
 # ==============================================================================
-# SMART VIDEO COMPRESSOR (Python - simple readable version)
+# SMART VIDEO COMPRESSOR
 # Requirements: ffmpeg, ffprobe
+#
+# Compression profiles:
+#   standard = safer default, max 1080p
+#   maximum  = smaller file, max 720p
+#
+# Encoder behavior:
+#   macOS Apple Silicon + h264_videotoolbox available -> h264_videotoolbox
+#   otherwise -> libx264
 # ==============================================================================
 
 # --- Colors & Icons ---
@@ -100,34 +108,163 @@ def get_video_info(input_file: Path) -> tuple[str, str, str]:
     return "N/A", "N/A", "N/A"
 
 
-def get_ffmpeg_args(mode: str) -> tuple[str, list[str], str]:
-    """Return (mode_label, ffmpeg_args, mode_color)."""
+def get_duration_seconds(input_file: Path) -> float | None:
+    """Read media duration in seconds using ffprobe."""
+    command = [
+        "ffprobe",
+        "-v", "error",
+        "-show_entries", "format=duration",
+        "-of", "default=noprint_wrappers=1:nokey=1",
+        str(input_file)
+    ]
+    result = run_command(command, capture_output=True)
+
+    if result.returncode != 0:
+        return None
+
+    text = result.stdout.strip()
+    if not text:
+        return None
+
+    try:
+        return float(text)
+    except ValueError:
+        return None
+
+
+def ffmpeg_encoder_available(encoder_name: str) -> bool:
+    """Check whether ffmpeg has a specific encoder available."""
+    command = [
+        "ffmpeg",
+        "-hide_banner",
+        "-encoders"
+    ]
+    result = run_command(command, capture_output=True)
+
+    if result.returncode != 0:
+        return False
+
+    return encoder_name in result.stdout
+
+
+def is_apple_silicon_mac() -> bool:
+    """Return True if running on macOS Apple Silicon."""
+    return platform.system() == "Darwin" and platform.machine().lower() in {"arm64", "aarch64"}
+
+
+def choose_video_encoder() -> str:
+    """
+    Automatically choose the best encoder.
+
+    Apple Silicon macOS:
+        use h264_videotoolbox if available
+
+    Other systems:
+        use libx264
+    """
+    if is_apple_silicon_mac() and ffmpeg_encoder_available("h264_videotoolbox"):
+        return "h264_videotoolbox"
+
+    return "libx264"
+
+
+def get_scale_filter(max_width: int, max_height: int) -> str:
+    """
+    Safer scaling filter.
+
+    - Prevents upscaling
+    - Works better for both landscape and portrait
+    - Forces even dimensions for encoder compatibility
+    """
+    return (
+        f"scale='min({max_width},iw)':'min({max_height},ih)':"
+        "force_original_aspect_ratio=decrease,"
+        "scale=trunc(iw/2)*2:trunc(ih/2)*2"
+    )
+
+
+def get_ffmpeg_args(mode: str, encoder: str) -> tuple[str, list[str], str]:
+    """
+    Return:
+        mode_label
+        ffmpeg_args
+        mode_color
+
+    Profiles:
+        standard = safer default, max 1080p
+        maximum  = stronger compression, max 720p
+
+    Encoder:
+        libx264
+        h264_videotoolbox
+    """
     if mode == "maximum":
-        mode_label = "MAXIMUM (Max 720p, Mono)"
+        mode_label = "MAXIMUM (Max 720p, Strong Compression)"
         mode_color = PURPLE
-        ffmpeg_args = [
-            "-c:v", "libx264",
-            "-preset", "veryslow",
-            "-crf", "28",
-            "-vf", "scale='min(1280,iw)':-2",
-            "-c:a", "aac",
-            "-b:a", "64k",
-            "-ac", "1",
-            "-movflags", "+faststart",
-        ]
+
+        if encoder == "h264_videotoolbox":
+            ffmpeg_args = [
+                "-map", "0:v:0",
+                "-map", "0:a?",
+                "-c:v", "h264_videotoolbox",
+                "-b:v", "2200k",
+                "-maxrate", "3200k",
+                "-bufsize", "5000k",
+                "-pix_fmt", "yuv420p",
+                "-vf", get_scale_filter(1280, 720),
+                "-c:a", "aac",
+                "-b:a", "96k",
+                "-ac", "2",
+                "-movflags", "+faststart",
+            ]
+        else:
+            ffmpeg_args = [
+                "-map", "0:v:0",
+                "-map", "0:a?",
+                "-c:v", "libx264",
+                "-preset", "slow",
+                "-crf", "26",
+                "-pix_fmt", "yuv420p",
+                "-vf", get_scale_filter(1280, 720),
+                "-c:a", "aac",
+                "-b:a", "96k",
+                "-ac", "2",
+                "-movflags", "+faststart",
+            ]
+
     else:
-        mode_label = "STANDARD (Max 1080p, Stereo)"
+        mode_label = "STANDARD (Max 1080p, Safe Balanced)"
         mode_color = GREEN
-        ffmpeg_args = [
-            "-c:v", "libx264",
-            "-preset", "slower",
-            "-crf", "26",
-            "-vf", "scale='min(1920,iw)':-2",
-            "-c:a", "aac",
-            "-b:a", "128k",
-            "-ac", "2",
-            "-movflags", "+faststart",
-        ]
+
+        if encoder == "h264_videotoolbox":
+            ffmpeg_args = [
+                "-map", "0:v:0",
+                "-map", "0:a?",
+                "-c:v", "h264_videotoolbox",
+                "-b:v", "4500k",
+                "-maxrate", "6000k",
+                "-bufsize", "9000k",
+                "-pix_fmt", "yuv420p",
+                "-vf", get_scale_filter(1920, 1080),
+                "-c:a", "aac",
+                "-b:a", "128k",
+                "-ac", "2",
+                "-movflags", "+faststart",
+            ]
+        else:
+            ffmpeg_args = [
+                "-map", "0:v:0",
+                "-map", "0:a?",
+                "-c:v", "libx264",
+                "-preset", "slow",
+                "-crf", "24",
+                "-pix_fmt", "yuv420p",
+                "-vf", get_scale_filter(1920, 1080),
+                "-c:a", "aac",
+                "-b:a", "128k",
+                "-ac", "2",
+                "-movflags", "+faststart",
+            ]
 
     return mode_label, ffmpeg_args, mode_color
 
@@ -139,7 +276,7 @@ def make_temp_file(output_file: Path) -> Path:
 
     Example:
     final: Screen Recording.mp4
-    temp : Screen Recording.tmp.mp4
+    temp : .Screen Recording.tmp.mp4
     """
     return output_file.with_name(f".{output_file.stem}.tmp{output_file.suffix}")
 
@@ -189,7 +326,7 @@ def build_output_plan(input_file: Path, output_folder: str | None, replace: bool
 
     # No output folder: same directory
     if replace:
-        # Traditional replace mode
+        # True replace mode, no backup
         if input_ext == ".mp4":
             output_file = input_file
         else:
@@ -221,6 +358,47 @@ def same_file(path1: Path, path2: Path) -> bool:
         return False
 
 
+def validate_output_file(input_file: Path, output_file: Path) -> bool:
+    """
+    Validate compressed output before replacing/deleting original.
+
+    Checks:
+    - File exists
+    - File size is not empty
+    - Video stream is readable
+    - Output duration is close to input duration
+    """
+    if not output_file.exists():
+        print(f"{RED}{ICON_ERROR} Validation failed: output file does not exist.{NC}")
+        return False
+
+    if output_file.stat().st_size <= 0:
+        print(f"{RED}{ICON_ERROR} Validation failed: output file is empty.{NC}")
+        return False
+
+    width, height, codec = get_video_info(output_file)
+
+    if width == "N/A" or height == "N/A" or codec == "N/A":
+        print(f"{RED}{ICON_ERROR} Validation failed: ffprobe could not read output video stream.{NC}")
+        return False
+
+    input_duration = get_duration_seconds(input_file)
+    output_duration = get_duration_seconds(output_file)
+
+    if input_duration is not None and output_duration is not None:
+        allowed_difference = max(2.0, input_duration * 0.02)
+        actual_difference = abs(input_duration - output_duration)
+
+        if actual_difference > allowed_difference:
+            print(f"{RED}{ICON_ERROR} Validation failed: output duration differs too much from input.{NC}")
+            print(f"{BOLD}Input duration:{NC}  {input_duration:.2f}s")
+            print(f"{BOLD}Output duration:{NC} {output_duration:.2f}s")
+            print(f"{BOLD}Difference:{NC}      {actual_difference:.2f}s")
+            return False
+
+    return True
+
+
 # ------------------------------------------------------------------------------
 # Main
 # ------------------------------------------------------------------------------
@@ -233,33 +411,43 @@ def parse_args():
             "Examples:\n"
             "  compress-video.py video.mp4\n"
             "  compress-video.py -s video.mov\n"
+            "  compress-video.py -m video.mov\n"
             "  compress-video.py -d video.mov\n"
-            "  compress-video.py video.mp4 ./out/\n"
+            "  compress-video.py -r video.mp4\n"
+            "  compress-video.py video.mp4 ./out/\n\n"
+            "Notes:\n"
+            "  Default mode is STANDARD for safer compression.\n"
+            "  On Apple Silicon macOS, h264_videotoolbox is used automatically if available.\n"
+            "  On other systems, libx264 is used.\n"
         )
     )
 
     mode_group = parser.add_mutually_exclusive_group()
     mode_group.add_argument(
         "-m",
+        "--maximum",
         action="store_true",
-        help="Maximum Compression (Default). Max 720p. Mono Audio."
+        help="Maximum compression. Max 720p. Smaller file, still safer than old aggressive mode."
     )
     mode_group.add_argument(
         "-s",
+        "--standard",
         action="store_true",
-        help="Standard Compression. Max 1080p. Stereo Audio."
+        help="Standard compression. Max 1080p. Safer balanced mode. This is the default."
     )
 
     action_group = parser.add_mutually_exclusive_group()
     action_group.add_argument(
         "-r",
+        "--replace",
         action="store_true",
-        help="Replace the original file (true replace, no backup)."
+        help="Replace the original file. No backup."
     )
     action_group.add_argument(
         "-d",
+        "--delete-original",
         action="store_true",
-        help="Delete original file after compression (no backup)."
+        help="Delete original file after compression. No backup."
     )
 
     parser.add_argument("video_file", help="Input video file")
@@ -275,9 +463,13 @@ def main():
 
     args = parse_args()
 
-    compression_mode = "standard" if args.s else "maximum"
-    replace = args.r
-    delete_original = args.d
+    # Safer default:
+    # Previous script defaulted to maximum.
+    # New script defaults to standard unless -m is passed.
+    compression_mode = "maximum" if args.maximum else "standard"
+
+    replace = args.replace
+    delete_original = args.delete_original
 
     input_file = Path(args.video_file).expanduser()
 
@@ -307,11 +499,15 @@ def main():
 
     # Analyze source file
     print(f"{BLUE}{ICON_INFO} Analyzing source file...{NC}")
+
     orig_size = input_file.stat().st_size
     orig_size_hr = human_filesize(orig_size)
     orig_width, orig_height, orig_codec = get_video_info(input_file)
+    orig_duration = get_duration_seconds(input_file)
 
-    mode_label, ffmpeg_args, mode_color = get_ffmpeg_args(compression_mode)
+    # Choose encoder automatically
+    encoder = choose_video_encoder()
+    mode_label, ffmpeg_args, mode_color = get_ffmpeg_args(compression_mode, encoder)
 
     # Show job info
     print(f"{WHITE}=================================================={NC}")
@@ -319,7 +515,16 @@ def main():
     print(f"{WHITE}=================================================={NC}")
     print(f"{BOLD}Input:{NC}         {input_file}")
     print(f"{BOLD}Details:{NC}       {orig_width}x{orig_height} | {orig_codec} | {orig_size_hr}")
+
+    if orig_duration is not None:
+        print(f"{BOLD}Duration:{NC}      {orig_duration:.2f}s")
+
     print(f"{BOLD}Mode:{NC}          {mode_color}{mode_label}{NC}")
+    print(f"{BOLD}Encoder:{NC}       {CYAN}{encoder}{NC}")
+
+    if encoder == "h264_videotoolbox":
+        print(f"{BOLD}Hardware:{NC}      {GREEN}Apple VideoToolbox enabled automatically{NC}")
+
     print(f"{BOLD}Output:{NC}        {output_file}")
 
     if backup_original_mp4:
@@ -332,11 +537,7 @@ def main():
     print(f"{WHITE}=================================================={NC}")
     print(f"{CYAN}{ICON_INFO} Processing...{NC}")
 
-    interrupted = False
-
     def handle_sigint(signum, frame):
-        nonlocal interrupted
-        interrupted = True
         if temp_file.exists():
             temp_file.unlink()
         print(f"\n{RED}{ICON_ERROR} Aborted by user.{NC}")
@@ -347,7 +548,8 @@ def main():
     # Build ffmpeg command
     ffmpeg_command = []
 
-    # Optional lower priority on macOS/Linux
+    # Optional lower priority on macOS/Linux.
+    # VideoToolbox benefits less from nice, but it is still okay.
     system_name = platform.system()
     if system_name in {"Darwin", "Linux"} and shutil.which("nice"):
         ffmpeg_command.extend(["nice", "-n", "10"])
@@ -372,6 +574,17 @@ def main():
             temp_file.unlink()
         sys.exit(1)
 
+    # Validate temp output before touching original
+    print(f"{BLUE}{ICON_INFO} Validating output file...{NC}")
+
+    if not validate_output_file(input_file, temp_file):
+        print(f"{RED}{ICON_ERROR} Output validation failed. Original file was not modified.{NC}")
+        if temp_file.exists():
+            temp_file.unlink()
+        sys.exit(1)
+
+    print(f"{GREEN}{ICON_SUCCESS} Output validation passed.{NC}")
+
     # Success path:
     # Handle backup / replace / move carefully.
     try:
@@ -381,10 +594,11 @@ def main():
             input_file.rename(backup_file)
             temp_file.rename(output_file)
 
-        # Case 2: output overwrites same file (MP4 replace/delete mode)
+        # Case 2: output overwrites same file, MP4 replace/delete mode
         elif same_file(input_file, output_file):
             old_file_for_delete = input_file.with_name(f"{input_file.stem}.pre_replace{input_file.suffix}")
             counter = 0
+
             while old_file_for_delete.exists():
                 counter += 1
                 old_file_for_delete = input_file.with_name(
@@ -427,18 +641,23 @@ def main():
         percent_saved = 0.0
         saved_color = NC
 
+    new_width, new_height, new_codec = get_video_info(output_file)
+    new_duration = get_duration_seconds(output_file)
+
     print(f"{WHITE}=================================================={NC}")
     print(f"  {ICON_SUCCESS}  {BOLD}{GREEN}COMPRESSION COMPLETE{NC}")
     print(f"{WHITE}=================================================={NC}")
     print(f"{BOLD}Original:{NC}      {orig_size_hr}")
     print(f"{BOLD}New Size:{NC}      {GREEN}{new_size_hr}{NC}")
     print(f"{BOLD}Reduction:{NC}     {saved_color}-{percent_saved:.1f}%{NC}")
+    print(f"{BOLD}Output Info:{NC}   {new_width}x{new_height} | {new_codec}")
+
+    if new_duration is not None:
+        print(f"{BOLD}New Duration:{NC}  {new_duration:.2f}s")
+
     print(f"{BOLD}Location:{NC}      {ICON_SAVE} {output_file}")
 
     if backup_original_mp4:
-        backup_file = get_numbered_backup_name(output_file)
-        # The above would now point to the next free name, not the actual one used.
-        # So show a general status instead of guessing incorrectly.
         print(f"{BOLD}Status:{NC}        {YELLOW}Original MP4 was renamed to *_original*.mp4{NC}")
     elif delete_original or replace:
         print(f"{BOLD}Status:{NC}        {RED}{ICON_TRASH} Original file removed.{NC}")

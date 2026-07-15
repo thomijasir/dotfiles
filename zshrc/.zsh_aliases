@@ -102,6 +102,9 @@ alias gcb='f() { git checkout -b "$1"; }; f'
 alias gco='f() { git checkout "$1"; }; f'
 alias gpsu='git push -u origin'
 alias glog='git log --oneline --graph --decorate --all'
+gpup() {
+  git push --set-upstream origin "$(git branch --show-current)"
+}
 
 # @desc: alias info
 gl() {
