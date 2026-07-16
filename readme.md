@@ -18,9 +18,14 @@ Opinionated macOS development environment powered by zsh, WezTerm, Neovim, Helix
    git clone git@github.com:<you>/dotfiles.git ~/Workspace/dotfiles
    cd ~/Workspace/dotfiles
    ```
-2. Choose your platform and run the appropriate setup script:
-   - **macOS**: Run `./mac/setup.sh` - interactive menu-driven setup
-   - **Linux**: Run `./linux/setup.sh` - interactive menu-driven setup
+2. Run the root setup script. It detects macOS or Linux and starts the appropriate interactive installer:
+   ```bash
+   ./setup.sh
+   ```
+
+   To start a platform installer directly for troubleshooting:
+   - **macOS**: Run `./mac/setup.sh`
+   - **Linux**: Run `python3 ./linux/setup.py`
 
 ### macOS Setup (`mac/setup.sh`)
 Interactive setup utility with the following options:
@@ -32,7 +37,7 @@ Interactive setup utility with the following options:
 - Apply macOS Settings
 - Full Setup (all components)
 
-### Linux Setup (`linux/setup.sh`)
+### Linux Setup (`linux/setup.py`)
 Interactive setup utility with the following options:
 - Install Essential Packages (curl, wget, git, build-essential, fzf, tig, jq, ripgrep, fd)
 - Select & Install Applications (zsh, docker, rust, helix, lazygit, yazi, eza, bat, zoxide)
