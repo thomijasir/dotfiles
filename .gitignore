@@ -4,3 +4,4 @@ luarc.json
 **/.DS_Store
 .aider*
 .env
+zshrc/.zsh_user

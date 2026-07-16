@@ -211,16 +211,6 @@ cf() {
 # @desc: youtube download best usage ytdl "youtube.com/url"
 alias ytdl='yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"'
 
-# --- Python Scripts ---
-# @desc: Auto translate video
-alias auto-translate='python ~/Workspace/minootube/scripts/auto-translate.py'
-
-# @desc: Auto transcribe video
-alias auto-transcribe='python ~/Workspace/minootube/scripts/auto-transcribe.py'
-
-# @desc: Compress video
-alias video-compress='python ~/Workspace/minootube/scripts/auto-compress.py'
-
 # @desc: disk analyzer
 alias diskusage="gdu-go /"
 
@@ -229,20 +219,3 @@ alias note="hx /Users/venobi/Library/CloudStorage/GoogleDrive-thomijasir@gmail.c
 
 # @desc: Alias Video Compress
 alias vcp="compress-video.sh"
-
-# --- SSH Connections ---
-
-# @desc: SSH Tencent SG New
-alias sersg="ssh root@43.160.253.244 -i ~/.ssh-keys/sersg.pem"
-
-# @desc: SSH vent
-alias vent="ssh vent@43.159.48.43 -i ~/.ssh-keys/vent.pem"
-
-# @desc: SSH venb
-alias venb="ssh root@43.159.171.15 -i ~/.ssh-keys/venb.pem"
-
-# @desc: SSH venr
-alias venr="ssh venr@101.32.127.245 -i ~/.ssh-keys/venr.pem"
-
-# @desc: SSH venh
-alias venh="ssh root@43.160.203.126 -i ~/.ssh-keys/venh.pem"

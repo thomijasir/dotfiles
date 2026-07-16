@@ -12,6 +12,9 @@ fi
 # Custom Scripts dot files
 export PATH="$DOTFILES_ROOT/scripts:$PATH"
 
+# Bin Path
+export PATH="$HOME/.local/bin:$PATH"
+
 # Library paths
 export LIBRARY_PATH="/opt/homebrew/lib:$LIBRARY_PATH"
 
@@ -44,9 +47,6 @@ export PATH="~/.antigravity/antigravity/bin:$PATH"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-
-# Windsurf (Added by Windsurf)
-export PATH="$HOME/.codeium/windsurf/bin:$PATH"
 
 # Visual Studio Code
 export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
@@ -127,10 +127,6 @@ fi
 [[ -f ~/.zsh_aliases ]] && source ~/.zsh_aliases
 [[ -f ~/.zsh_help ]] && source ~/.zsh_help
 [[ -f ~/.zsh_run ]] && source ~/.zsh_run
-export PATH="$HOME/.local/bin:$PATH"
 
-# kilo
-export PATH=/Users/venobi/.kilo/bin:$PATH
-
-# opencode
-export PATH=/Users/venobi/.opencode/bin:$PATH
+# --- User Registered ---
+[[ -f ~/.zsh_user ]] && source ~/.zsh_user
