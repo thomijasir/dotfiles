@@ -58,7 +58,7 @@ map(
 )
 
 
-map("n", "<leader>e", function()
+map("n", "<C-e>", function()
   MiniFiles.open(vim.fn.getcwd())
 end, {
   desc = "Open file explorer",
