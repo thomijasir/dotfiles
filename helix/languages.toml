@@ -37,10 +37,6 @@ args = ["up", "--method", "stdio"]
 command = "sqruff"
 args = ["lsp"]
 
-[language-server.vue-language-server]
-command = "vue-language-server"
-args = ["--stdio"]
-
 
 [language-server.dart-ls]
 command = "fvm"
@@ -55,7 +51,7 @@ args = ["--stdio"]
 [language-server.tailwind-ls]
 command = "tailwindcss-language-server"
 args = ["--stdio"]
-config = { userLanguages = { astro = "html", "*.astro" = "html" } }
+config = { userLanguages = { astro = "html", "*.astro" = "html", vue = "html" } }
 
 [language-server.astro-ls]
 command = "astro-ls"
@@ -93,9 +89,10 @@ auto-format = true
 
 [[language]]
 name = "vue"
-file-types = ["vue"]
-language-servers = ["vue-language-server"]
+language-servers = ["codebook", "emmet", "tailwind-ls"]
+formatter = { command = "prettier", args = ["--parser", "vue"] }
 auto-format = true
+
 
 [[language]]
 name = "rust"

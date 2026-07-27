@@ -52,7 +52,30 @@ fzf.setup({
 
 fzf.register_ui_select()
 
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    if vim.fn.argc() ~= 1 then
+      return
+    end
+
+    local directory = vim.fn.fnamemodify(vim.fn.argv(0), ":p")
+    if vim.fn.isdirectory(directory) ~= 1 then
+      return
+    end
+
+    vim.cmd.cd(vim.fn.fnameescape(directory))
+    vim.cmd.enew()
+    vim.schedule(function()
+      fzf.files({ cwd = directory })
+    end)
+  end,
+})
+
 local map = vim.keymap.set
+
+map("n", "<leader>/", fzf.live_grep, {
+  desc = "Find string",
+})
 
 map("n", "<leader>ff", fzf.files, {
   desc = "Find files",

@@ -10,8 +10,18 @@ require("blink.cmp").setup({
   keymap = {
     preset = "default",
   },
+  cmdline = {
+    keymap = {
+      preset = "inherit",
+    },
+    completion = {
+      menu = {
+        auto_show = true,
+      },
+    },
+  },
   completion = {
-      documentation = {
+    documentation = {
       auto_show = true,
       auto_show_delay_ms = 300,
     },

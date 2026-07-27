@@ -52,6 +52,31 @@ opt.termguicolors = true
 opt.signcolumn = "yes"
 -- opt.showmatch = true
 
+local function set_yank_highlight()
+  vim.api.nvim_set_hl(0, "YankHighlight", {
+    fg = "#24273a",
+    bg = "#eed49f",
+    bold = true,
+  })
+end
+
+set_yank_highlight()
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = set_yank_highlight,
+  desc = "Keep yank highlight visible after colorscheme changes",
+})
+
+vim.api.nvim_create_autocmd("TextYankPost", {
+  callback = function()
+    vim.hl.on_yank({
+      higroup = "YankHighlight",
+      timeout = 300,
+    })
+  end,
+  desc = "Highlight yanked or deleted text",
+})
+
 -- Spelling settings
 -- opt.spell = true
 -- opt.spelllang = "en,en_gb"
