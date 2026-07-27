@@ -36,7 +36,6 @@ local function wezterm_command(command, with_file, success_message)
   end
 end
 
-map("n", ";g", wezterm_command("lazygit"), { desc = "Open lazygit", silent = true })
 map("n", ";t", wezterm_command("open_terminal_bottom"), { desc = "Open terminal below", silent = true })
 map("n", ";c", wezterm_command("open_in_vscode"), { desc = "Open in VS Code", silent = true })
 map("n", ";o", wezterm_command("reveal_current_folder", true), { desc = "Reveal current folder", silent = true })

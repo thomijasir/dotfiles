@@ -13,6 +13,7 @@ local servers = {
   "lua_ls",
   "vtsls",
   "vue_ls",
+  "tailwindcss",
   "basedpyright",
   "ruff",
   "rust_analyzer",

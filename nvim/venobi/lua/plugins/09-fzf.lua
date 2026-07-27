@@ -15,14 +15,12 @@ fzf.setup({
   },
 
   winopts = {
-    height = 0.85,
-    width = 0.85,
-    row = 0.5,
-    col = 0.5,
-    border = "rounded",
+    fullscreen = true,
+    border = "none",
+    backdrop = false,
 
     preview = {
-      border = "rounded",
+      border = "none",
       layout = "flex",
       scrollbar = "float",
     },
@@ -77,7 +75,7 @@ map("n", "<leader>/", fzf.live_grep, {
   desc = "Find string",
 })
 
-map("n", "<leader>ff", fzf.files, {
+map("n", ";f", fzf.files, {
   desc = "Find files",
 })
 
@@ -93,7 +91,7 @@ map("v", "<leader>fw", fzf.grep_visual, {
   desc = "Search selected text",
 })
 
-map("n", "<leader>fb", fzf.buffers, {
+map("n", "<leader>,", fzf.buffers, {
   desc = "Find buffers",
 })
 

@@ -56,17 +56,19 @@ config.color_scheme = "Catppuccin Macchiato"
 -- TMUX Alternative
 config.leader = { key = "a", mods = "ALT", timeout_milliseconds = 2500 }
 
+config.front_end = "Software"
+
 config.keys = {
 	-- Make Alt+Enter work properly
-  {
-    key = 'Enter',
-    mods = 'ALT',
-    action = act.SendKey {
-      key = 'Enter',
-      mods = 'ALT',
-    },
-  },
-  -- LEADER KEY CONTROL
+	{
+		key = "Enter",
+		mods = "ALT",
+		action = act.SendKey({
+			key = "Enter",
+			mods = "ALT",
+		}),
+	},
+	-- LEADER KEY CONTROL
 	{
 		mods = "LEADER",
 		key = "q",
@@ -114,110 +116,112 @@ config.keys = {
 		action = act.SplitVertical({ domain = "CurrentPaneDomain" }),
 	},
 	{
-		mods = "CMD", key = "h",
+		mods = "CMD",
+		key = "h",
 		action = act.ActivatePaneDirection("Left"),
 	},
 	{
-		mods = "CMD", key = "j",
+		mods = "CMD",
+		key = "j",
 		action = act.ActivatePaneDirection("Down"),
 	},
 	{
-		mods = "CMD", key = "k",
+		mods = "CMD",
+		key = "k",
 		action = act.ActivatePaneDirection("Up"),
 	},
 	{
-		mods = "CMD", key = "l",
+		mods = "CMD",
+		key = "l",
 		action = act.ActivatePaneDirection("Right"),
 	},
 	-- Tabs Control
 	{
-		mods = "CMD", key = "{",
-		action = act.ActivateTabRelative(-1)
+		mods = "CMD",
+		key = "{",
+		action = act.ActivateTabRelative(-1),
 	},
-  {
-  	mods = "CMD", key = "}",
-  	action = act.ActivateTabRelative(1)
-  },
+	{
+		mods = "CMD",
+		key = "}",
+		action = act.ActivateTabRelative(1),
+	},
 }
 
 config.hyperlink_rules = {
-  -- Match http/https URLs and include everything up to whitespace
-  {
-    regex = [[\bhttps?://[^\s'")<>]+]],
-    format = "$0",
-  },
-  -- Optional: match www. URLs without scheme
-  {
-    regex = [[\bwww\.[^\s'")<>]+]],
-    format = "http://$0",
-  },
-  -- Optional: match bare domain.tld paths
-  {
-    regex = [[\b[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(/[^\s'")<>]+)?]],
-    format = "http://$0",
-  },
+	-- Match http/https URLs and include everything up to whitespace
+	{
+		regex = [[\bhttps?://[^\s'")<>]+]],
+		format = "$0",
+	},
+	-- Optional: match www. URLs without scheme
+	{
+		regex = [[\bwww\.[^\s'")<>]+]],
+		format = "http://$0",
+	},
+	-- Optional: match bare domain.tld paths
+	{
+		regex = [[\b[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(/[^\s'")<>]+)?]],
+		format = "http://$0",
+	},
 }
-
 
 -- Make localhost URLs clickable
 table.insert(config.hyperlink_rules, {
-  regex = [[\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d+)\b]],
-  format = "http://$1:$2",
+	regex = [[\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d+)\b]],
+	format = "http://$1:$2",
 })
 
 -- Make file paths clickable
 table.insert(config.hyperlink_rules, {
-  regex = [[\bfile://([^\s]+)\b]],
-  format = "file://$1",
+	regex = [[\bfile://([^\s]+)\b]],
+	format = "file://$1",
 })
 
 -- ==========================================
 -- LEADER + NUMBER: Move tab to position
 -- ==========================================
 for i = 1, 9 do
-  table.insert(config.keys, {
-    key = tostring(i),
-    mods = "LEADER",
-    action = act.MoveTab(i - 1),
-  })
+	table.insert(config.keys, {
+		key = tostring(i),
+		mods = "LEADER",
+		action = act.MoveTab(i - 1),
+	})
 end
 
 -- ==========================================
 -- CMD + NUMBER: Activate specific tab
 -- ==========================================
 for i = 1, 9 do
-  table.insert(config.keys, {
-    key = tostring(i),
-    mods = "CMD",
-    action = act.ActivateTab(i - 1),
-  })
+	table.insert(config.keys, {
+		key = tostring(i),
+		mods = "CMD",
+		action = act.ActivateTab(i - 1),
+	})
 end
-
 
 -- Event Emiiter ---
 
 -- Simplified tab title with directory
-wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
-  local cwd = tab.active_pane.current_working_dir
-  local dir = cwd and cwd.file_path:match("([^/]+)/?$") or "~"
-  return string.format(" %d: %s ", tab.tab_index + 1, dir)
+wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+	local cwd = tab.active_pane.current_working_dir
+	local dir = cwd and cwd.file_path:match("([^/]+)/?$") or "~"
+	return string.format(" %d: %s ", tab.tab_index + 1, dir)
 end)
-
 
 -- reload helix condiitions
-wezterm.on('reload-helix', function(window, pane)
-  local top_process = basename(pane:get_foreground_process_name())
-  if top_process == 'hx' then
-    local bottom_pane = pane:tab():get_pane_direction('Down')
-    if bottom_pane ~= nil then
-      local bottom_process = basename(bottom_pane:get_foreground_process_name())
-      if bottom_process == 'lazygit' then
-        local action = wezterm.action.SendString(':reload-all\r\n')
-        window:perform_action(action, pane);
-      end
-    end
-  end
+wezterm.on("reload-helix", function(window, pane)
+	local top_process = basename(pane:get_foreground_process_name())
+	if top_process == "hx" then
+		local bottom_pane = pane:tab():get_pane_direction("Down")
+		if bottom_pane ~= nil then
+			local bottom_process = basename(bottom_pane:get_foreground_process_name())
+			if bottom_process == "lazygit" then
+				local action = wezterm.action.SendString(":reload-all\r\n")
+				window:perform_action(action, pane)
+			end
+		end
+	end
 end)
-
 
 return config
