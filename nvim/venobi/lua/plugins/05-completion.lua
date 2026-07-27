@@ -1,11 +1,11 @@
 local pack = require("utils.pack")
-pack.add {
+pack.add({
   {
-   src = "https://github.com/Saghen/blink.cmp",
-   version = vim.version.range("1.*"),
-  }
-}
-  
+    src = "https://github.com/Saghen/blink.cmp",
+    version = vim.version.range("1.*"),
+  },
+})
+
 require("blink.cmp").setup({
   keymap = {
     preset = "default",
@@ -28,10 +28,18 @@ require("blink.cmp").setup({
   },
   sources = {
     default = {
+      "lazydev",
       "lsp",
       "path",
       "snippets",
       "buffer",
+    },
+    providers = {
+      lazydev = {
+        name = "LazyDev",
+        module = "lazydev.integrations.blink",
+        score_offset = 100,
+      },
     },
   },
   fuzzy = {

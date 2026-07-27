@@ -6,6 +6,7 @@ local opt = vim.opt
 opt.title = true
 opt.cmdheight = 0
 opt.wrap = false
+opt.updatetime = 250
 
 -- Number
 opt.relativenumber = true
@@ -13,7 +14,7 @@ opt.number = true
 
 -- Cursor
 opt.cursorline = true
-opt.cursorcolumn = true
+opt.cursorcolumn = false
 
 -- Search settings
 opt.ignorecase = true
@@ -38,6 +39,7 @@ opt.splitbelow = true -- Split horizontal window to the bottmo
 
 -- Turn off swap file
 opt.swapfile = false
+opt.undofile = true
 
 -- Folding
 opt.foldcolumn = "1"

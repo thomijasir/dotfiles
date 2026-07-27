@@ -1,56 +1,50 @@
 local pack = require("utils.pack")
-pack.add {{ src = "https://github.com/stevearc/conform.nvim" }}
+pack.add({ { src = "https://github.com/stevearc/conform.nvim" } })
 
-require("conform").setup({
+local conform = require("conform")
+
+conform.setup({
   formatters_by_ft = {
     lua = { "stylua" },
 
     javascript = {
       "prettierd",
-      "prettier",
-      stop_after_first = true,
     },
 
     typescript = {
       "prettierd",
-      "prettier",
-      stop_after_first = true,
     },
 
     javascriptreact = {
       "prettierd",
-      "prettier",
-      stop_after_first = true,
     },
 
     typescriptreact = {
       "prettierd",
-      "prettier",
-      stop_after_first = true,
     },
 
     vue = {
       "prettierd",
-      "prettier",
-      stop_after_first = true,
     },
 
     json = {
       "prettierd",
-      "prettier",
-      stop_after_first = true,
     },
 
     css = {
       "prettierd",
-      "prettier",
-      stop_after_first = true,
     },
 
     html = {
       "prettierd",
-      "prettier",
-      stop_after_first = true,
+    },
+
+    markdown = {
+      "prettierd",
+    },
+
+    yaml = {
+      "prettierd",
     },
 
     rust = {

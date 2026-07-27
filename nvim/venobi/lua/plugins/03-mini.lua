@@ -1,14 +1,17 @@
 local pack = require("utils.pack")
-pack.add {
+pack.add({
   {
     src = "https://github.com/nvim-mini/mini.nvim",
-    version = "stable"
-  }
-}
+    version = "stable",
+  },
+})
 
 require("mini.pairs").setup()
 require("mini.surround").setup()
-require("mini.icons").setup()
+
+local icons = require("mini.icons")
+icons.setup()
+icons.mock_nvim_web_devicons()
 
 local statusline = require("mini.statusline")
 
@@ -70,22 +73,13 @@ jump2d.setup({
   silent = true,
 })
 
-
 local map = vim.keymap.set
 
-map(
-  { "n", "x", "o" },
-  "gw",
-  function()
-    jump2d.start(
-      jump2d.builtin_opts.word_start
-    )
-  end,
-  {
-    desc = "Jump to visible word",
-  }
-)
-
+map({ "n", "x", "o" }, "gw", function()
+  jump2d.start(jump2d.builtin_opts.word_start)
+end, {
+  desc = "Jump to visible word",
+})
 
 map("n", "<C-e>", function()
   local current_file = vim.api.nvim_buf_get_name(0)

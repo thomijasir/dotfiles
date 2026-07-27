@@ -129,7 +129,6 @@ map("n", "<leader>fS", fzf.lsp_workspace_symbols, {
   desc = "Workspace symbols",
 })
 
-
 map("n", "<leader>gf", fzf.git_files, {
   desc = "Find Git files",
 })

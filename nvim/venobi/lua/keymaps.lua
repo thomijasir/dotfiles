@@ -76,11 +76,17 @@ map("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) --  go to n
 map("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" }) --  go to previous tab
 map("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab
 
--- Save with Ctrl+S in normal and insert mode
-map("n", "<C-s>", ":w<CR>", opts) -- Formatted save
-map("i", "<C-s>", "<Esc>:w<CR>", opts)
-map("n", "<C-S>", ":noa w<CR>", opts) -- Save without format
-map("i", "<C-S>", ":noa w<CR>", opts)
+-- Save with Ctrl+S without leaving insert mode. BufWritePre still runs, so
+-- Conform's format-on-save is applied.
+map({ "n", "i" }, "<C-s>", "<cmd>write<CR>", {
+  desc = "Save file",
+  silent = true,
+})
+
+map("n", "<leader>cW", "<cmd>noautocmd write<CR>", {
+  desc = "Save without autocommands",
+  silent = true,
+})
 
 -- Select all
 map("n", "<C-a>", "ggVG", opts)

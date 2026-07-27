@@ -1,12 +1,7 @@
 -- Automatic detect package inside plugins folder
 local plugins_dir = vim.fn.stdpath("config") .. "/lua/plugins"
 
-local plugin_files = vim.fn.globpath(
-  plugins_dir,
-  "*.lua",
-  false,
-  true
-)
+local plugin_files = vim.fn.globpath(plugins_dir, "*.lua", false, true)
 
 table.sort(plugin_files)
 
