@@ -4,10 +4,30 @@ pack.add({
   {
     src = "https://github.com/folke/snacks.nvim",
   },
+  -- Support dependency mini files to show image
+  {
+    src = "https://github.com/3rd/image.nvim",
+  },
+  {
+    src = "https://github.com/hmdfrds/focal.nvim",
+  },
 })
 
 local custom_config_path = vim.fn.stdpath("config") .. "/lazygit.yml"
 local map = vim.keymap.set
+
+---@diagnostic disable-next-line: missing-fields
+require("image").setup({
+  backend = "kitty", -- Ghostty uses the Kitty graphics protocol
+  max_height_window_percentage = 40,
+  max_width_window_percentage = 40,
+  window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+})
+
+require("focal").setup({
+  enabled = true,
+  border = "rounded",
+})
 
 require("snacks").setup({
   -- Enables high-res image previews for Ghostty (also powers fzf-lua image previews).

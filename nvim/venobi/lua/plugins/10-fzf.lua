@@ -55,12 +55,18 @@ fzf.register_ui_select()
 
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
-    local arg = vim.fn.argv(0)
-    -- Check if Neovim was launched with a directory argument
-    ---@diagnostic disable-next-line: param-type-mismatch
-    if arg ~= "" and vim.fn.isdirectory(arg) == 1 then
-      require("fzf-lua").files()
-    end
+    vim.schedule(function()
+      if vim.g.nvim_startup_error or vim.v.errmsg ~= "" then
+        return
+      end
+
+      local arg = vim.fn.argv(0)
+      -- Check if Neovim was launched with a directory argument
+      ---@diagnostic disable-next-line: param-type-mismatch
+      if arg ~= "" and vim.fn.isdirectory(arg) == 1 then
+        fzf.files()
+      end
+    end)
   end,
 })
 

@@ -4,24 +4,18 @@ pack.add({
     src = "https://github.com/nvim-mini/mini.nvim",
     version = "stable",
   },
-  -- Support dependency mini files to show image
-  {
-    src = "https://github.com/3rd/image.nvim",
-  },
-  {
-    src = "https://github.com/hmdfrds/focal.nvim",
-  },
 })
 
 require("mini.pairs").setup()
 require("mini.surround").setup()
 require("mini.comment").setup() -- Provides gc/gcc, used by the <C-c> toggle-comment keymap
-
 local icons = require("mini.icons")
+local statusline = require("mini.statusline")
+local jump2d = require("mini.jump2d")
+local map = vim.keymap.set
+
 icons.setup()
 icons.mock_nvim_web_devicons()
-
-local statusline = require("mini.statusline")
 
 statusline.setup({
   content = {
@@ -62,21 +56,6 @@ require("mini.files").setup({
   },
 })
 
----@diagnostic disable-next-line: missing-fields
-require("image").setup({
-  backend = "kitty", -- Ghostty uses the Kitty graphics protocol
-  max_height_window_percentage = 40,
-  max_width_window_percentage = 40,
-  window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
-})
-
-require("focal").setup({
-  enabled = true,
-  border = "rounded",
-})
-
-local jump2d = require("mini.jump2d")
-
 jump2d.setup({
   labels = "asdfghjklqwertyuiopzxcvbnm",
   view = {
@@ -88,8 +67,6 @@ jump2d.setup({
   },
   silent = true,
 })
-
-local map = vim.keymap.set
 
 map({ "n", "x", "o" }, "gw", function()
   jump2d.start(jump2d.builtin_opts.word_start)

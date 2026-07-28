@@ -12,6 +12,7 @@ for _, filepath in ipairs(plugin_files) do
   -- skipped automatically by the glob pattern above.
   local ok, err = pcall(require, "plugins." .. filename)
   if not ok then
+    vim.g.nvim_startup_error = true
     vim.notify(("Failed to load plugins.%s:\n%s"):format(filename, err), vim.log.levels.ERROR)
   end
 end
