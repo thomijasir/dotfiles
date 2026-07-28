@@ -121,7 +121,7 @@ macos-option-as-alt = true
 # This supports zsh, fish, bash, nushell, and other recognized
 # shells without needing to force a specific shell.
 shell-integration = detect
-
+shell-integration-features = no-cursor
 
 # ============================================================
 # CLOSE CONFIRMATION

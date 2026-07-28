@@ -11,6 +11,7 @@ mkdir -p ~/.config
 ln -sf $DOTFILES_ROOT/zshrc/.zprofile.default ~/.zprofile
 ln -sf $DOTFILES_ROOT/zshrc/.zshrc.default ~/.zshrc
 ln -sf $DOTFILES_ROOT/wezterm/.wezterm.lua ~/.wezterm.lua
+ln -sf $DOTFILES_ROOT/ghostty/config.ghostty ~/.config/ghostty
 # use this for default custom nvim
 # ln -s $DOTFILES_ROOT/nvim ~/.config/nvim
 # use this for default lazyvim
