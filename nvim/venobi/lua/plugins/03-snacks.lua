@@ -17,6 +17,28 @@ require("snacks").setup({
   image = {
     enabled = true,
     doc = { enabled = false },
+    -- `svg` is not in snacks.image's default `formats`, so add it so the
+    -- builtin fzf-lua previewer renders SVG as an image (via ImageMagick's
+    -- `vector` converter / rsvg-convert delegate) instead of raw XML text.
+    formats = {
+      "png",
+      "jpg",
+      "jpeg",
+      "gif",
+      "bmp",
+      "webp",
+      "tiff",
+      "heic",
+      "avif",
+      "mp4",
+      "mov",
+      "avi",
+      "mkv",
+      "webm",
+      "pdf",
+      "icns",
+      "svg",
+    },
   },
   bufdelete = { enabled = true },
   indent = { enabled = true },
