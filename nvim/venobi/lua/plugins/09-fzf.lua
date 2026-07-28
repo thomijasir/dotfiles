@@ -77,7 +77,7 @@ map("n", "<leader>/", fzf.live_grep, {
   desc = "Find string",
 })
 
-map("n", "<leader>ff", fzf.files, {
+map("n", ";f", fzf.files, {
   desc = "Find files",
 })
 
