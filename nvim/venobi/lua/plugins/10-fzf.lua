@@ -85,11 +85,11 @@ map("n", "<leader>D", fzf.diagnostics_workspace, {
   desc = "Workspace diagnostics",
 })
 
-map("n", "<leader>s", fzf.lsp_document_symbols, {
+map("n", "<leader>ss", fzf.lsp_document_symbols, {
   desc = "Document symbols",
 })
 
-map("n", "<leader>S", fzf.lsp_workspace_symbols, {
+map("n", "<leader>sS", fzf.lsp_workspace_symbols, {
   desc = "Workspace symbols",
 })
 

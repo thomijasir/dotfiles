@@ -60,6 +60,17 @@ vim.lsp.config("basedpyright", {
       analysis = {
         diagnosticMode = "openFilesOnly",
         typeCheckingMode = "standard",
+        -- Delegate lint-style diagnostics to ruff so the two servers don't
+        -- report the same problems (unused imports/variables, etc.).
+        -- basedpyright focuses on type checking; ruff handles linting.
+        diagnosticSeverityOverrides = {
+          reportUnusedImport = "none",
+          reportUnusedVariable = "none",
+          reportUnusedFunction = "none",
+          reportUnusedClass = "none",
+          reportUnusedExpression = "none",
+          reportDuplicateImport = "none",
+        },
       },
     },
   },

@@ -15,6 +15,7 @@ pack.add({
 
 require("mini.pairs").setup()
 require("mini.surround").setup()
+require("mini.comment").setup() -- Provides gc/gcc, used by the <C-c> toggle-comment keymap
 
 local icons = require("mini.icons")
 icons.setup()
