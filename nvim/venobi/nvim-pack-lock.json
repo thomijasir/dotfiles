@@ -85,6 +85,10 @@
       "rev": "882c996cf28183f4d63640de0b4c02ec886d01f2",
       "src": "https://github.com/folke/snacks.nvim"
     },
+    "spellwand.nvim": {
+      "rev": "608a3b4717525d4cf4e3d8dbad70cfb7d6167ef7",
+      "src": "https://github.com/chaneyzorn/spellwand.nvim"
+    },
     "todo-comments.nvim": {
       "rev": "31e3c38ce9b29781e4422fc0322eb0a21f4e8668",
       "src": "https://github.com/folke/todo-comments.nvim"

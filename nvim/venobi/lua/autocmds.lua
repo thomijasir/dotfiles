@@ -1,6 +1,24 @@
 local nvim_set = vim.api.nvim_set_hl
 local autocmd = vim.api.nvim_create_autocmd
 
+local function diagnostic_or_hover()
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local diagnostics = vim.diagnostic.get(0, { lnum = cursor[1] - 1 })
+
+  for _, diagnostic in ipairs(diagnostics) do
+    local end_col = diagnostic.end_col or (diagnostic.col + 1)
+    if cursor[2] >= diagnostic.col and cursor[2] < end_col then
+      vim.diagnostic.open_float({
+        scope = "cursor",
+        focus = false,
+      })
+      return
+    end
+  end
+
+  vim.lsp.buf.hover()
+end
+
 autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
   callback = function(event)
@@ -11,7 +29,7 @@ autocmd("LspAttach", {
 
     map("n", "gd", vim.lsp.buf.definition, "Go to Definition")
     map("n", "gD", vim.lsp.buf.declaration, "Go to Declaration")
-    map("n", "K", vim.lsp.buf.hover, "Hover")
+    map("n", "K", diagnostic_or_hover, "Diagnostic or Hover")
     map("n", "<leader>rn", vim.lsp.buf.rename, "Rename Symbol")
     map({ "n", "v" }, "<leader>a", vim.lsp.buf.code_action, "Code Action")
   end,
