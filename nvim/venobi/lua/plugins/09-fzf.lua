@@ -73,44 +73,16 @@ vim.api.nvim_create_autocmd("VimEnter", {
 
 local map = vim.keymap.set
 
-map("n", "<leader>/", fzf.live_grep, {
-  desc = "Find string",
-})
-
-map("n", "<leader>ff", fzf.files, {
-  desc = "Find files",
-})
-
-map("n", "<leader>fg", fzf.live_grep, {
-  desc = "Search project text",
-})
-
-map("n", "<leader>fw", fzf.grep_cword, {
-  desc = "Search word under cursor",
-})
-
-map("v", "<leader>fw", fzf.grep_visual, {
-  desc = "Search selected text",
-})
-
 map("n", "<leader>,", fzf.buffers, {
   desc = "Find buffers",
 })
 
-map("n", "<leader>fr", fzf.oldfiles, {
-  desc = "Recent files",
-})
-
-map("n", "<leader>fh", fzf.helptags, {
-  desc = "Search help",
-})
-
-map("n", "<leader>fc", fzf.commands, {
-  desc = "Search commands",
-})
-
-map("n", "<leader>fk", fzf.keymaps, {
-  desc = "Search keymaps",
+map("n", "<leader>/", function()
+  fzf.live_grep({
+    rg_glob = true,
+  })
+end, {
+  desc = "Find string",
 })
 
 map("n", "<leader>d", fzf.diagnostics_document, {
@@ -127,6 +99,34 @@ map("n", "<leader>s", fzf.lsp_document_symbols, {
 
 map("n", "<leader>S", fzf.lsp_workspace_symbols, {
   desc = "Workspace symbols",
+})
+
+map("n", "<leader>f", fzf.files, {
+  desc = "Find files",
+})
+
+map("n", "<leader>Fw", fzf.grep_cword, {
+  desc = "Search word under cursor",
+})
+
+map("v", "<leader>Fw", fzf.grep_visual, {
+  desc = "Search selected text",
+})
+
+map("n", "<leader>Fr", fzf.oldfiles, {
+  desc = "Recent files",
+})
+
+map("n", "<leader>Fh", fzf.helptags, {
+  desc = "Search help",
+})
+
+map("n", "<leader>Fc", fzf.commands, {
+  desc = "Search commands",
+})
+
+map("n", "<leader>Fk", fzf.keymaps, {
+  desc = "Search keymaps",
 })
 
 map("n", "<leader>gf", fzf.git_files, {

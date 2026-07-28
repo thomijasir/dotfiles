@@ -53,6 +53,8 @@ opt.scrolloff = 10
 opt.termguicolors = true
 opt.signcolumn = "yes"
 -- opt.showmatch = true
+opt.showcmd = true
+opt.showcmdloc = "statusline"
 
 local function set_yank_highlight()
   vim.api.nvim_set_hl(0, "YankHighlight", {

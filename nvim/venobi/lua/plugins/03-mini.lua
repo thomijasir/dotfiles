@@ -19,17 +19,15 @@ statusline.setup({
   content = {
     active = function()
       local mode, mode_hl = statusline.section_mode({ trunc_width = math.huge })
-      local git = statusline.section_git({ trunc_width = 50 })
       local diagnostics = statusline.section_diagnostics({ trunc_width = 70 })
 
       return statusline.combine_groups({
         { hl = mode_hl, strings = { mode } },
-        { hl = "MiniStatuslineDevinfo", strings = { git } },
         "%<",
         { hl = "MiniStatuslineFilename", strings = { "%t%m%r" } },
         "%=",
-        { hl = "MiniStatuslineDevinfo", strings = { diagnostics } },
-        { hl = mode_hl, strings = { "%l:%2v" } },
+        { hl = "MiniStatuslineDevinfo", strings = { "%S", diagnostics } },
+        { hl = mode_hl, strings = { "%l:%v~%L" } },
       })
     end,
     inactive = function()

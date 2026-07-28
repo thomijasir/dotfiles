@@ -8,7 +8,7 @@ pack.add({
 
 require("blink.cmp").setup({
   keymap = {
-    preset = "default",
+    preset = "enter",
   },
   cmdline = {
     keymap = {
@@ -21,6 +21,12 @@ require("blink.cmp").setup({
     },
   },
   completion = {
+    list = {
+      selection = {
+        preselect = true,
+        auto_insert = false,
+      },
+    },
     documentation = {
       auto_show = true,
       auto_show_delay_ms = 300,

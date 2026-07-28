@@ -15,7 +15,7 @@ which_key.add({
   { ";", group = "Development tools" },
   { "<leader>b", group = "Buffer" },
   { "<leader>c", group = "Code" },
-  { "<leader>f", group = "Find" },
+  { "<leader>F", group = "Find" },
   { "<leader>g", group = "Git" },
   { "<leader>h", group = "Git hunks" },
   { "<leader>m", group = "Multicursor" },
