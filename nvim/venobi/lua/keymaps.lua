@@ -36,7 +36,11 @@ local function wezterm_command(command, with_file, success_message)
 end
 
 -- keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
-map("n", "<leader>cx", ":nohl<CR>", { desc = "Clear" })
+-- map("n", "<leader>cx", ":nohl<CR>", { desc = "Clear" })
+map("n", "<Esc>", "<cmd>nohlsearch<CR>", {
+  silent = true,
+  desc = "Clear search highlight",
+})
 
 map("n", ";t", wezterm_command("open_terminal_bottom"), { desc = "Open terminal", silent = true })
 map("n", ";c", wezterm_command("open_in_vscode"), { desc = "Open VSCode", silent = true })

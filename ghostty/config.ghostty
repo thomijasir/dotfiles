@@ -1,0 +1,291 @@
+# ============================================================
+# Ghostty configuration
+# Migrated from WezTerm
+# Target: Ghostty 1.3.x on macOS
+# ============================================================
+
+
+# ============================================================
+# APPEARANCE
+# ============================================================
+
+# WezTerm:
+# config.color_scheme = "Catppuccin Macchiato"
+#
+# Verify the name locally:
+# ghostty +list-themes | grep -i catppuccin
+theme = Catppuccin Macchiato
+
+
+# ============================================================
+# FONT
+# ============================================================
+
+# WezTerm:
+# config.font = wezterm.font("JetBrainsMonoNL Nerd Font")
+# config.font_size = 16
+#
+# Verify the exact family:
+# ghostty +list-fonts | grep -i JetBrains
+font-family = JetBrainsMonoNL Nerd Font
+font-size = 16
+
+# WezTerm:
+# config.line_height = 1.05
+#
+# Ghostty adjusts the terminal cell height instead of using
+# WezTerm's line-height multiplier.
+adjust-cell-height = 5%
+
+# WezTerm:
+# config.underline_position = "-4pt"
+#
+# This is not a perfect one-to-one conversion because Ghostty
+# and WezTerm use different font metric adjustment systems.
+# Start with this and adjust visually if necessary.
+adjust-underline-position = -4
+
+
+# ============================================================
+# CURSOR
+# ============================================================
+
+# WezTerm:
+# config.default_cursor_style = "BlinkingBlock"
+# config.cursor_blink_ease_in = "Constant"
+# config.cursor_blink_ease_out = "Constant"
+cursor-style = block
+cursor-style-blink = true
+
+# Ghostty does not expose WezTerm-style cursor blink easing.
+# The cursor is simply configured as blinking or non-blinking.
+
+
+# ============================================================
+# MOUSE AND SCROLLBAR
+# ============================================================
+
+# WezTerm:
+# config.hide_mouse_cursor_when_typing = true
+mouse-hide-while-typing = true
+
+# WezTerm:
+# config.enable_scroll_bar = true
+#
+# Native scrollbar support requires Ghostty 1.3 or newer.
+scrollbar = system
+
+
+# ============================================================
+# WINDOW
+# ============================================================
+
+# WezTerm:
+# config.window_padding = {
+#   left = 0,
+#   right = 0,
+#   top = 0,
+#   bottom = 0,
+# }
+window-padding-x = 0
+window-padding-y = 0
+window-padding-balance = false
+
+# WezTerm:
+# config.window_decorations = "TITLE | RESIZE"
+window-decoration = true
+
+# Use native macOS title-bar tabs.
+macos-titlebar-style = tabs  
+# Let Option function as Alt/Meta inside terminal applications.
+# Useful for Neovim mappings such as <M-h> and <M-Enter>.
+macos-option-as-alt = true
+
+
+# ============================================================
+# OPTIONAL TRANSPARENCY
+# ============================================================
+
+# Your WezTerm transparency settings were commented out.
+# Uncomment these if you want the equivalent effect.
+#
+# background-opacity = 0.9
+# background-blur-radius = 90
+
+
+# ============================================================
+# SHELL INTEGRATION
+# ============================================================
+
+# Ghostty normally detects supported shells automatically.
+# This supports zsh, fish, bash, nushell, and other recognized
+# shells without needing to force a specific shell.
+shell-integration = detect
+
+
+# ============================================================
+# CLOSE CONFIRMATION
+# ============================================================
+
+# Preserve confirmation when closing an active terminal surface.
+confirm-close-surface = true
+
+
+# ============================================================
+# CONFIGURATION RELOAD
+# ============================================================
+
+# WezTerm automatically monitored its configuration.
+# Ghostty supports an explicit reload action.
+keybind = cmd+shift+comma=reload_config
+
+
+# ============================================================
+# LEADER KEY
+# ============================================================
+
+# WezTerm:
+# config.leader = {
+#   key = "a",
+#   mods = "ALT",
+#   timeout_milliseconds = 2500,
+# }
+#
+# Ghostty implements a leader through key sequences.
+#
+# Example:
+# alt+a followed by c
+#
+# Important difference:
+# Ghostty sequences do not support a configurable timeout.
+# Ghostty waits for the next key or an unmatched continuation.
+
+
+# ============================================================
+# TAB CREATION AND SURFACE CLOSING
+# ============================================================
+
+# Leader + C: create tab
+keybind = alt+a>c=new_tab
+
+# Leader + X: close current pane/surface
+keybind = alt+a>x=close_surface
+
+
+# ============================================================
+# SPLIT CREATION
+# ============================================================
+
+# WezTerm SplitHorizontal creates a top/bottom layout.
+# Ghostty's equivalent creates the new split below.
+keybind = alt+a>v=new_split:down
+
+# WezTerm SplitVertical creates a left/right layout.
+# Ghostty's equivalent creates the new split to the right.
+keybind = alt+a>h=new_split:right
+
+
+# ============================================================
+# SPLIT NAVIGATION
+# ============================================================
+
+# WezTerm:
+# CMD + H/J/K/L
+keybind = cmd+h=goto_split:left
+keybind = cmd+j=goto_split:down
+keybind = cmd+k=goto_split:up
+keybind = cmd+l=goto_split:right
+
+
+# ============================================================
+# SPLIT RESIZING
+# ============================================================
+
+# WezTerm:
+# Leader + Arrow adjusts by 5 cells.
+keybind = alt+a>left=resize_split:left,5
+keybind = alt+a>right=resize_split:right,5
+keybind = alt+a>down=resize_split:down,5
+keybind = alt+a>up=resize_split:up,5
+
+
+# ============================================================
+# ADDITIONAL SPLIT CONTROLS
+# ============================================================
+
+# Ghostty does not have a direct equivalent to WezTerm's
+# interactive PaneSelect overlay.
+#
+# These are useful alternatives:
+
+# Leader + Q: cycle through splits
+keybind = alt+a>q=goto_split:previous
+
+# Leader + Z: zoom or restore current split
+keybind = alt+a>z=toggle_split_zoom
+
+# Leader + E: make all splits equal size
+keybind = alt+a>e=equalize_splits
+
+
+# ============================================================
+# TAB NAVIGATION
+# ============================================================
+
+# Your WezTerm bindings used CMD + { and CMD + }.
+#
+# On a US keyboard:
+# { is Shift + [
+# } is Shift + ]
+keybind = cmd+shift+left_bracket=previous_tab
+keybind = cmd+shift+right_bracket=next_tab
+
+
+# ============================================================
+# CMD + NUMBER: ACTIVATE TAB
+# ============================================================
+
+# Ghostty tab positions are one-based here.
+keybind = cmd+1=goto_tab:1
+keybind = cmd+2=goto_tab:2
+keybind = cmd+3=goto_tab:3
+keybind = cmd+4=goto_tab:4
+keybind = cmd+5=goto_tab:5
+keybind = cmd+6=goto_tab:6
+keybind = cmd+7=goto_tab:7
+keybind = cmd+8=goto_tab:8
+keybind = cmd+9=goto_tab:9
+
+
+# ============================================================
+# TAB MOVEMENT
+# ============================================================
+
+# Ghostty supports relative tab movement rather than WezTerm's
+# convenient absolute MoveTab(index) operation.
+#
+# Leader + [ moves the current tab left.
+# Leader + ] moves the current tab right.
+keybind = alt+a>left_bracket=move_tab:-1
+keybind = alt+a>right_bracket=move_tab:1
+
+
+# ============================================================
+# ALT + ENTER
+# ============================================================
+
+# No explicit binding is usually required.
+#
+# With:
+# macos-option-as-alt = true
+#
+# Ghostty should send Option/Alt + Enter to Neovim and other
+# terminal applications as a modified key.
+#
+# Do not add a Ghostty action unless testing shows that your
+# specific shell or Neovim configuration does not receive it.
+
+
+# ============================================================
+# END
+# ============================================================

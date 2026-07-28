@@ -26,8 +26,8 @@ statusline.setup({
         "%<",
         { hl = "MiniStatuslineFilename", strings = { "%t%m%r" } },
         "%=",
-        { hl = "MiniStatuslineDevinfo", strings = { "%S", diagnostics } },
-        { hl = mode_hl, strings = { "%l:%v~%L" } },
+        { hl = "MiniStatuslineDevinfo", strings = { diagnostics, "%S" } },
+        { hl = mode_hl, strings = { "%l:%v2~%L" } },
       })
     end,
     inactive = function()
@@ -58,16 +58,13 @@ local jump2d = require("mini.jump2d")
 
 jump2d.setup({
   labels = "asdfghjklqwertyuiopzxcvbnm",
-
   view = {
     dim = true,
     n_steps_ahead = 2,
   },
-
   mappings = {
     start_jumping = "",
   },
-
   silent = true,
 })
 
