@@ -10,12 +10,12 @@ require("trouble").setup({})
 
 local map = vim.keymap.set
 
-map("n", "<leader>xw", "<cmd>Trouble diagnostics toggle<CR>", {
-  desc = "Trouble workspace diagnostics",
+map("n", "<leader>xD", "<cmd>Trouble diagnostics toggle<CR>", {
+  desc = "Diagnostics workspace",
 })
 
 map("n", "<leader>xd", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", {
-  desc = "Trouble document diagnostics",
+  desc = "Diagnostics document",
 })
 
 map("n", "<leader>xq", "<cmd>Trouble quickfix toggle<CR>", {

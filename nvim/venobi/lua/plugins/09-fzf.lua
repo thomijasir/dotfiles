@@ -77,7 +77,7 @@ map("n", "<leader>/", fzf.live_grep, {
   desc = "Find string",
 })
 
-map("n", ";f", fzf.files, {
+map("n", "<leader>ff", fzf.files, {
   desc = "Find files",
 })
 
@@ -113,19 +113,19 @@ map("n", "<leader>fk", fzf.keymaps, {
   desc = "Search keymaps",
 })
 
-map("n", "<leader>fd", fzf.diagnostics_document, {
+map("n", "<leader>d", fzf.diagnostics_document, {
   desc = "Document diagnostics",
 })
 
-map("n", "<leader>fD", fzf.diagnostics_workspace, {
+map("n", "<leader>D", fzf.diagnostics_workspace, {
   desc = "Workspace diagnostics",
 })
 
-map("n", "<leader>fs", fzf.lsp_document_symbols, {
+map("n", "<leader>s", fzf.lsp_document_symbols, {
   desc = "Document symbols",
 })
 
-map("n", "<leader>fS", fzf.lsp_workspace_symbols, {
+map("n", "<leader>S", fzf.lsp_workspace_symbols, {
   desc = "Workspace symbols",
 })
 

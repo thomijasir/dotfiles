@@ -1,5 +1,6 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
+
 local map = vim.keymap.set -- for conciseness
 local opts = { noremap = true, silent = true }
 
@@ -60,7 +61,7 @@ map("n", "<C-d>", "<C-d>zz", opts) -- scroll down
 map("n", "<leader>wv", "<C-w>v", { desc = "Split vertically" }) -- split window vertically
 map("n", "<leader>wh", "<C-w>s", { desc = "Split horizontally" }) -- split window horizontally
 map("n", "<leader>we", "<C-w>=", { desc = "Window equal size" }) -- make split windows equal width & height
-map("n", "<leader>wx", "<cmd>close<CR>", { desc = "Close current split" }) -- close current split window
+map("n", "<leader>wq", "<cmd>close<CR>", { desc = "Close split" }) -- close current split window
 map("n", "<leader>ww", function()
   vim.wo.wrap = not vim.wo.wrap
 end, { desc = "Toggle wrap" }) -- toggle wrap ons window
