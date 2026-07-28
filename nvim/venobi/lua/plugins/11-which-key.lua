@@ -1,9 +1,6 @@
 local pack = require("utils.pack")
 pack.add({ { src = "https://github.com/folke/which-key.nvim" } })
 
-vim.opt.timeout = true
-vim.opt.timeoutlen = 500
-
 local which_key = require("which-key")
 
 which_key.setup({

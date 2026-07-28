@@ -1,5 +1,10 @@
-vim.g.mapleader = " "
+-- set default leader key
+vim.g.mapleader = " " -- space leader key
 vim.g.maplocalleader = "\\"
+-- Disable Nvim Tree Explorer
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+-- vim.cmd("let g:netrw_liststyle = 3") -- active this for nvim explorer tree
 
 local map = vim.keymap.set -- for conciseness
 local opts = { noremap = true, silent = true }
@@ -69,7 +74,6 @@ map("n", "<leader>wq", "<cmd>close<CR>", { desc = "Close split" }) -- close curr
 map("n", "<leader>ww", function()
   vim.wo.wrap = not vim.wo.wrap
 end, { desc = "Toggle wrap" }) -- toggle wrap ons window
-map("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Close buffer" })
 
 map("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" }) -- open new tab
 map("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" }) -- close current tab

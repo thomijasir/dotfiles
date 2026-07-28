@@ -1,3 +1,4 @@
+-- Its disable because we use snack lazygit
 local pack = require("utils.pack")
 
 pack.add({

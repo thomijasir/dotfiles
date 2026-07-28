@@ -4,6 +4,13 @@ pack.add({
     src = "https://github.com/nvim-mini/mini.nvim",
     version = "stable",
   },
+  -- Support dependency mini files to show image
+  {
+    src = "https://github.com/3rd/image.nvim",
+  },
+  {
+    src = "https://github.com/hmdfrds/focal.nvim",
+  },
 })
 
 require("mini.pairs").setup()
@@ -52,6 +59,19 @@ require("mini.files").setup({
     width_nofocus = 15,
     width_preview = 50,
   },
+})
+
+---@diagnostic disable-next-line: missing-fields
+require("image").setup({
+  backend = "kitty", -- Ghostty uses the Kitty graphics protocol
+  max_height_window_percentage = 40,
+  max_width_window_percentage = 40,
+  window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+})
+
+require("focal").setup({
+  enabled = true,
+  border = "rounded",
 })
 
 local jump2d = require("mini.jump2d")

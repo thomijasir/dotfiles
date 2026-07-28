@@ -1,5 +1,3 @@
-vim.cmd("let g:netrw_liststyle = 3")
-
 local opt = vim.opt
 
 -- General
@@ -12,6 +10,10 @@ opt.updatetime = 250
 opt.relativenumber = false
 opt.number = true
 opt.numberwidth = 1
+
+-- Timeout
+opt.timeout = true
+opt.timeoutlen = 500
 
 -- Cursor
 opt.cursorline = true

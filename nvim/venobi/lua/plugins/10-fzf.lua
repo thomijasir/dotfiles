@@ -7,6 +7,7 @@ pack.add({
 })
 
 local fzf = require("fzf-lua")
+
 fzf.setup({
   defaults = {
     file_icons = true,
@@ -54,20 +55,11 @@ fzf.register_ui_select()
 
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
-    if vim.fn.argc() ~= 1 then
-      return
+    local arg = vim.fn.argv(0)
+    -- Check if Neovim was launched with a directory argument
+    if arg ~= "" and vim.fn.isdirectory(arg) == 1 then
+      require("fzf-lua").files()
     end
-
-    local directory = vim.fn.fnamemodify(vim.fn.argv(0), ":p")
-    if vim.fn.isdirectory(directory) ~= 1 then
-      return
-    end
-
-    vim.cmd.cd(vim.fn.fnameescape(directory))
-    vim.cmd.enew()
-    vim.schedule(function()
-      fzf.files({ cwd = directory })
-    end)
   end,
 })
 
