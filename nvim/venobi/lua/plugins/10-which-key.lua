@@ -13,6 +13,7 @@ which_key.setup({
 
 which_key.add({
   { ";", group = "Development tools" },
+  { "<leader>b", group = "Buffer" },
   { "<leader>c", group = "Code" },
   { "<leader>f", group = "Find" },
   { "<leader>g", group = "Git" },

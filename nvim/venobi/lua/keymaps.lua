@@ -1,9 +1,7 @@
 vim.g.mapleader = " "
-
+vim.g.maplocalleader = "\\"
 local map = vim.keymap.set -- for conciseness
 local opts = { noremap = true, silent = true }
--- keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
-map("n", "<leader>cx", ":nohl<CR>", { desc = "Clear" })
 
 -- Development tools
 local function wezterm_command(command, with_file, success_message)
@@ -36,15 +34,13 @@ local function wezterm_command(command, with_file, success_message)
   end
 end
 
-map("n", ";t", wezterm_command("open_terminal_bottom"), { desc = "Open terminal below", silent = true })
-map("n", ";c", wezterm_command("open_in_vscode"), { desc = "Open in VS Code", silent = true })
+-- keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
+map("n", "<leader>cx", ":nohl<CR>", { desc = "Clear" })
+
+map("n", ";t", wezterm_command("open_terminal_bottom"), { desc = "Open terminal", silent = true })
+map("n", ";c", wezterm_command("open_in_vscode"), { desc = "Open VSCode", silent = true })
 map("n", ";o", wezterm_command("reveal_current_folder", true), { desc = "Reveal current folder", silent = true })
-map(
-  "n",
-  ";y",
-  wezterm_command("copy_filename", true, "Filename copied"),
-  { desc = "Copy filename", silent = true }
-)
+map("n", ";y", wezterm_command("copy_filename", true, "Filename copied"), { desc = "Copy filename", silent = true })
 map(
   "n",
   ";Y",
@@ -68,6 +64,7 @@ map("n", "<leader>wx", "<cmd>close<CR>", { desc = "Close current split" }) -- cl
 map("n", "<leader>ww", function()
   vim.wo.wrap = not vim.wo.wrap
 end, { desc = "Toggle wrap" }) -- toggle wrap ons window
+map("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Close buffer" })
 
 map("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" }) -- open new tab
 map("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" }) -- close current tab

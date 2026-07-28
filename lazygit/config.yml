@@ -1,5 +1,5 @@
 os:
-  edit: "hx {{filename}}"
+  editPreset: "helix (hx)"
   open: "open $(dirname {{filename}})"
 gui:
   language: "en"

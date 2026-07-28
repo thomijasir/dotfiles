@@ -15,12 +15,14 @@ fzf.setup({
   },
 
   winopts = {
-    fullscreen = true,
-    border = "none",
-    backdrop = false,
+    height = 0.85,
+    width = 0.85,
+    row = 0.5,
+    col = 0.5,
+    border = "rounded",
 
     preview = {
-      border = "none",
+      border = "rounded",
       layout = "flex",
       scrollbar = "float",
     },
@@ -75,7 +77,7 @@ map("n", "<leader>/", fzf.live_grep, {
   desc = "Find string",
 })
 
-map("n", ";f", fzf.files, {
+map("n", "<leader>ff", fzf.files, {
   desc = "Find files",
 })
 
