@@ -5,7 +5,6 @@ pack.add({
   { src = "https://github.com/mason-org/mason-lspconfig.nvim" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim" },
-  { src = "https://github.com/chaneyzorn/spellwand.nvim" },
 })
 
 require("mason").setup()
@@ -19,6 +18,7 @@ local servers = {
   "ruff",
   "rust_analyzer",
   "eslint",
+  "typos_lsp",
 }
 
 local vue_language_server_path = vim.fs.joinpath(
@@ -83,6 +83,13 @@ vim.lsp.config("eslint", {
   },
 })
 
+vim.lsp.config("typos_lsp", {
+  init_options = {
+    diagnosticSeverity = "Hint",
+  },
+})
+
+-- { src = "https://github.com/chaneyzorn/spellwand.nvim" },
 -- Expose Neovim's native spell checker as LSP diagnostics and code actions.
 -- This keeps suggestions in sync with spelllang, spellfile, and `zg`/`z=`.
 --
@@ -99,17 +106,18 @@ vim.lsp.config("eslint", {
 -- spelling file located at ~/.local/share/nvim/site/spell/en.utf-8.add
 -- sample link spell file
 -- ln -sf ~/Workspace/dotfiles/nvim/venobi/spell/en.utf-8.add ~/.local/share/nvim/site/spell/en.utf-8.add
-vim.lsp.config("spellwand", {
-  settings = {
-    spellwand = {
-      num_suggestions_in_diagnostics = 0,
-      num_suggestions_in_code_action = 5,
-      max_errors = 100,
-      debounce_ms = 500,
-    },
-  },
-})
-vim.lsp.enable("spellwand")
+-- vim.lsp.config("spellwand", {
+--   settings = {
+--     spellwand = {
+--       num_suggestions_in_diagnostics = 0,
+--       num_suggestions_in_code_action = 5,
+--       max_errors = 100,
+--       debounce_ms = 500,
+--     },
+--   },
+-- })
+-- Disable spellwand
+-- vim.lsp.enable("spellwand")
 
 require("mason-lspconfig").setup({
   automatic_enable = servers,

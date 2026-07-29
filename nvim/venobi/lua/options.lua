@@ -64,9 +64,10 @@ opt.hlsearch = true
 opt.incsearch = true
 
 -- Spelling settings
-opt.spell = true
-opt.spelllang = "en,en_gb"
-opt.spelloptions = "camel"
+-- Spelling are disabled because we use typos_ls
+-- opt.spell = true
+-- opt.spelllang = "en,en_gb"
+-- opt.spelloptions = "camel"
 -- change color of spelling mistake
 -- vim.cmd("highlight SpellBad ctermbg=white guibg=white")
 -- vim.cmd("highlight SpellCap ctermbg=blue guibg=blue")
