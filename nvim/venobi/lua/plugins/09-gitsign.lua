@@ -54,9 +54,13 @@ require("gitsigns").setup({
       desc = "Preview Git hunk",
     })
 
-    map("n", "<leader>hb", function()
+    map("n", ";b", function()
       gitsigns.blame_line({ full = true })
-    end, { desc = "Blame current line" })
+    end, { desc = "Git Blame line" })
+
+    map("n", ";B", function()
+      gitsigns.blame()
+    end, { desc = "Git Blame list" })
 
     map({ "o", "x" }, "ih", gitsigns.select_hunk, {
       desc = "Inside Git hunk",

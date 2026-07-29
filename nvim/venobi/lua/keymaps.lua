@@ -49,12 +49,13 @@ map("n", "<Esc>", "<cmd>nohlsearch<CR>", {
 
 map("n", ";t", wezterm_command("open_terminal_bottom"), { desc = "Open terminal", silent = true })
 map("n", ";c", wezterm_command("open_in_vscode"), { desc = "Open VSCode", silent = true })
-map("n", ";o", wezterm_command("reveal_current_folder", true), { desc = "Reveal current folder", silent = true })
+map("n", ";o", wezterm_command("reveal_current_folder", true), { desc = "Open folder", silent = true })
+map("n", ";O", wezterm_command("reveal_workspace", true), { desc = "Open workspace", silent = true })
 map("n", ";y", wezterm_command("copy_filename", true, "Filename copied"), { desc = "Copy filename", silent = true })
 map(
   "n",
   ";Y",
-  wezterm_command("copy_abs_path", true, "Absolute path copied"),
+  wezterm_command("copy_abs_path", true, "Copy absolute path"),
   { desc = "Copy absolute path", silent = true }
 )
 
@@ -70,7 +71,7 @@ map("n", "<C-d>", "<C-d>zz", opts) -- scroll down
 map("n", "<leader>wv", "<C-w>v", { desc = "Split vertically" }) -- split window vertically
 map("n", "<leader>wh", "<C-w>s", { desc = "Split horizontally" }) -- split window horizontally
 map("n", "<leader>we", "<C-w>=", { desc = "Window equal size" }) -- make split windows equal width & height
-map("n", "<leader>wq", "<cmd>close<CR>", { desc = "Close split" }) -- close current split window
+map("n", "<leader>q", "<cmd>close<CR>", { desc = "Close Window" }) -- close current split window
 map("n", "<leader>ww", function()
   vim.wo.wrap = not vim.wo.wrap
 end, { desc = "Toggle wrap" }) -- toggle wrap ons window

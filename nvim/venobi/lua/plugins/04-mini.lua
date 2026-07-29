@@ -17,18 +17,27 @@ local map = vim.keymap.set
 icons.setup()
 icons.mock_nvim_web_devicons()
 
+local function lsp_status()
+  if vim.tbl_isempty(vim.lsp.get_clients({ bufnr = 0 })) then
+    return ""
+  end
+
+  return vim.lsp.status() ~= "" and "Indexing..." or "󰄬 LSP"
+end
+
 statusline.setup({
   content = {
     active = function()
       local mode, mode_hl = statusline.section_mode({ trunc_width = math.huge })
       local diagnostics = statusline.section_diagnostics({ trunc_width = 70 })
+      local lsp = lsp_status()
 
       return statusline.combine_groups({
         { hl = mode_hl, strings = { mode } },
         "%<",
         { hl = "MiniStatuslineFilename", strings = { "%t%m%r" } },
         "%=",
-        { hl = "MiniStatuslineDevinfo", strings = { diagnostics, "%S" } },
+        { hl = "MiniStatuslineDevinfo", strings = { diagnostics, "%S", lsp } },
         { hl = mode_hl, strings = { "%l:%v2~%L" } },
       })
     end,
@@ -58,8 +67,12 @@ require("mini.files").setup({
 
 jump2d.setup({
   labels = "asdfghjklqwertyuiopzxcvbnm",
+  allowed_windows = {
+    current = true,
+    not_current = false,
+  },
   view = {
-    dim = true,
+    dim = false,
     n_steps_ahead = 2,
   },
   mappings = {
