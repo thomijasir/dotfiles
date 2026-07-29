@@ -1,6 +1,7 @@
 local pack = require("utils.pack")
 
 pack.add({
+  -- plenary is dependency for todo-comments
   {
     src = "https://github.com/nvim-lua/plenary.nvim",
   },

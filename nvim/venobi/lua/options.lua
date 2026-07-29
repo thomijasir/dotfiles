@@ -29,6 +29,7 @@ opt.shiftwidth = 2
 opt.expandtab = true
 opt.autoindent = true
 opt.smartindent = true
+opt.showtabline = 0
 
 -- Backspace
 opt.backspace = "indent,eol,start"
