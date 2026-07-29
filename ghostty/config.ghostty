@@ -95,7 +95,7 @@ window-padding-balance = false
 window-decoration = true
 
 # Use native macOS title-bar tabs.
-macos-titlebar-style = tabs  
+macos-titlebar-style = hidden 
 # Let Option function as Alt/Meta inside terminal applications.
 # Useful for Neovim mappings such as <M-h> and <M-Enter>.
 macos-option-as-alt = true
@@ -120,7 +120,7 @@ macos-option-as-alt = true
 # This supports zsh, fish, bash, nushell, and other recognized
 # shells without needing to force a specific shell.
 shell-integration = detect
-shell-integration-features = no-cursor,no-title 
+shell-integration-features = no-cursor 
 
 # ============================================================
 # CLOSE CONFIRMATION
@@ -165,10 +165,10 @@ keybind = cmd+shift+comma=reload_config
 # ============================================================
 
 # Leader + C: create tab
-keybind = alt+a>c=new_tab
+# keybind = alt+a>c=new_tab
 
 # Leader + X: close current pane/surface
-keybind = alt+a>x=close_surface
+# keybind = alt+a>x=close_surface
 
 
 # ============================================================
@@ -177,11 +177,11 @@ keybind = alt+a>x=close_surface
 
 # WezTerm SplitHorizontal creates a top/bottom layout.
 # Ghostty's equivalent creates the new split below.
-keybind = alt+a>h=new_split:down
+# keybind = alt+a>h=new_split:down
 
 # WezTerm SplitVertical creates a left/right layout.
 # Ghostty's equivalent creates the new split to the right.
-keybind = alt+a>v=new_split:right
+# keybind = alt+a>v=new_split:right
 
 
 # ============================================================
@@ -190,10 +190,11 @@ keybind = alt+a>v=new_split:right
 
 # WezTerm:
 # CMD + H/J/K/L
-keybind = cmd+h=goto_split:left
-keybind = cmd+j=goto_split:down
-keybind = cmd+k=goto_split:up
-keybind = cmd+l=goto_split:right
+# keybind = cmd+h=goto_split:left
+# keybind = cmd+j=goto_split:down
+# keybind = cmd+k=goto_split:up
+# keybind = cmd+l=goto_split:right
+
 
 
 # ============================================================
@@ -236,8 +237,9 @@ keybind = alt+a>e=equalize_splits
 # On a US keyboard:
 # { is Shift + [
 # } is Shift + ]
-keybind = cmd+shift+left_bracket=previous_tab
-keybind = cmd+shift+right_bracket=next_tab
+# keybind = cmd+shift+left_bracket=previous_tab
+# keybind = cmd+shift+right_bracket=next_tab
+
 
 
 # ============================================================
@@ -245,16 +247,16 @@ keybind = cmd+shift+right_bracket=next_tab
 # ============================================================
 
 # Ghostty tab positions are one-based here.
-keybind = cmd+1=goto_tab:1
-keybind = cmd+2=goto_tab:2
-keybind = cmd+3=goto_tab:3
-keybind = cmd+4=goto_tab:4
-keybind = cmd+5=goto_tab:5
-keybind = cmd+6=goto_tab:6
-keybind = cmd+7=goto_tab:7
-keybind = cmd+8=goto_tab:8
-keybind = cmd+9=goto_tab:9
-
+# keybind = cmd+1=goto_tab:1
+# keybind = cmd+2=goto_tab:2
+# keybind = cmd+3=goto_tab:3
+# keybind = cmd+4=goto_tab:4
+# keybind = cmd+5=goto_tab:5
+# keybind = cmd+6=goto_tab:6
+# keybind = cmd+7=goto_tab:7
+# keybind = cmd+8=goto_tab:8
+# keybind = cmd+9=goto_tab:9
+#
 
 # ============================================================
 # TAB MOVEMENT
@@ -265,8 +267,8 @@ keybind = cmd+9=goto_tab:9
 #
 # Leader + [ moves the current tab left.
 # Leader + ] moves the current tab right.
-keybind = alt+a>left_bracket=move_tab:-1
-keybind = alt+a>right_bracket=move_tab:1
+# keybind = alt+a>left_bracket=move_tab:-1
+# keybind = alt+a>right_bracket=move_tab:1
 
 
 # ============================================================
