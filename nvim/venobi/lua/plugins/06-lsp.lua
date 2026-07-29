@@ -85,11 +85,27 @@ vim.lsp.config("eslint", {
 
 -- Expose Neovim's native spell checker as LSP diagnostics and code actions.
 -- This keeps suggestions in sync with spelllang, spellfile, and `zg`/`z=`.
+--
+-- Performance tuning: on files full of non-dictionary tokens (e.g. .ghostty,
+-- .dat, .mex) almost every word reads as "misspelled", so the defaults make
+-- each refresh expensive. The knobs below keep spell on everywhere while
+-- cutting the per-refresh cost:
+--   - num_suggestions_in_diagnostics = 0: skip per-word `spellsuggest` calls
+--     during the diagnostic scan (the biggest win). Suggestions are still
+--     computed on demand via the code action (<leader>a).
+--   - max_errors = 100: cap how many diagnostics are built/rendered per buffer
+--     (the scan also stops early once the cap is reached).
+--   - debounce_ms = 500: re-scan less often on normal-mode buffer changes.
+-- spelling file located at ~/.local/share/nvim/site/spell/en.utf-8.add
+-- sample link spell file
+-- ln -sf ~/Workspace/dotfiles/nvim/venobi/spell/en.utf-8.add ~/.local/share/nvim/site/spell/en.utf-8.add
 vim.lsp.config("spellwand", {
   settings = {
     spellwand = {
-      num_suggestions_in_diagnostics = 3,
+      num_suggestions_in_diagnostics = 0,
       num_suggestions_in_code_action = 5,
+      max_errors = 100,
+      debounce_ms = 500,
     },
   },
 })

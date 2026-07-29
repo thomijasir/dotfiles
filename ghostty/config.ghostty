@@ -43,8 +43,7 @@ adjust-cell-height = 5%
 # This is not a perfect one-to-one conversion because Ghostty
 # and WezTerm use different font metric adjustment systems.
 # Start with this and adjust visually if necessary.
-adjust-underline-position = -4
-
+adjust-underline-position = -1
 
 # ============================================================
 # CURSOR
@@ -178,11 +177,11 @@ keybind = alt+a>x=close_surface
 
 # WezTerm SplitHorizontal creates a top/bottom layout.
 # Ghostty's equivalent creates the new split below.
-keybind = alt+a>v=new_split:down
+keybind = alt+a>h=new_split:down
 
 # WezTerm SplitVertical creates a left/right layout.
 # Ghostty's equivalent creates the new split to the right.
-keybind = alt+a>h=new_split:right
+keybind = alt+a>v=new_split:right
 
 
 # ============================================================
