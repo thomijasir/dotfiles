@@ -53,18 +53,6 @@ name = "terminal"
 # manifest_check = true
 
 [keys]
-previous_tab = "alt+{"
-next_tab     = "alt+}"
-
-focus_pane_left  = "alt+h"
-focus_pane_down  = "alt+j"
-focus_pane_up    = "alt+k"
-focus_pane_right = "alt+l"
-
-split_vertical   = "prefix+v"
-split_horizontal = "prefix+h"
-
-new_tab = "alt+t"
 # Prefix key to enter prefix mode (default: "ctrl+b")
 # Examples: "ctrl+b", "f12", "esc", "-"
 # Action bindings use explicit syntax: "prefix+n" requires the prefix;
@@ -90,15 +78,20 @@ new_tab = "alt+t"
 # rename_workspace = "prefix+shift+w"
 # close_workspace = "prefix+shift+d"
 # previous_workspace = "" # optional, unset by default
+previous_workspace = "alt+ctrl+j" # optional, unset by default
 # next_workspace = ""     # optional, unset by default
+next_workspace = "alt+ctrl+k"     # optional, unset by default
 # previous_agent = ""     # optional, unset by default
 # next_agent = ""         # optional, unset by default
 # focus_agent = ""        # optional indexed binding, e.g. "prefix+alt+1..9"
 # remote_image_paste = "ctrl+v" # only active in herdr --remote; empty disables raw-key image paste
 # new_tab = "prefix+c"
+new_tab = "alt+t"
 # rename_tab = "prefix+shift+t"
 # previous_tab = "prefix+p"
+previous_tab = "alt+{"
 # next_tab = "prefix+n"
+next_tab     = "alt+}"
 # switch_tab = "prefix+1..9"
 switch_tab = "alt+1..9"
 # switch_workspace = ""   # optional indexed binding, e.g. "prefix+shift+1..9"
@@ -106,14 +99,20 @@ switch_tab = "alt+1..9"
 # rename_pane = "prefix+shift+p"
 # edit_scrollback = "prefix+e"
 # focus_pane_left = "prefix+h"
+focus_pane_left  = "alt+h"
 # focus_pane_down = "prefix+j"
+focus_pane_down  = "alt+j"
 # focus_pane_up = "prefix+k"
+focus_pane_up    = "alt+k"
 # focus_pane_right = "prefix+l"
+focus_pane_right = "alt+l"
 # cycle_pane_next = "prefix+tab"
 # cycle_pane_previous = "prefix+shift+tab"
 # last_pane = ""          # optional, unset by default; bind e.g. "prefix+tab" for global back-and-forth
 # split_vertical = "prefix+v"
+split_vertical   = "prefix+v"
 # split_horizontal = "prefix+minus"
+split_horizontal = "prefix+h"
 # close_pane = "prefix+x"
 # zoom = "prefix+z"       # legacy alias: fullscreen
 # resize_mode = "prefix+r"
