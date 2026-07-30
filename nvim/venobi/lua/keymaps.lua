@@ -9,37 +9,6 @@ vim.g.loaded_netrwPlugin = 1
 local map = vim.keymap.set -- for conciseness
 local opts = { noremap = true, silent = true }
 
--- Development tools
-local function wezterm_command(command, with_file, success_message)
-  return function()
-    local args = { "vim-wezterm.sh", command }
-    local job_opts = { detach = true }
-
-    if with_file then
-      local current_file = vim.api.nvim_buf_get_name(0)
-      if current_file == "" then
-        vim.notify("Current buffer has no file", vim.log.levels.WARN)
-        return
-      end
-      table.insert(args, current_file)
-    end
-
-    if success_message then
-      job_opts.on_exit = function(_, exit_code)
-        if exit_code == 0 then
-          vim.schedule(function()
-            vim.notify(success_message, vim.log.levels.INFO)
-          end)
-        end
-      end
-    end
-
-    if vim.fn.jobstart(args, job_opts) <= 0 then
-      vim.notify("Failed to run vim-wezterm.sh " .. command, vim.log.levels.ERROR)
-    end
-  end
-end
-
 -- keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
 -- map("n", "<leader>cx", ":nohl<CR>", { desc = "Clear" })
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", {
@@ -47,21 +16,38 @@ map("n", "<Esc>", "<cmd>nohlsearch<CR>", {
   desc = "Clear search highlight",
 })
 
-map("n", ";t", wezterm_command("open_terminal_bottom"), { desc = "Open terminal", silent = true })
-map("n", ";c", wezterm_command("open_in_vscode"), { desc = "Open VSCode", silent = true })
-map("n", ";o", wezterm_command("reveal_current_folder", true), { desc = "Open folder", silent = true })
-map("n", ";O", wezterm_command("reveal_workspace", true), { desc = "Open workspace", silent = true })
-map("n", ";y", wezterm_command("copy_filename", true, "Filename copied"), { desc = "Copy filename", silent = true })
-map(
-  "n",
-  ";Y",
-  wezterm_command("copy_abs_path", true, "Copy absolute path"),
-  { desc = "Copy absolute path", silent = true }
-)
+-- Open current working directory in VS Code
+map("n", ";c", function()
+  vim.fn.system("code .")
+end, { desc = "Open VSCode", silent = true })
 
--- increment/decrement numbers
--- map("n", "<leader>+", "<C-a>", { desc = "Increment number" }) -- increment
--- map("n", "<leader>-", "<C-x>", { desc = "Decrement number" }) -- decrement
+-- Open the current file's folder
+map("n", ";o", function()
+  vim.fn.system("open " .. vim.fn.shellescape(vim.fn.expand("%:p:h")))
+end, { desc = "Open current file folder", silent = true })
+
+-- Open Neovim's working directory
+map("n", ";O", function()
+  vim.fn.system("open " .. vim.fn.shellescape(vim.fn.getcwd()))
+end, { desc = "Open workspace", silent = true }) -- Copy filename
+
+-- Nvim Copy fn --
+map("n", ";y", function()
+  vim.fn.setreg("+", vim.fn.expand("%:t"))
+  vim.notify("Filename copied")
+end, { desc = "Filename copied", silent = true })
+
+-- Copy relative file path
+map("n", ";r", function()
+  vim.fn.setreg("+", vim.fn.expand("%:."))
+  vim.notify("Relative path copied")
+end, { desc = "Relative path copied", silent = true })
+
+-- Copy absolute file path
+map("n", ";Y", function()
+  vim.fn.setreg("+", vim.fn.expand("%:p"))
+  vim.notify("Absolute path copied")
+end, { desc = "Absolute path copied", silent = true })
 
 -- Scrolling
 map("n", "<C-u>", "<C-u>zz", opts) -- scroll up

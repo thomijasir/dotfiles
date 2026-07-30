@@ -7,7 +7,7 @@ opt.wrap = false
 opt.updatetime = 250
 
 -- Number
-opt.relativenumber = false
+opt.relativenumber = true
 opt.number = true
 opt.numberwidth = 1
 

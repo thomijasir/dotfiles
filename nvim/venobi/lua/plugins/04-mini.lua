@@ -37,7 +37,7 @@ statusline.setup({
         "%<",
         { hl = "MiniStatuslineFilename", strings = { "%t%m%r" } },
         "%=",
-        { hl = "MiniStatuslineDevinfo", strings = { diagnostics, "%S", lsp } },
+        { hl = "MiniStatuslineDevinfo", strings = { "%S", lsp, diagnostics } },
         { hl = mode_hl, strings = { "%l:%v2~%L" } },
       })
     end,
