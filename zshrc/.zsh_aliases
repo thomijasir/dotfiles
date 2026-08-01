@@ -219,3 +219,11 @@ alias note="hx /Users/venobi/Library/CloudStorage/GoogleDrive-thomijasir@gmail.c
 
 # @desc: Alias Video Compress
 alias vcp="compress-video.sh"
+
+# @desc: herdr stop server
+alias hrs="herdr server stop"
+
+# @desc: herdr open
+alias hrd="herdr"
+
+
