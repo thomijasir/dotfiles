@@ -14,6 +14,10 @@ local servers = {
   "vtsls",
   "vue_ls",
   "tailwindcss",
+  "html",
+  "cssls",
+  "jsonls",
+  "yamlls",
   "basedpyright",
   "ruff",
   "rust_analyzer",
@@ -77,7 +81,23 @@ vim.lsp.config("basedpyright", {
   },
 })
 
+local eslint_on_attach = vim.lsp.config.eslint.on_attach
+local eslint_fix_group = vim.api.nvim_create_augroup("UserEslintFixAll", { clear = true })
+
 vim.lsp.config("eslint", {
+  on_attach = function(client, bufnr)
+    if eslint_on_attach then
+      eslint_on_attach(client, bufnr)
+    end
+
+    vim.api.nvim_clear_autocmds({ group = eslint_fix_group, buffer = bufnr })
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = eslint_fix_group,
+      buffer = bufnr,
+      command = "LspEslintFixAll",
+      desc = "Apply all ESLint fixes before saving",
+    })
+  end,
   settings = {
     format = false,
   },
