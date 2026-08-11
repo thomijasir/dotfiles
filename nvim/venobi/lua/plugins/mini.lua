@@ -58,6 +58,8 @@ require("mini.files").setup({
   },
 
   windows = {
+    -- MiniFiles renders text files in its preview column, while Focal handles
+    -- image files in a floating window.
     preview = true,
     width_focus = 30,
     width_nofocus = 15,

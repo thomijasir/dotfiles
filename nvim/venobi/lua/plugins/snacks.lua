@@ -19,6 +19,21 @@ local map = vim.keymap.set
 ---@diagnostic disable-next-line: missing-fields
 require("image").setup({
   backend = "kitty", -- Ghostty uses the Kitty graphics protocol
+  -- Snacks owns direct image buffers and fzf-lua previews. Keep image.nvim
+  -- focused on document and Focal previews so both plugins do not render the
+  -- same image buffer.
+  hijack_file_patterns = {},
+  integrations = {
+    markdown = {
+      enabled = true,
+      only_render_image_at_cursor = true,
+      only_render_image_at_cursor_mode = "popup",
+    },
+    asciidoc = { enabled = false },
+    typst = { enabled = false },
+    neorg = { enabled = false },
+    syslang = { enabled = false },
+  },
   max_height_window_percentage = 40,
   max_width_window_percentage = 40,
   window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
@@ -26,6 +41,7 @@ require("image").setup({
 
 require("focal").setup({
   enabled = true,
+  backend = "image.nvim",
   border = "rounded",
 })
 
