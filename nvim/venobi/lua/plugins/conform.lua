@@ -5,6 +5,7 @@ local conform = require("conform")
 
 conform.setup({
   formatters_by_ft = {
+    astro = { "prettierd" },
     lua = { "stylua" },
 
     javascript = {

@@ -20,6 +20,7 @@ treesitter.setup({
 })
 
 local parsers = {
+  "astro",
   "bash",
   "css",
   "dockerfile",

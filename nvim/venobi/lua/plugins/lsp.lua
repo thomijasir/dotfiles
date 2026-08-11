@@ -10,6 +10,7 @@ pack.add({
 require("mason").setup()
 
 local servers = {
+  "astro",
   "lua_ls",
   "vtsls",
   "vue_ls",
