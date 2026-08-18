@@ -56,6 +56,15 @@ conform.setup({
     python = {
       "ruff_format",
     },
+
+    sql = {
+      "pgformat",
+      lsp_format = "fallback",
+    },
+
+    toml = {
+      "taplo",
+    },
   },
 
   format_on_save = {
@@ -63,6 +72,12 @@ conform.setup({
     lsp_format = "fallback",
   },
 })
+
+-- pg_format lowercases keywords by default; keep whatever case was written
+conform.formatters.pgformat = {
+  command = "pg_format",
+  prepend_args = { "--no-case-change" },
+}
 
 vim.keymap.set({ "n", "v" }, "<leader>cf", function()
   conform.format({

@@ -28,7 +28,7 @@ theme = Catppuccin Macchiato
 # Verify the exact family:
 # ghostty +list-fonts | grep -i JetBrains
 font-family = JetBrainsMonoNL Nerd Font
-font-size = 16
+font-size = 15
 
 # WezTerm:
 # config.line_height = 1.05
@@ -108,7 +108,7 @@ macos-option-as-alt = true
 # Your WezTerm transparency settings were commented out.
 # Uncomment these if you want the equivalent effect.
 #
-# background-opacity = 0.9
+background-opacity = 0.96
 # background-blur-radius = 90
 
 
