@@ -29,7 +29,7 @@ end
 local map = vim.keymap.set
 
 map("n", "<leader>gv", command(""), {
-  desc = "Open Git diff view",
+  desc = "Open CodeDiff view",
 })
 
 map("n", "<leader>gH", command("history %"), {
