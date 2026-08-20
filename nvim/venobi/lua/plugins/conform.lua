@@ -67,10 +67,17 @@ conform.setup({
     },
   },
 
-  format_on_save = {
-    timeout_ms = 1000,
-    lsp_format = "fallback",
-  },
+  format_on_save = function(bufnr)
+    if vim.b[bufnr].skip_format_once then
+      vim.b[bufnr].skip_format_once = nil
+      return
+    end
+
+    return {
+      timeout_ms = 1000,
+      lsp_format = "fallback",
+    }
+  end,
 })
 
 -- pg_format lowercases keywords by default; keep whatever case was written

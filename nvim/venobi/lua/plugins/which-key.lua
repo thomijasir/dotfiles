@@ -16,6 +16,7 @@ which_key.add({
   { "<leader>g", group = "Git" },
   { "<leader>h", group = "Git hunks" },
   { "<leader>m", group = "Multicursor" },
+  { "<leader>o", group = "Tasks" },
   { "<leader>s", group = "Search" },
   { "<leader>t", group = "Tabs" },
   { "<leader>w", group = "Windows" },

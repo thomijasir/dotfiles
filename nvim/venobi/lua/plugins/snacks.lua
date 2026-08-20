@@ -46,6 +46,13 @@ require("focal").setup({
 })
 
 require("snacks").setup({
+  -- Avoid attaching expensive editor features to minified or otherwise
+  -- oversized files.
+  bigfile = { enabled = true },
+  -- Render an explicitly opened file before the rest of startup completes.
+  quickfile = { enabled = true },
+  -- Highlight and navigate references reported by the attached LSP.
+  words = { enabled = true },
   -- Enables high-res image previews for Ghostty (also powers fzf-lua image previews).
   -- `doc` is disabled so it does not double-render inline markdown images that
   -- image.nvim already handles; fzf-lua previews are unaffected (they use the
@@ -81,6 +88,16 @@ require("snacks").setup({
   lazygit = {
     enabled = true,
   },
+})
+
+-- Notify attached LSP clients when MiniFiles moves or renames a file so they
+-- can update imports and other workspace references.
+vim.api.nvim_create_autocmd("User", {
+  pattern = "MiniFilesActionRename",
+  callback = function(event)
+    Snacks.rename.on_rename_file(event.data.from, event.data.to)
+  end,
+  desc = "Notify LSP clients after MiniFiles rename",
 })
 
 -- Resolve LazyGit's config directory lazily (only when `;g` is pressed) and
@@ -130,3 +147,27 @@ end, { desc = "Close buffer" })
 map("n", "<leader>bo", function()
   Snacks.bufdelete.other()
 end, { desc = "Close other buffer" })
+
+map("n", "]r", function()
+  Snacks.words.jump(vim.v.count1)
+end, { desc = "Next LSP reference" })
+
+map("n", "[r", function()
+  Snacks.words.jump(-vim.v.count1)
+end, { desc = "Previous LSP reference" })
+
+map("n", "<leader>.", function()
+  Snacks.scratch()
+end, { desc = "Toggle scratch buffer" })
+
+map("n", "<leader>S", function()
+  Snacks.scratch.select()
+end, { desc = "Select scratch buffer" })
+
+map({ "n", "t" }, "<C-/>", function()
+  Snacks.terminal()
+end, { desc = "Toggle terminal" })
+
+map("n", "<leader>cr", function()
+  Snacks.rename.rename_file()
+end, { desc = "Rename file" })

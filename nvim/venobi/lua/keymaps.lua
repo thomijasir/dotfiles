@@ -75,7 +75,21 @@ map({ "n", "i" }, "<C-s>", "<cmd>write<CR>", {
   silent = true,
 })
 
-map("n", "<leader>cw", "<cmd>noautocmd write<CR>", {
+map("n", "<leader>cw", function()
+  -- Conform consumes this flag on the next write. Other BufWritePre and
+  -- BufWritePost hooks still run normally.
+  local bufnr = vim.api.nvim_get_current_buf()
+  vim.b[bufnr].skip_format_once = true
+
+  local ok, err = pcall(vim.cmd.write)
+  -- A write can fail before BufWritePre (for example, when the buffer has no
+  -- filename), so ensure a failed attempt cannot skip formatting later.
+  vim.b[bufnr].skip_format_once = nil
+
+  if not ok then
+    error(err, 0)
+  end
+end, {
   desc = "Save without format",
   silent = true,
 })
