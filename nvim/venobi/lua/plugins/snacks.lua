@@ -3,6 +3,7 @@ local pack = require("utils.pack")
 pack.add({
   {
     src = "https://github.com/folke/snacks.nvim",
+    version = "stable",
   },
   -- Support dependency mini files to show image
   {
@@ -10,6 +11,7 @@ pack.add({
   },
   {
     src = "https://github.com/hmdfrds/focal.nvim",
+    version = "stable",
   },
 })
 

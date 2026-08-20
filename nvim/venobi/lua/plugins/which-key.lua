@@ -1,5 +1,5 @@
 local pack = require("utils.pack")
-pack.add({ { src = "https://github.com/folke/which-key.nvim" } })
+pack.add({ { src = "https://github.com/folke/which-key.nvim", version = "stable" } })
 
 local which_key = require("which-key")
 

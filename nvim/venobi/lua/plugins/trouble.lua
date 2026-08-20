@@ -3,6 +3,7 @@ local pack = require("utils.pack")
 pack.add({
   {
     src = "https://github.com/folke/trouble.nvim",
+    version = "stable",
   },
 })
 

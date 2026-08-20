@@ -1,5 +1,5 @@
 local pack = require("utils.pack")
-pack.add({ { src = "https://github.com/stevearc/conform.nvim" } })
+pack.add({ { src = "https://github.com/stevearc/conform.nvim", version = "stable" } })
 
 local conform = require("conform")
 

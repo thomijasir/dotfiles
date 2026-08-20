@@ -3,6 +3,7 @@ local pack = require("utils.pack")
 pack.add({
   {
     src = "https://github.com/stevearc/overseer.nvim",
+    version = "stable",
   },
 }, {
   lazy = true,

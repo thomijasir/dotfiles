@@ -1,6 +1,6 @@
 local pack = require("utils.pack")
 
-pack.add({ { src = "https://github.com/lewis6991/gitsigns.nvim" } })
+pack.add({ { src = "https://github.com/lewis6991/gitsigns.nvim", version = "stable" } })
 
 require("gitsigns").setup({
   on_attach = function(buffer)
