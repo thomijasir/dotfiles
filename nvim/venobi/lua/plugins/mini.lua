@@ -48,10 +48,6 @@ statusline.setup({
 })
 
 require("mini.files").setup({
-  mappings = {
-    go_in = "L",
-    go_in_plus = "l",
-  },
   options = {
     use_as_default_explorer = false,
   },

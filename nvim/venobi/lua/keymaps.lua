@@ -75,8 +75,8 @@ map({ "n", "i" }, "<C-s>", "<cmd>write<CR>", {
   silent = true,
 })
 
-map("n", "<leader>cW", "<cmd>noautocmd write<CR>", {
-  desc = "Save without autocommands",
+map("n", "<leader>cw", "<cmd>noautocmd write<CR>", {
+  desc = "Save without format",
   silent = true,
 })
 

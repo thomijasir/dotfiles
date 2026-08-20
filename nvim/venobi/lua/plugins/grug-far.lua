@@ -4,10 +4,13 @@ pack.add({
   {
     src = "https://github.com/MagicDuck/grug-far.nvim",
   },
+}, {
+  lazy = true,
 })
 
-require("grug-far").setup({})
-
-vim.keymap.set("n", "<leader>sr", "<cmd>GrugFar<CR>", {
+vim.keymap.set("n", "<leader>sr", function()
+  vim.cmd.packadd("grug-far.nvim")
+  require("grug-far").open()
+end, {
   desc = "Search and replace",
 })

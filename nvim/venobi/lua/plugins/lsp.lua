@@ -118,7 +118,7 @@ require("mason-tool-installer").setup({
   ensure_installed = vim.list_extend(vim.deepcopy(servers), {
     "stylua",
     "prettierd",
-    "pgformat", -- SQL Formatter
+    "pgformatter", -- SQL Formatter
     "taplo", -- TOML Formatter
   }),
   auto_update = false,
