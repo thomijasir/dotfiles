@@ -39,7 +39,7 @@ opt.clipboard:append("unnamedplus")
 
 -- Split windows
 opt.splitright = true -- Split vertical window to the right
-opt.splitbelow = true -- Split horizontal window to the bottmo
+opt.splitbelow = true -- Split horizontal window to the bottom
 
 -- Turn off swap file
 opt.swapfile = false

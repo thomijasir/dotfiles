@@ -48,6 +48,8 @@ require("focal").setup({
 })
 
 require("snacks").setup({
+  -- make sure picker disable only use fzf-lua
+  picker = { enabled = false },
   -- Avoid attaching expensive editor features to minified or otherwise
   -- oversized files.
   bigfile = { enabled = true },

@@ -7,19 +7,23 @@
     },
     "catppuccin": {
       "rev": "edefef779ab08ce1a4a404713e3012b0d202bd35",
-      "src": "https://github.com/catppuccin/nvim"
+      "src": "https://github.com/catppuccin/nvim",
+      "version": "'stable'"
     },
     "codediff.nvim": {
       "rev": "e08a35a56a52c290398ebfaec33c34cfcf2d0f3c",
-      "src": "https://github.com/esmuellert/codediff.nvim"
+      "src": "https://github.com/esmuellert/codediff.nvim",
+      "version": "'stable'"
     },
     "conform.nvim": {
       "rev": "016802de402556da54c36bd7359b441266b01cdd",
-      "src": "https://github.com/stevearc/conform.nvim"
+      "src": "https://github.com/stevearc/conform.nvim",
+      "version": "'stable'"
     },
     "focal.nvim": {
       "rev": "25c946b9ba57c394fbb8644f084a4cd6d0004e54",
-      "src": "https://github.com/hmdfrds/focal.nvim"
+      "src": "https://github.com/hmdfrds/focal.nvim",
+      "version": "'stable'"
     },
     "fzf-lua": {
       "rev": "05e44d38de0a79c11fba5f7bf8138791b1dbdd1e",
@@ -27,7 +31,8 @@
     },
     "gitsigns.nvim": {
       "rev": "5be654f2232c10ddcad19c1607a67b6b4b78fc29",
-      "src": "https://github.com/lewis6991/gitsigns.nvim"
+      "src": "https://github.com/lewis6991/gitsigns.nvim",
+      "version": "'stable'"
     },
     "grug-far.nvim": {
       "rev": "11595bf747edc270bce2069d1020502ad4ae56cf",
@@ -83,7 +88,8 @@
     },
     "overseer.nvim": {
       "rev": "a93d9f6d6defdac4bcd6d2c8ba988650e42e0a0e",
-      "src": "https://github.com/stevearc/overseer.nvim"
+      "src": "https://github.com/stevearc/overseer.nvim",
+      "version": "'stable'"
     },
     "plenary.nvim": {
       "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
@@ -91,7 +97,8 @@
     },
     "snacks.nvim": {
       "rev": "882c996cf28183f4d63640de0b4c02ec886d01f2",
-      "src": "https://github.com/folke/snacks.nvim"
+      "src": "https://github.com/folke/snacks.nvim",
+      "version": "'stable'"
     },
     "todo-comments.nvim": {
       "rev": "31e3c38ce9b29781e4422fc0322eb0a21f4e8668",
@@ -99,11 +106,13 @@
     },
     "trouble.nvim": {
       "rev": "bd67efe408d4816e25e8491cc5ad4088e708a69a",
-      "src": "https://github.com/folke/trouble.nvim"
+      "src": "https://github.com/folke/trouble.nvim",
+      "version": "'stable'"
     },
     "which-key.nvim": {
       "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",
-      "src": "https://github.com/folke/which-key.nvim"
+      "src": "https://github.com/folke/which-key.nvim",
+      "version": "'stable'"
     }
   }
 }
