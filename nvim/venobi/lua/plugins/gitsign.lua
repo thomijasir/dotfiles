@@ -39,6 +39,8 @@ require("gitsigns").setup({
       })
     end, { desc = "Stage selected Git hunk" })
 
+    map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "Stage entire buffer" })
+
     map("n", "<leader>hr", gitsigns.reset_hunk, {
       desc = "Reset Git hunk",
     })
@@ -50,9 +52,21 @@ require("gitsigns").setup({
       })
     end, { desc = "Reset selected Git hunk" })
 
+    map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "Reset entire buffer" })
+
     map("n", "<leader>hp", gitsigns.preview_hunk, {
       desc = "Preview Git hunk",
     })
+
+    -- Diffing
+    map("n", "<leader>hd", gitsigns.diffthis, { desc = "Diff against index" })
+    map("n", "<leader>hD", function()
+      gitsigns.diffthis("~")
+    end, { desc = "Diff against last commit" })
+
+    -- UI Toggles
+    map("n", "<leader>gt", gitsigns.toggle_current_line_blame, { desc = "Toggle inline blame" })
+    map("n", "<leader>gw", gitsigns.toggle_word_diff, { desc = "Toggle word diff" })
 
     map("n", ";b", function()
       gitsigns.blame_line({ full = true })
