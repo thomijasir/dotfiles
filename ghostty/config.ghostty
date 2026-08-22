@@ -24,11 +24,16 @@ theme = Catppuccin Macchiato
 # WezTerm:
 # config.font = wezterm.font("JetBrainsMonoNL Nerd Font")
 # config.font_size = 16
-#
+# 
 # Verify the exact family:
 # ghostty +list-fonts | grep -i JetBrains
-font-family = JetBrainsMonoNL Nerd Font
+font-family = "JetBrainsMono Nerd Font"
+font-family-bold = "JetBrainsMono Nerd Font"
+font-family-italic = "JetBrainsMono Nerd Font"
+font-family-bold-italic = "JetBrainsMono Nerd Font"
 font-size = 15
+font-thicken = true
+# font-thicken-strength = 70
 
 # WezTerm:
 # config.line_height = 1.05
@@ -89,16 +94,17 @@ scrollbar = system
 window-padding-x = 0
 window-padding-y = 0
 window-padding-balance = false
+macos-window-shadow = false
 
 # WezTerm:
 # config.window_decorations = "TITLE | RESIZE"
-window-decoration = true
-
+window-decoration = none
 # Use native macOS title-bar tabs.
 macos-titlebar-style = hidden 
 # Let Option function as Alt/Meta inside terminal applications.
 # Useful for Neovim mappings such as <M-h> and <M-Enter>.
 macos-option-as-alt = true
+maximize = true
 
 
 # ============================================================

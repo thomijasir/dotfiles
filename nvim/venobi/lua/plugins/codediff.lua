@@ -16,7 +16,11 @@ local function load_codediff()
     return
   end
   vim.cmd.packadd("codediff.nvim")
-  require("codediff").setup({})
+  require("codediff").setup({
+    explorer = {
+      auto_open_on_cursor = true,
+    },
+  })
   loaded = true
 end
 

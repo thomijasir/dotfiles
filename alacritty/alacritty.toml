@@ -1,0 +1,130 @@
+# Alacritty configuration for a Neovim + herdr workflow on macOS.
+# Keep terminal-level shortcuts Command-based so Control and Option remain
+# available to applications and the multiplexer.
+
+[general]
+live_config_reload = true
+
+[window]
+padding = { x = 0, y = 0 }
+dynamic_padding = false
+decorations = "None"
+opacity = 0.96
+blur = true
+dynamic_title = true
+option_as_alt = "Both"
+startup_mode = "Maximized"
+
+[scrolling]
+history = 10_000
+multiplier = 3
+
+[font]
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
+bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
+size = 15
+builtin_box_drawing = true
+
+[cursor]
+style = { shape = "Block", blinking = "On" }
+unfocused_hollow = true
+thickness = 0.15
+
+[selection]
+save_to_clipboard = true
+
+[mouse]
+hide_when_typing = true
+
+[terminal]
+# Allow terminal applications and remote sessions to copy through OSC 52,
+# without granting them access to paste/read the system clipboard.
+osc52 = "OnlyCopy"
+
+[hints]
+alphabet = "jfkdls;ahgurieowpq"
+
+[[hints.enabled]]
+command = "/usr/bin/open"
+hyperlinks = true
+post_processing = true
+persist = false
+mouse = { enabled = true, mods = "Command" }
+binding = { key = "E", mods = "Command" }
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\\u0000-\\u001F\\u007F-\\u009F<>\\\"\\s{-}\\^⟨⟩`\\\\]+"
+
+[keyboard]
+bindings = [
+  { key = "Enter", mods = "Command", action = "CreateNewWindow" },
+  { key = "F1", action = "ToggleViMode" },
+]
+
+# Catppuccin Macchiato. Kept inline so this file has no external theme
+# dependency and stays visually consistent with the Kitty configuration.
+[colors.primary]
+background = "#24273a"
+foreground = "#cad3f5"
+dim_foreground = "#8087a2"
+bright_foreground = "#cad3f5"
+
+[colors.cursor]
+text = "#24273a"
+cursor = "#f4dbd6"
+
+[colors.vi_mode_cursor]
+text = "#24273a"
+cursor = "#b7bdf8"
+
+[colors.search.matches]
+foreground = "#24273a"
+background = "#a5adcb"
+
+[colors.search.focused_match]
+foreground = "#24273a"
+background = "#a6da95"
+
+[colors.footer_bar]
+foreground = "#24273a"
+background = "#a5adcb"
+
+[colors.hints.start]
+foreground = "#24273a"
+background = "#eed49f"
+
+[colors.hints.end]
+foreground = "#24273a"
+background = "#a5adcb"
+
+[colors.selection]
+text = "#24273a"
+background = "#b7bdf8"
+
+[colors.normal]
+black = "#494d64"
+red = "#ed8796"
+green = "#a6da95"
+yellow = "#eed49f"
+blue = "#8aadf4"
+magenta = "#f5bde6"
+cyan = "#8bd5ca"
+white = "#b8c0e0"
+
+[colors.bright]
+black = "#5b6078"
+red = "#ec7f87"
+green = "#b9dd9a"
+yellow = "#f5d78a"
+blue = "#8fa9f8"
+magenta = "#f0a6dd"
+cyan = "#93d6cb"
+white = "#a5adcb"
+
+[[colors.indexed_colors]]
+index = 16
+color = "#f5a97f"
+
+[[colors.indexed_colors]]
+index = 17
+color = "#f4dbd6"
