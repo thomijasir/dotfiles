@@ -32,6 +32,14 @@ conform.setup({
       "prettierd",
     },
 
+    jsonc = {
+      "prettierd",
+    },
+
+    json5 = {
+      "prettierd",
+    },
+
     css = {
       "prettierd",
     },
@@ -50,16 +58,27 @@ conform.setup({
 
     rust = {
       "rustfmt",
-      lsp_format = "fallback",
     },
 
     python = {
+      "ruff_organize_imports",
       "ruff_format",
     },
 
     sql = {
-      "pgformat",
-      lsp_format = "fallback",
+      "pg_format",
+    },
+
+    sh = {
+      "shfmt",
+    },
+
+    bash = {
+      "shfmt",
+    },
+
+    zsh = {
+      "shfmt",
     },
 
     toml = {
@@ -80,10 +99,24 @@ conform.setup({
   end,
 })
 
--- pg_format lowercases keywords by default; keep whatever case was written
-conform.formatters.pgformat = {
-  command = "pg_format",
-  prepend_args = { "--no-case-change" },
+-- Keep PostgreSQL and PL/pgSQL formatting consistent and readable.
+conform.formatters.pg_format = {
+  prepend_args = {
+    "--no-space-function",
+    "--keyword-case",
+    "2",
+    "--function-case",
+    "0",
+    "--type-case",
+    "1",
+    "--spaces",
+    "4",
+    "--wrap-limit",
+    "100",
+    "--keep-newline",
+    "--no-extra-line",
+    "--redundant-parenthesis",
+  },
 }
 
 vim.keymap.set({ "n", "v" }, "<leader>cf", function()

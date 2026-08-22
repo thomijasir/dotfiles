@@ -119,6 +119,7 @@ require("mason-tool-installer").setup({
     "stylua",
     "prettierd",
     "pgformatter", -- SQL Formatter
+    "shfmt", -- Shell Formatter
     "taplo", -- TOML Formatter
   }),
   auto_update = false,

@@ -34,9 +34,9 @@ end
 local map = vim.keymap.set
 
 map("n", "<leader>gv", command(""), {
-  desc = "Open CodeDiff view",
+  desc = "Open CodeDiff",
 })
 
 map("n", "<leader>gH", command("history %"), {
-  desc = "Current file Git history",
+  desc = "View history",
 })

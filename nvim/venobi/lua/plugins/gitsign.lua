@@ -3,6 +3,8 @@ local pack = require("utils.pack")
 pack.add({ { src = "https://github.com/lewis6991/gitsigns.nvim", version = "stable" } })
 
 require("gitsigns").setup({
+  -- Attach to untracked files so on_attach keymaps (which-key, staging) work in new files
+  attach_to_untracked = true,
   on_attach = function(buffer)
     local gitsigns = require("gitsigns")
 
@@ -16,7 +18,7 @@ require("gitsigns").setup({
       if vim.wo.diff then
         vim.cmd.normal({ "]c", bang = true })
       else
-        gitsigns.nav_hunk("next")
+        gitsigns.nav_hunk("next", { target = "all" })
       end
     end, { desc = "Next Git hunk" })
 
@@ -24,7 +26,7 @@ require("gitsigns").setup({
       if vim.wo.diff then
         vim.cmd.normal({ "[c", bang = true })
       else
-        gitsigns.nav_hunk("prev")
+        gitsigns.nav_hunk("prev", { target = "all" })
       end
     end, { desc = "Previous Git hunk" })
 
@@ -40,6 +42,8 @@ require("gitsigns").setup({
     end, { desc = "Stage selected Git hunk" })
 
     map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "Stage entire buffer" })
+
+    map("n", "<leader>hU", gitsigns.reset_buffer_index, { desc = "Unstage entire buffer" })
 
     map("n", "<leader>hr", gitsigns.reset_hunk, {
       desc = "Reset Git hunk",
@@ -63,6 +67,12 @@ require("gitsigns").setup({
     map("n", "<leader>hD", function()
       gitsigns.diffthis("~")
     end, { desc = "Diff against last commit" })
+
+    -- Hunk Overview
+    map("n", "<leader>hq", gitsigns.setqflist, { desc = "All hunks in file to quickfix" })
+    map("n", "<leader>hQ", function()
+      gitsigns.setqflist("all")
+    end, { desc = "All changed files to quickfix" })
 
     -- UI Toggles
     map("n", "<leader>gt", gitsigns.toggle_current_line_blame, { desc = "Toggle inline blame" })
