@@ -77,6 +77,24 @@ jump2d.setup({
   silent = true,
 })
 
+-- When open mini nvim and want to open reveal in finder
+vim.api.nvim_create_autocmd("User", {
+  pattern = "MiniFilesBufferCreate",
+  callback = function(args)
+    local buf_id = args.data.buf_id
+
+    -- Press 'gO' (or replace with your key choice) to open entry in macOS Finder
+    map("n", "gO", function()
+      local mini_files = require("mini.files")
+      local entry = mini_files.get_fs_entry()
+      if entry then
+        -- Open and reveal (-R) the path in Finder
+        vim.fn.jobstart({ "open", "-R", entry.path }, { detach = true })
+      end
+    end, { buffer = buf_id, desc = "Open in Finder" })
+  end,
+})
+
 map({ "n", "x", "o" }, "gw", function()
   jump2d.start(jump2d.builtin_opts.word_start)
 end, {

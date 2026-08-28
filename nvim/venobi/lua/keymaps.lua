@@ -74,6 +74,26 @@ map({ "n", "i" }, "<C-s>", "<cmd>write<CR>", {
   desc = "Save file",
   silent = true,
 })
+map({ "n", "i" }, "<C-s>", "<cmd>write<CR>", {
+  desc = "Save file",
+  silent = true,
+})
+
+-- Reload file from disk
+-- NOTE: <C-r> is the built-in redo key in normal mode. This mapping replaces
+-- it; redo remains available via the :redo command.
+map("n", "<C-r>", "<cmd>e<CR>", {
+  desc = "Reload file",
+  silent = true,
+})
+
+-- Requires a terminal with extended-key support (Kitty keyboard protocol:
+-- Kitty, Ghostty, recent WezTerm/iTerm2/Alacritty) to be distinguishable
+-- from <C-r>; otherwise the terminal sends the same bytes for both.
+map("n", "<C-S-r>", "<cmd>e!<CR>", {
+  desc = "Force reload file (discard changes)",
+  silent = true,
+})
 
 map("n", "<leader>cw", function()
   -- Conform consumes this flag on the next write. Other BufWritePre and
