@@ -215,7 +215,7 @@ alias ytdl='yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"
 alias diskusage="gdu-go /"
 
 # @desc: open my notes
-alias note="hx /Users/venobi/Library/CloudStorage/GoogleDrive-thomijasir@gmail.com/My\ Drive/My\ Note/notes.md"
+alias note="nvim ~/notes/main.md"
 
 # @desc: Alias Video Compress
 alias vcp="compress-video.sh"
@@ -225,5 +225,3 @@ alias hrs="herdr server stop"
 
 # @desc: herdr open
 alias hrd="herdr"
-
-
