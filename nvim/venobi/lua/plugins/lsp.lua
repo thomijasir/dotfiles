@@ -63,9 +63,13 @@ vim.lsp.config("vtsls", {
 vim.lsp.config("basedpyright", {
   settings = {
     basedpyright = {
+      disableOrganizeImports = true,
       analysis = {
+        autoImportCompletions = true,
+        autoSearchPaths = true,
         diagnosticMode = "openFilesOnly",
         typeCheckingMode = "standard",
+        useLibraryCodeForTypes = true,
         -- Delegate lint-style diagnostics to ruff so the two servers don't
         -- report the same problems (unused imports/variables, etc.).
         -- basedpyright focuses on type checking; ruff handles linting.
