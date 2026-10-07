@@ -58,6 +58,7 @@ run_link_config "$dotfiles_root/herdr/config.toml" "$HOME/.config/herdr/config.t
 echo "  Helix editor config..."
 run_link_config "$dotfiles_root/helix/config.toml" "$HOME/.config/helix/config.toml"
 run_link_config "$dotfiles_root/helix/languages.toml" "$HOME/.config/helix/languages.toml"
+run_link_config "$dotfiles_root/helix/themes" "$HOME/.config/helix/themes"
 
 echo ""
 echo "  Lazygit config..."
