@@ -47,6 +47,14 @@ run_link_config() {
   link_config "$@" || errors=$((errors + 1))
 }
 
+echo ""
+echo "  Nvim config..."
+run_link_config "$dotfiles_root/nvim/venobi" "$HOME/.config/nvim"
+
+echo ""
+echo "  Herdr config..."
+run_link_config "$dotfiles_root/herdr/config.toml" "$HOME/.config/herdr/config.toml"
+
 echo "  Helix editor config..."
 run_link_config "$dotfiles_root/helix/config.toml" "$HOME/.config/helix/config.toml"
 run_link_config "$dotfiles_root/helix/languages.toml" "$HOME/.config/helix/languages.toml"
