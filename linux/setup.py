@@ -1,142 +1,117 @@
 #!/usr/bin/env python3
+import shutil
 import subprocess
 import sys
-import os
-import shutil
+from pathlib import Path
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PACKAGES_DIR = os.path.join(BASE_DIR, "packages")
+PACKAGES_DIR = Path(__file__).resolve().parent / "packages"
 
 
-def build_menu_list():
-    """Builds the menu dynamically from the scripts in the packages folder.
+def get_scripts():
+    """Find package scripts named NN-description.sh in numeric order."""
+    return sorted(
+        path
+        for path in PACKAGES_DIR.glob("[0-9][0-9]-*.sh")
+        if path.is_file() and path.stem[3:]
+    )
 
-    Scripts must be named with a leading numeric prefix (e.g. `01-essential.sh`)
-    so they are ordered deterministically. The label is derived from the part
-    after the prefix: hyphens become spaces and words are title-cased.
-    """
-    scripts = [
-        f for f in os.listdir(PACKAGES_DIR)
-        if f.endswith(".sh") and os.path.isfile(os.path.join(PACKAGES_DIR, f))
-    ]
-
-    # Sort by the leading numeric prefix (e.g. "01", "02", ... "20")
-    scripts.sort(key=lambda name: int(name.split("-", 1)[0]))
-
-    menu_list = []
-    for index, script in enumerate(scripts, start=1):
-        # "01-essential.sh" -> "essential" -> "Essential"
-        # "03-setup-user.sh" -> "setup-user" -> "Setup User"
-        name = script.split("-", 1)[1].rsplit(".sh", 1)[0]
-        label = " ".join(part.capitalize() for part in name.split("-"))
-        menu_list.append({"id": str(index), "label": label, "script": script})
-
-    return menu_list
 
 def check_os():
-    """Checks if the current operating system is Debian or Ubuntu and has apt installed."""
-    # 1. Ensure it is a Linux system
     if sys.platform != "linux":
+        print("This installer requires Debian or Ubuntu Linux.")
         return False
-        
-    # 2. Check if the 'apt' package manager exists (Equivalent to `command -v apt`)
-    if shutil.which("apt") is None:
-        print("\n❌ This script requires the 'apt' package manager.")
-        return False
-        
-    # 3. Verify it is specifically Debian or Ubuntu
-    try:
-        with open('/etc/os-release', 'r') as f:
-            os_info = f.read().lower()
-            if 'id=ubuntu' in os_info or 'id=debian' in os_info:
-                return True
-    except FileNotFoundError:
-        pass
-        
-    return False
-
-def execute_install_script(script_name):
-    """Executes the shell script from the packages directory."""
-    
-    script_path = os.path.join(PACKAGES_DIR, script_name)
-    
-    if not os.path.exists(script_path):
-        print(f"\n[ERROR] Could not find '{script_path}'. Make sure it exists in the packages directory.\n")
-        return False # Return False so we know it failed
 
     try:
-        print(f"\n>>> Executing: {script_path}...")
-        subprocess.run(['bash', script_path], check=True)
-        print(f">>> Successfully finished {script_name}!\n")
-        return True # Return True so we know it succeeded
-        
-    except subprocess.CalledProcessError as e:
-        print(f"\n[ERROR] The script {script_path} failed with exit code {e.returncode}.\n")
+        os_release = dict(
+            line.split("=", 1)
+            for line in Path("/etc/os-release").read_text().splitlines()
+            if "=" in line and not line.startswith("#")
+        )
+    except OSError as error:
+        print(f"Could not read /etc/os-release: {error}")
         return False
+
+    if os_release.get("ID", "").strip("\"'") not in {"debian", "ubuntu"}:
+        print("This installer supports Debian and Ubuntu only.")
+        return False
+
+    if shutil.which("apt") is None or shutil.which("bash") is None:
+        print("This installer requires apt and Bash.")
+        return False
+
+    return True
+
+
+def run_script(script):
+    print(f"\nRunning {script.name}...", flush=True)
+    try:
+        subprocess.run(["bash", str(script)], check=True)
+    except subprocess.CalledProcessError as error:
+        print(f"Failed: {script.name} (exit code {error.returncode}).")
+        return False
+    except OSError as error:
+        print(f"Could not run {script.name}: {error}")
+        return False
+
+    print(f"Finished {script.name}.")
+    return True
+
 
 def main():
-    menu_list = build_menu_list()
+    if not check_os():
+        return 1
 
-    if not menu_list:
-        print("\n[!] No package scripts found in the 'packages' directory. Exiting.")
-        sys.exit(1)
+    if not PACKAGES_DIR.is_dir():
+        print(f"Package directory not found: {PACKAGES_DIR}")
+        return 1
 
-    try:
-        while True:
-            print("\n====================================")
-            print("       LINUX SETUP UTILITY          ")
-            print("====================================")
-        
-            for item in menu_list:
-                print(f"{item['id']:>2}) {item['label']}")
-            
-            print("------------------------------------")
-            print("99) Install Everything (Run All)")
-            print(" 0) Exit")
-            print("====================================")
-        
-            choice = input("Enter your choice: ")
-        
-            # Handle Exit
-            if choice == '0':
-                print("Exiting Setup. Goodbye!")
-                sys.exit(0)
-            
-            # Handle "Run All"
-            elif choice == '99':
-                print("\n" + "="*30)
-                print("   STARTING COMPLETE INSTALLATION   ")
-                print("="*30)
-            
-                for item in menu_list:
-                    execute_install_script(item['script'])
-                
-                print("\n>>> All tasks in the bulk installation have been processed!\n")
-                continue # Skip the rest of the loop and show the menu again
-            
-            # Match choice to a single script
-            selected_script = None
-            for item in menu_list:
-                if item['id'] == choice:
-                    selected_script = item['script']
-                    break 
-                
-            # Execute single script
-            if selected_script:
-                execute_install_script(selected_script)
+    scripts = get_scripts()
+    if not scripts:
+        print("No package scripts found. Expected names such as 01-essential.sh.")
+        return 1
+
+    menu = {str(number): script for number, script in enumerate(scripts, start=1)}
+    while True:
+        print("\nLinux setup\n")
+        for number, script in menu.items():
+            label = script.stem[3:].replace("-", " ").title()
+            print(f"{number:>2}) {label}")
+        print("99) Run all scripts")
+        print(" 0) Exit")
+
+        choice = input("Choose an option: ").strip()
+        if choice == "0":
+            return 0
+
+        if choice == "99":
+            confirm = input(
+                "Run all scripts, including swap, user/SSH setup, and symlinks? [y/N]: "
+            ).strip().lower()
+            if confirm != "y":
+                continue
+            for script in scripts:
+                if not run_script(script):
+                    print("Stopped. Fix the failed script before running the remaining tasks.")
+                    break
             else:
-                print(f"\n[!] Invalid choice '{choice}'. Please select a valid number from the menu.\n")
+                print("All scripts finished successfully.")
+            continue
 
-    # Catch the Ctrl+C interrupt gracefully
-    except KeyboardInterrupt:
-        print("\n\n[!] Setup interrupted by user (Ctrl+C). Exiting cleanly...")
-        sys.exit(0)
+        if choice in menu:
+            run_script(menu[choice])
+        else:
+            print("Invalid option. Choose a number from the menu.")
+
 
 if __name__ == "__main__":
-    # Run the OS check before doing anything else
-    if not check_os():
-        print("\n[!] FATAL ERROR: This setup script is only designed for Debian and Ubuntu systems.")
-        print("Execution aborted to prevent system damage.\n")
+    try:
+        sys.exit(main())
+    except EOFError:
+        print("\nInput closed. Exiting.")
+        sys.exit(0)
+    except KeyboardInterrupt:
+        print("\nSetup interrupted.")
+        sys.exit(130)
+    except OSError as error:
+        print(f"Setup failed: {error}", file=sys.stderr)
         sys.exit(1)
-        
-    main()
