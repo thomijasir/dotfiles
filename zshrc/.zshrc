@@ -34,8 +34,8 @@ export PATH=$PATH:$ANDROID_HOME/tools/bin
 export NDK_HOME="$ANDROID_HOME/ndk/$(ls -1 $ANDROID_HOME/ndk)"
 
 # Default Terminal editor (helix or nvim)
-# export EDITOR=/opt/homebrew/bin/nvim
-export EDITOR=/opt/homebrew/bin/hx
+export EDITOR=/opt/homebrew/bin/nvim
+# export EDITOR=/opt/homebrew/bin/hx
 
 # --- START APPLICATION ---
 # Added by Antigravity
