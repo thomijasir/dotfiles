@@ -34,11 +34,18 @@ id "$TARGET_USER" >/dev/null 2>&1 || die "Target user '$TARGET_USER' does not ex
 TARGET_UID="$(id -u "$TARGET_USER")"
 TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
 [ -n "$TARGET_HOME" ] && [ -d "$TARGET_HOME" ] || die "Could not find the home directory for '$TARGET_USER'."
-for tool in tailscale ip ss runuser; do
-  command -v "$tool" >/dev/null 2>&1 || die "Required command '$tool' is missing. Install Tailscale and iproute2 first."
+# Administrative tools may be outside a normal login user's PATH.
+export PATH="$PATH:/usr/local/sbin:/usr/sbin:/sbin"
+command -v tailscale >/dev/null 2>&1 ||
+  die "Required command 'tailscale' is missing. Install Tailscale before running this installer."
+for tool in ip ss; do
+  command -v "$tool" >/dev/null 2>&1 ||
+    die "Required command '$tool' is missing. Install iproute2: sudo apt-get install iproute2"
 done
+RUNUSER="$(command -v runuser)" ||
+  die "Required command 'runuser' is missing. Install util-linux: sudo apt-get install util-linux"
 as_user() {
-  $SUDO runuser -u "$TARGET_USER" -- env XDG_CONFIG_HOME="$TARGET_HOME/.config" \
+  $SUDO "$RUNUSER" -u "$TARGET_USER" -- env XDG_CONFIG_HOME="$TARGET_HOME/.config" \
     XDG_RUNTIME_DIR="/run/user/$TARGET_UID" \
     DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$TARGET_UID/bus" "$@"
 }

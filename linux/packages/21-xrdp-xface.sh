@@ -45,9 +45,16 @@ fi
 id "$TARGET_USER" >/dev/null 2>&1 || die "Target user '$TARGET_USER' does not exist."
 TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
 [ -n "$TARGET_HOME" ] && [ -d "$TARGET_HOME" ] || die "Could not find the home directory for '$TARGET_USER'."
-for tool in tailscale ip ss runuser; do
-  command -v "$tool" >/dev/null 2>&1 || die "Required command '$tool' is missing. Install Tailscale and iproute2 before running this installer."
+# Administrative tools may be outside a normal login user's PATH.
+export PATH="$PATH:/usr/local/sbin:/usr/sbin:/sbin"
+command -v tailscale >/dev/null 2>&1 ||
+  die "Required command 'tailscale' is missing. Install Tailscale before running this installer."
+for tool in ip ss; do
+  command -v "$tool" >/dev/null 2>&1 ||
+    die "Required command '$tool' is missing. Install iproute2: sudo apt-get install iproute2"
 done
+RUNUSER="$(command -v runuser)" ||
+  die "Required command 'runuser' is missing. Install util-linux: sudo apt-get install util-linux"
 for session_path in "$TARGET_HOME/.xsession" "$TARGET_HOME/.xsession.before-xrdp-xfce"; do
   $SUDO test ! -L "$session_path" || die "Refusing to replace or back up a symlink: $session_path"
   if $SUDO test -e "$session_path"; then
@@ -132,7 +139,7 @@ command -v startxfce4 >/dev/null 2>&1 || die "The XFCE X11 launcher (startxfce4)
 info "Configuring the XFCE X11 session for '$TARGET_USER'"
 # Variables in this script expand in the target user's shell.
 # shellcheck disable=SC2016
-$SUDO runuser -u "$TARGET_USER" -- sh -c '
+$SUDO "$RUNUSER" -u "$TARGET_USER" -- sh -c '
   set -eu
   cd "$1"
   session_file=.xsession

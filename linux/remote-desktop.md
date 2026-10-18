@@ -2,6 +2,8 @@
 
 Run either installer as your normal Linux user. Both require systemd, an authenticated Tailscale connection, and a tailscale0 interface.
 
+Both installers include the standard administrative directories in their command search path. If a prerequisite is missing, the error names its package: Tailscale for tailscale, iproute2 for ip and ss, or util-linux for runuser.
+
 ## KDE Plasma
 
 Run `bash linux/packages/20-kde-plasma.sh`.
