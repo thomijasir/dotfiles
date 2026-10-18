@@ -1,14 +1,26 @@
 #!/usr/bin/env bash
-# Install KDE Plasma with native KRdp screen sharing on Debian/Ubuntu.
-# Requires a distribution with Plasma 6 and the krdp package.
-# Sharing starts in the user's Plasma Wayland session, over Tailscale only.
-# KDE_RDP_PORT optionally selects a port; otherwise keep KDE's saved port.
+# XRDP + KDE Plasma X11 installer for Debian/Ubuntu servers.
+# XRDP listens only on the current Tailscale IPv4 address.
+# Run as your normal login user, or with sudo preserving SUDO_USER.
+# KDE_RDP_PORT optionally selects a port (default: 3389).
 
 set -euo pipefail
 
 info() { printf '\n\033[1;34m==> %s\033[0m\n' "$*"; }
 warn() { printf '\n\033[1;33mWarning: %s\033[0m\n' "$*" >&2; }
 die() { printf '\n\033[1;31mError: %s\033[0m\n' "$*" >&2; exit 1; }
+
+cleanup() {
+  unset PW1 PW2 XRDP_PASSWORD
+  if [ -n "${CONFIG_TEMP:-}" ]; then
+    $SUDO rm -f -- "$CONFIG_TEMP"
+  fi
+  if [ "${SERVICES_MASKED:-false}" = true ]; then
+    $SUDO systemctl mask --now xrdp.service xrdp-sesman.service || warn "Could not mask XRDP after setup failed."
+    warn "XRDP services remain masked because setup did not finish. Fix the error and rerun this installer."
+  fi
+}
+trap cleanup EXIT
 
 [ -r /etc/os-release ] || die "This installer requires Debian or Ubuntu Linux."
 # shellcheck source=/dev/null
@@ -29,9 +41,8 @@ else
   TARGET_USER="$(id -un)"
 fi
 [ -n "$TARGET_USER" ] && [ "$TARGET_USER" != root ] ||
-  die "Run as your normal login user, or use sudo from that account. Screen sharing will not be configured for root."
+  die "Run as your normal login user, or use sudo from that account. XRDP will not be configured for root."
 id "$TARGET_USER" >/dev/null 2>&1 || die "Target user '$TARGET_USER' does not exist."
-TARGET_UID="$(id -u "$TARGET_USER")"
 TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
 [ -n "$TARGET_HOME" ] && [ -d "$TARGET_HOME" ] || die "Could not find the home directory for '$TARGET_USER'."
 # Administrative tools may be outside a normal login user's PATH.
@@ -44,147 +55,237 @@ for tool in ip ss; do
 done
 RUNUSER="$(command -v runuser)" ||
   die "Required command 'runuser' is missing. Install util-linux: sudo apt-get install util-linux"
-as_user() {
-  $SUDO "$RUNUSER" -u "$TARGET_USER" -- env XDG_CONFIG_HOME="$TARGET_HOME/.config" \
-    XDG_RUNTIME_DIR="/run/user/$TARGET_UID" \
-    DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$TARGET_UID/bus" "$@"
-}
-user_service() {
-  as_user env XDG_RUNTIME_DIR="/run/user/$TARGET_UID" \
-    DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$TARGET_UID/bus" systemctl --user "$@"
-}
+for session_path in "$TARGET_HOME/.xsession" "$TARGET_HOME/.xsession.before-xrdp-kde"; do
+  $SUDO test ! -L "$session_path" || die "Refusing to replace or back up a symlink: $session_path"
+  if $SUDO test -e "$session_path"; then
+    $SUDO test -f "$session_path" || die "Expected a regular file: $session_path"
+  fi
+done
 
 info "Checking Tailscale"
 $SUDO tailscale status >/dev/null 2>&1 || die "Run 'sudo tailscale up' before running this installer."
 TS_IP="$($SUDO tailscale ip -4)"
+# Require one IPv4 address and confirm it is assigned to the Tailscale interface.
 [[ "$TS_IP" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]] || die "Could not determine a single Tailscale IPv4 address."
 ip -o -4 addr show dev tailscale0 | awk -v address="$TS_IP" '
   { split($4, parts, "/"); if (parts[1] == address) found = 1 }
   END { exit !found }
 ' || die "Tailscale address '$TS_IP' is not assigned to tailscale0."
-if [ -n "${KDE_RDP_PORT:-}" ]; then
-  [[ "$KDE_RDP_PORT" =~ ^[1-9][0-9]{0,4}$ ]] && [ "$KDE_RDP_PORT" -le 65535 ] ||
-    die "KDE_RDP_PORT must be a port number from 1 to 65535."
+info "Tailscale address: $TS_IP"
+RDP_PORT="${KDE_RDP_PORT:-3389}"
+[[ "$RDP_PORT" =~ ^[1-9][0-9]{0,4}$ ]] && [ "$RDP_PORT" -le 65535 ] ||
+  die "KDE_RDP_PORT must be a port number from 1 to 65535."
+
+# Collect credentials before installing packages or stopping services.
+CHANGE_PASSWORD=true
+GENERATED_PASSWORD=false
+if [ "$($SUDO passwd -S "$TARGET_USER" | awk '{ print $2 }')" = P ]; then
+  while true; do
+    IFS= read -r -p "Keep the existing Linux account password for XRDP? [Y/n]: " KEEP_PASSWORD ||
+      die "No password choice received."
+    case "$KEEP_PASSWORD" in
+      ""|y|Y|yes|YES) CHANGE_PASSWORD=false; break ;;
+      n|N|no|NO) break ;;
+      *) warn "Enter y or n." ;;
+    esac
+  done
+fi
+if [ "$CHANGE_PASSWORD" = true ]; then
+  printf 'This sets your Linux account password, which XRDP uses to log in. SSH key login is unaffected.\n'
+  while true; do
+    IFS= read -s -r -p "New password (empty = generate): " PW1 || die "No password input received."
+    printf '\n'
+    if [ -z "$PW1" ]; then
+      # Read a fixed amount of entropy so pipefail cannot see a SIGPIPE.
+      XRDP_PASSWORD="$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')"
+      [[ "$XRDP_PASSWORD" =~ ^[0-9a-f]{32}$ ]] || die "Failed to generate a password."
+      GENERATED_PASSWORD=true
+      break
+    fi
+    IFS= read -s -r -p "Confirm password: " PW2 || die "No password confirmation received."
+    printf '\n'
+    if [ "$PW1" = "$PW2" ]; then
+      XRDP_PASSWORD="$PW1"
+      break
+    fi
+    warn "Passwords did not match. Try again."
+  done
 fi
 
-GRAPHICS_DEVICE=false
-for device in /dev/dri/renderD* /dev/dri/card*; do
-  if [ -c "$device" ]; then
-    GRAPHICS_DEVICE=true
-    break
-  fi
-done
-if [ "$GRAPHICS_DEVICE" = false ]; then
-  warn "No DRM graphics device was found. Native screen sharing needs a working OpenGL Plasma Wayland session; installing packages alone will not provide it."
-fi
-
-info "Checking Plasma and native RDP packages"
+info "Checking XRDP and KDE Plasma X11 packages"
 $SUDO apt-get update
 PACKAGES=(
-  plasma-desktop plasma-workspace kwin-wayland systemsettings sddm krdp
-  pipewire wireplumber xdg-desktop-portal xdg-desktop-portal-kde kwallet6
-  dbus-user-session libpam-systemd openssl libegl-mesa0 libgl1-mesa-dri
+  xrdp xorgxrdp xserver-xorg-core xauth x11-xserver-utils
+  dbus-x11 dbus-daemon dbus-user-session libpam-systemd ssl-cert
+  plasma-desktop plasma-workspace kwin-x11 systemsettings polkit-kde-agent-1
   dolphin konsole kate ark gwenview kde-spectacle kcalc plasma-systemmonitor
+  x11-utils libgl1-mesa-dri
   fonts-dejavu fonts-liberation
 )
 for package in "${PACKAGES[@]}"; do
   candidate="$(LC_ALL=C apt-cache policy "$package" | awk '/Candidate:/ { print $2 }')"
   [ -n "$candidate" ] && [ "$candidate" != "(none)" ] ||
-    die "Package '$package' has no installation candidate. Native RDP requires Plasma 6 with KRdp, for example Debian 13 or Ubuntu 26.04. No packages have been installed."
+    die "Package '$package' has no installation candidate. Check your APT repositories. This setup requires Plasma X11, kwin-x11, and xorgxrdp; a Wayland-only Plasma build cannot be used."
 done
 $SUDO apt-get -s install --no-install-recommends "${PACKAGES[@]}" >/dev/null
-# Debian may enable KRdp globally during installation. Apply the listener
-# restriction first so newly started user services inherit it as well.
-GLOBAL_DROPIN=/etc/systemd/user/app-org.kde.krdpserver.service.d/10-tailscale.conf
-$SUDO install -d -m 755 "$(dirname "$GLOBAL_DROPIN")"
-[ ! -L "$GLOBAL_DROPIN" ] || die "Refusing to overwrite a symlink: $GLOBAL_DROPIN"
-if $SUDO test -f "$GLOBAL_DROPIN"; then
-  $SUDO cp -p --no-clobber "$GLOBAL_DROPIN" "$GLOBAL_DROPIN.before-dotfiles"
-fi
-printf '[Service]\nExecStart=\nExecStart=/usr/bin/krdpserver --address %s\n' "$TS_IP" |
-  $SUDO tee "$GLOBAL_DROPIN" >/dev/null
-$SUDO chmod 644 "$GLOBAL_DROPIN"
+
+# Prevent package post-install scripts from starting a public RDP listener.
+info "Stopping XRDP while configuring it"
+$SUDO systemctl mask xrdp.service xrdp-sesman.service
+SERVICES_MASKED=true
+$SUDO systemctl stop xrdp.service xrdp-sesman.service
 $SUDO env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${PACKAGES[@]}"
-for tool in startplasma-wayland krdpserver kwriteconfig6 kreadconfig6; do
-  command -v "$tool" >/dev/null 2>&1 || die "Expected Plasma command '$tool' was not installed."
-done
+command -v startplasma-x11 >/dev/null 2>&1 || die "The Plasma X11 launcher (startplasma-x11) is missing. This distribution may provide only a Wayland session."
 
-SERVICE=app-org.kde.krdpserver.service
-RDP_PORT="${KDE_RDP_PORT:-$(as_user kreadconfig6 --file krdpserverrc --group General --key ListenPort --default 3389)}"
-[[ "$RDP_PORT" =~ ^[1-9][0-9]{0,4}$ ]] && [ "$RDP_PORT" -le 65535 ] || die "KDE's saved RDP port is invalid."
-# An existing native server for this user may own the port during a rerun.
-if [ -n "$(ss -H -ltn "sport = :$RDP_PORT")" ] && ! user_service is-active --quiet "$SERVICE" 2>/dev/null; then
-  die "Port $RDP_PORT is already in use. Stop the other RDP server or rerun with KDE_RDP_PORT set to a free port."
-fi
-KRDP_WAS_ACTIVE=false
-if user_service is-active --quiet "$SERVICE" 2>/dev/null; then
-  KRDP_WAS_ACTIVE=true
-  user_service stop "$SERVICE"
-fi
-
-info "Configuring native screen sharing for '$TARGET_USER'"
-# All home-directory writes run as the target user, including config tools.
+# Write as the login user so paths in their home never receive root writes.
+info "Configuring the KDE Plasma X11 session for '$TARGET_USER'"
+# Variables in this script expand in the target user's shell.
 # shellcheck disable=SC2016
-as_user sh -c '
+$SUDO "$RUNUSER" -u "$TARGET_USER" -- sh -c '
   set -eu
-  umask 077
-  config="$HOME/.config/krdpserverrc"
-  dropin="$HOME/.config/systemd/user/app-org.kde.krdpserver.service.d/tailscale.conf"
-  data="$HOME/.local/share/krdpserver"
-  mkdir -p "$(dirname "$config")" "$(dirname "$dropin")" "$data"
-  for path in "$config" "$dropin" "$data/krdp.crt" "$data/krdp.key"; do
+  cd "$1"
+  session_file=.xsession
+  backup=.xsession.before-xrdp-kde
+  for path in "$session_file" "$backup"; do
     [ ! -L "$path" ] || { printf "Refusing symlink: %s\n" "$path" >&2; exit 1; }
     [ ! -e "$path" ] || [ -f "$path" ] || exit 1
   done
-  for path in "$config" "$dropin"; do
-    if [ -f "$path" ] && [ ! -e "$path.before-dotfiles" ]; then
-      cp --no-clobber --preserve=mode,timestamps -- "$path" "$path.before-dotfiles"
-    fi
-  done
-  certificate="$(kreadconfig6 --file krdpserverrc --group General --key Certificate)"
-  key="$(kreadconfig6 --file krdpserverrc --group General --key CertificateKey)"
-  if [ -z "$certificate" ] && [ -z "$key" ]; then
-    certificate="$data/krdp.crt"
-    key="$data/krdp.key"
-    if [ ! -e "$certificate" ] && [ ! -e "$key" ]; then
-      openssl req -x509 -newkey rsa:3072 -sha256 -nodes -days 365 \
-        -subj "/CN=KDE Remote Desktop" -keyout "$key" -out "$certificate" 2>/dev/null
-    fi
-    kwriteconfig6 --file krdpserverrc --group General --key Certificate "$certificate"
-    kwriteconfig6 --file krdpserverrc --group General --key CertificateKey "$key"
+  if [ -f "$session_file" ] && [ ! -e "$backup" ]; then
+    cp --no-clobber --preserve=mode,timestamps -- "$session_file" "$backup"
   fi
-  [ -r "$certificate" ] && [ -r "$key" ] || {
-    printf "The configured KRdp certificate or key is missing or unreadable.\n" >&2
-    exit 1
-  }
-  openssl x509 -in "$certificate" -noout -checkend 0 >/dev/null
-  kwriteconfig6 --file krdpserverrc --group General --key ListenPort "$2"
-  kwriteconfig6 --file krdpserverrc --group General --key Autostart true
-  printf "[Service]\nExecStart=\nExecStart=/usr/bin/krdpserver --address %s\nRestart=on-failure\nRestartSec=5s\n" "$1" > "$dropin"
-  SYSTEMD_OFFLINE=1 systemctl --user --no-reload enable app-org.kde.krdpserver.service
-' sh "$TS_IP" "$RDP_PORT"
+  session_temp="$(mktemp .xsession.xrdp.XXXXXX)"
+  trap '\''rm -f -- "$session_temp"'\'' EXIT
+  cat > "$session_temp"
+  chmod 644 "$session_temp"
+  mv -fT -- "$session_temp" "$session_file"
+' sh "$TARGET_HOME" <<'SESSION'
+#!/bin/sh
+unset SESSION_MANAGER DBUS_SESSION_BUS_ADDRESS WAYLAND_DISPLAY
+export XDG_SESSION_TYPE=x11
+export XDG_CURRENT_DESKTOP=KDE
+export XDG_SESSION_DESKTOP=KDE
+export DESKTOP_SESSION=plasma
+export QT_QPA_PLATFORM=xcb
+exec dbus-run-session -- startplasma-x11
+SESSION
+
+# Native KRdp can hold the RDP port or start again at login.
+# Mask only this user's native server; retain its settings and certificates.
+if command -v krdpserver >/dev/null 2>&1; then
+  info "Disabling native KRdp for '$TARGET_USER'"
+  TARGET_UID="$(id -u "$TARGET_USER")"
+  if [ -S "/run/user/$TARGET_UID/bus" ]; then
+    $SUDO "$RUNUSER" -u "$TARGET_USER" -- env \
+      XDG_CONFIG_HOME="$TARGET_HOME/.config" XDG_RUNTIME_DIR="/run/user/$TARGET_UID" \
+      DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$TARGET_UID/bus" \
+      systemctl --user mask --now app-org.kde.krdpserver.service
+  else
+    $SUDO "$RUNUSER" -u "$TARGET_USER" -- env XDG_CONFIG_HOME="$TARGET_HOME/.config" \
+      SYSTEMD_OFFLINE=1 systemctl --user --no-reload mask app-org.kde.krdpserver.service
+  fi
+fi
+
+info "Restricting XRDP to $TS_IP:$RDP_PORT"
+configure_ini() {
+  local config="$1" section="$2"
+  shift 2
+  [ ! -L "$config" ] || die "Refusing to overwrite a symlink: $config"
+  $SUDO test -f "$config" || die "Configuration is missing: $config"
+  $SUDO cp -p --no-clobber "$config" "$config.before-dotfiles"
+  CONFIG_TEMP="$($SUDO mktemp /etc/xrdp/.config.XXXXXX)"
+  # Preserve other sections, including backend port values in xrdp.ini.
+  # shellcheck disable=SC2016
+  $SUDO awk -v section="$section" -v settings="$*" '
+    BEGIN {
+      count = split(settings, desired, " ")
+      for (i = 1; i <= count; i++) {
+        split(desired[i], pair, "=")
+        keys[tolower(pair[1])] = 1
+      }
+    }
+    function write_settings() {
+      for (i = 1; i <= count; i++) print desired[i]
+    }
+    /^[[:space:]]*\[/ {
+      if (in_section) write_settings()
+      header = tolower($0)
+      gsub(/^[[:space:]]*\[|\][[:space:]]*$/, "", header)
+      in_section = (header == tolower(section))
+      if (in_section) section_count++
+    }
+    in_section && /^[[:space:]]*[^;#][^=]*=/ {
+      split($0, pair, "=")
+      key = tolower(pair[1])
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", key)
+      if (key in keys) next
+    }
+    { print }
+    END {
+      if (in_section) write_settings()
+      if (section_count != 1) exit 1
+    }
+  ' "$config" | $SUDO tee "$CONFIG_TEMP" >/dev/null ||
+    die "Could not configure [$section] in $config."
+  $SUDO chmod --reference="$config" "$CONFIG_TEMP"
+  $SUDO chown --reference="$config" "$CONFIG_TEMP"
+  $SUDO mv -fT -- "$CONFIG_TEMP" "$config"
+  CONFIG_TEMP=""
+}
+configure_ini /etc/xrdp/xrdp.ini Globals "port=tcp://$TS_IP:$RDP_PORT" use_vsock=false security_layer=tls
+configure_ini /etc/xrdp/sesman.ini Security AllowRootLogin=false
+$SUDO usermod -aG ssl-cert xrdp
+
+# Retry if tailscaled has started but its address is not ready at boot.
+$SUDO install -d -m 755 /etc/systemd/system/xrdp.service.d
+$SUDO tee /etc/systemd/system/xrdp.service.d/tailscale.conf >/dev/null <<'UNIT'
+[Unit]
+Wants=network-online.target tailscaled.service
+After=network-online.target tailscaled.service
+
+[Service]
+Restart=on-failure
+RestartSec=5s
+UNIT
 
 if command -v ufw >/dev/null 2>&1 && $SUDO env LC_ALL=C ufw status | grep -q '^Status: active'; then
+  info "Allowing RDP through tailscale0 in UFW"
   $SUDO ufw allow in on tailscale0 to any port "$RDP_PORT" proto tcp
 fi
-# Reload an existing user manager; otherwise systemd loads the unit at login.
-if [ -S "/run/user/$TARGET_UID/bus" ]; then
-  user_service daemon-reload
-  if [ "$KRDP_WAS_ACTIVE" = true ]; then
-    user_service restart "$SERVICE"
-    user_service is-active --quiet "$SERVICE" || die "The native RDP service did not restart."
-  fi
+if [ "$CHANGE_PASSWORD" = true ]; then
+  printf '%s:%s\n' "$TARGET_USER" "$XRDP_PASSWORD" | $SUDO chpasswd
 fi
 
-info "KDE Plasma installed; native RDP enabled at Plasma login"
-printf 'Host: %s\nPort: %s\nUser: %s\n' "$TS_IP" "$RDP_PORT" "$TARGET_USER"
-cat <<'NEXT'
+info "Starting XRDP"
+$SUDO systemctl unmask xrdp.service xrdp-sesman.service
+$SUDO systemctl daemon-reload
+$SUDO systemctl enable xrdp.service
+$SUDO systemctl restart xrdp-sesman.service xrdp.service
+for service in xrdp.service xrdp-sesman.service; do
+  $SUDO systemctl is-active --quiet "$service" || die "Service $service did not start."
+done
+# Allow the forked daemon a moment to create its listening socket.
+LISTENER_OK=false
+for _attempt in {1..10}; do
+  if ss -H -ltn "sport = :$RDP_PORT" | awk -v expected="$TS_IP:$RDP_PORT" '
+    $4 != expected { bad = 1 }
+    END { exit bad || NR == 0 }
+  '; then
+    LISTENER_OK=true
+    break
+  fi
+  sleep 1
+done
+if [ "$LISTENER_OK" != true ]; then
+  $SUDO systemctl stop xrdp.service
+  die "XRDP did not bind exclusively to $TS_IP:$RDP_PORT. The service has been stopped."
+fi
 
-Log in to a Plasma (Wayland) desktop, then open:
-  System Settings > Remote Desktop
-Add an RDP username and password there, then enable the server.
-Approve screen sharing if Plasma asks.
-
-KRdp shares the logged-in desktop. It does not provide a remote login screen.
-Connect from a device on the same tailnet. Automatic local login is not enabled.
-NEXT
+SERVICES_MASKED=false
+info "XRDP + KDE Plasma X11 installation complete"
+printf 'Host: %s\nPort: %s\nSession: Xorg\nDesktop: KDE Plasma (X11)\nUser: %s\n' "$TS_IP" "$RDP_PORT" "$TARGET_USER"
+if [ "$GENERATED_PASSWORD" = true ]; then
+  printf '\nGenerated Linux account password: %s\nSave it now; it will not be shown again.\n' "$XRDP_PASSWORD"
+else
+  printf 'Password: your Linux account password\n'
+fi
+printf '\nConnect from a client on the same tailnet and select Xorg at the XRDP login screen.\nNo local graphical login is required. Log out of other graphical sessions for this user before connecting.\n'

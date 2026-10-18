@@ -1,53 +1,57 @@
 # Remote desktops
 
-Run either installer as your normal Linux user. Both require systemd, an authenticated Tailscale connection, and a tailscale0 interface.
+Run either installer over SSH as your normal Linux user, or with sudo from that account. Both require Debian or Ubuntu, systemd, an authenticated Tailscale connection, and a tailscale0 interface.
 
-Both installers include the standard administrative directories in their command search path. If a prerequisite is missing, the error names its package: Tailscale for tailscale, iproute2 for ip and ss, or util-linux for runuser.
+Both installers include the standard administrative directories in their command search path. Missing-command errors name the package to install: Tailscale, iproute2 for ip and ss, or util-linux for runuser.
 
-## KDE Plasma
+## KDE Plasma X11
 
 Run `bash linux/packages/20-kde-plasma.sh`.
 
-This installs Plasma and its native KRdp server. It requires a distribution that provides the krdp package, such as Debian 13 or Ubuntu 26.04. Debian 12 and Ubuntu 24.04 do not provide this setup in their default repositories.
+This installs XRDP, its Xorg backend, and KDE Plasma with the X11 window manager. Select Xorg at the XRDP login screen and use your Linux username and password. XRDP starts the desktop when you connect, so setup needs no local graphical login or display manager.
 
-Log in to Plasma (Wayland), open System Settings > Remote Desktop, add an RDP user and password, and enable the server. Approve screen sharing when prompted. KRdp stores these credentials in KWallet; the installer does not change your Linux account password.
+The installer offers to keep an existing Linux account password, or lets you set or generate one. It saves the original .xsession as .xsession.before-xrdp-kde and writes a session that starts Plasma X11 with its own D-Bus session. Log out of other graphical sessions for the same user before connecting. Running both desktop installers for the same user changes that user's next XRDP session to the last desktop installed.
 
-Screen capture requires OpenGL compositing. The installer reports when no DRM graphics device is present.
+If native KRdp is installed, the installer stops and masks its service for the selected user. Its settings and certificates remain available. To use native KRdp again later, stop XRDP, unmask app-org.kde.krdpserver.service in the user's systemd manager, and configure a Plasma Wayland session.
 
-Sharing uses the logged-in desktop. The installer does not enable automatic local login or provide access to the login screen. Existing RDP users, certificate settings, and the saved port are preserved.
+XRDP listens only on the current Tailscale IPv4 address, on TCP port 3389. To choose another port, run `KDE_RDP_PORT=3390 bash linux/packages/20-kde-plasma.sh`. If installation or listener verification fails after XRDP is masked, the services stay masked until setup completes successfully.
 
-The service binds to the Tailscale IPv4 address. A system-wide service override applies that restriction before installation because Debian can enable KRdp for all users during package setup. The login user's service also receives an override and autostart setting.
-
-To choose a different port, use `KDE_RDP_PORT=3390 bash linux/packages/20-kde-plasma.sh`.
+The distribution must provide plasma-workspace with startplasma-x11, kwin-x11, and xorgxrdp. A Wayland-only Plasma build cannot run this setup. This installer does not add third-party repositories to obtain X11 packages.
 
 ## XFCE
 
 Run `bash linux/packages/21-xrdp-xface.sh`.
 
-This installs XFCE with XRDP and its Xorg backend. Select Xorg on the RDP login screen. Log out of other graphical sessions for the same user before connecting.
+This installs XFCE with XRDP and its Xorg backend. Select Xorg on the RDP login screen and use your Linux account password. The installer offers to keep an existing password, or lets you set or generate one.
 
-XRDP uses the Linux account password. The installer offers to keep an existing password, or lets you set or generate one. It preserves the original .xsession file and stops and masks XRDP if installation or listener verification fails.
+It preserves the original .xsession as .xsession.before-xrdp-xfce and stops and masks XRDP if installation or listener verification fails. Log out of other graphical sessions for the same user before connecting.
 
 ## Checks
 
-Run `python3 -B linux/tests/test_remote_desktop_installers.py`.
+Run Bash syntax checks and ShellCheck before installing:
 
-The tests run the installers against temporary files and command fixtures. They cover package failures, listener restrictions, session backups, symlinks, password preservation, native RDP settings, and private-key permissions. They do not install packages or change real services.
+```bash
+bash -n linux/packages/20-kde-plasma.sh linux/packages/21-xrdp-xface.sh
+shellcheck linux/packages/20-kde-plasma.sh linux/packages/21-xrdp-xface.sh
+```
 
-Live checks need an isolated Linux system with systemd and a graphical session. KDE video validation also needs working OpenGL graphics; a QPainter desktop cannot provide screencasting. Docker can validate package installation, but ordinary containers do not provide that complete desktop environment.
+Package checks alone do not verify desktop login. Test installation and an authenticated RDP connection on an isolated Linux system with systemd.
 
 ## Validation on 2026-10-19
 
-Tests ran on arm64 in disposable containers and isolated Linux machines:
+Earlier XFCE checks passed on Debian 13 and Ubuntu 24.04 in isolated arm64 Linux machines: installation, rerun, and authenticated Xorg desktop login. Debian 12 package installation also passed in Docker.
 
-| Environment | Check | Result |
+The KDE XRDP installer passed these checks in disposable arm64 Linux machines:
+
+| Environment | Checks | Result |
 | --- | --- | --- |
-| Debian 12, Docker | XFCE packages and the regression suite | Passed |
-| Debian 13, systemd | XFCE installation, rerun, and authenticated Xorg desktop login | Passed |
-| Ubuntu 24.04, systemd | XFCE installation, rerun, password preservation, file ownership, and authenticated Xorg desktop login | Passed |
-| Debian 13, systemd | Native KDE installation, autostart, certificate permissions, and RDP authentication | Passed |
-| Ubuntu 26.04, Docker | Native KDE package resolution | Passed |
+| Debian 13, Plasma 6 | Installation, rerun, password and backup preservation, Tailscale address binding, and authenticated Plasma X11 desktop login | Passed |
+| Ubuntu 24.04, Plasma 5 | Installation as a normal user with a restricted PATH, custom port 3390, rerun, password and backup preservation, address binding, and authenticated Plasma X11 desktop login | Passed |
 
-Bash syntax checks, ShellCheck, and all ten regression tests passed.
+Both machines had no GPU device or prior graphical login. Captured desktop frames showed the Plasma panel and wallpaper.
 
-Live tests used a dummy tailnet interface rather than a real Tailscale account. Native KDE video validation did not pass: the test machines had no DRM graphics device, KWin used QPainter, and the RDP client received blank frames. KDE video still needs verification on a Plasma Wayland desktop with OpenGL compositing. KWin's capture requirement is documented in its [source code](https://github.com/KDE/kwin/blob/Plasma/6.3/src/plugins/screencast/screencaststream.cpp#L338).
+Focused Docker checks passed for session file ownership, backup preservation on reruns, symlink rejection, and XRDP configuration that preserves the Xorg backend ports. Native KRdp migration passed with both an active user service and no running user bus. The active service was stopped and masked while its configuration was preserved.
+
+Bash syntax checks and ShellCheck passed for both installers.
+
+The live tests used a dummy tailscale0 interface and a Tailscale command fixture. They verified binding to that interface's address; they did not exercise authentication to a real Tailscale account or connections between tailnet devices.
