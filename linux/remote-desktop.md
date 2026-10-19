@@ -4,6 +4,32 @@ Run either installer over SSH as your normal Linux user, or with sudo from that 
 
 Both installers include the standard administrative directories in their command search path. Missing-command errors name the package to install: Tailscale, iproute2 for ip and ss, or util-linux for runuser.
 
+## Local network access
+
+Both installers can listen on Tailscale and one private LAN IPv4 address. Tailscale is still required.
+
+When you run `python3 linux/setup.py` interactively, select 20 for KDE Plasma or the XFCE installer. If a private LAN address is detected, setup asks whether to enable local network access and offers that address. Press Enter to keep Tailscale-only access, or answer `y` and confirm the address.
+
+To choose an address explicitly, replace this example with the Linux computer's local IP:
+
+```bash
+XRDP_LAN_IP=192.168.1.50 python3 linux/setup.py
+```
+
+The same variable works when running either package script directly. Connect your RDP client to the printed LAN host on port 3389, using your Linux username and password. KDE's `KDE_RDP_PORT` setting also applies to the LAN listener.
+
+XRDP binds to the selected addresses. If UFW is active, the LAN rule permits the selected interface's private subnet to reach that LAN address and RDP port.
+
+Reruns keep the saved LAN address. Without a saved choice, noninteractive runs keep Tailscale-only access unless `XRDP_LAN_IP` is set. If DHCP changes the LAN address, rerun with its new address or `off`. A DHCP reservation in your router can keep the address stable. The selected interfaces must be available when XRDP starts.
+
+To disable LAN access, run this and select your desktop again:
+
+```bash
+XRDP_LAN_IP=off python3 linux/setup.py
+```
+
+This removes the LAN listener. Existing UFW allow rules remain in place. Run setup over SSH because it restarts XRDP and disconnects active desktop sessions.
+
 ## Included apps
 
 Both installers include everyday apps and add their launchers to the application menu:
@@ -28,7 +54,7 @@ Debian uses Firefox ESR from its own repositories. Ubuntu uses native Firefox fr
 
 Existing browser profiles and Firefox Snap installations are preserved. Native Firefox does not automatically import a Snap profile; use Firefox Sync or Mozilla's profile migration instructions if needed.
 
-To add these apps to an existing setup, rerun the installer for your desktop. Keep the repository's linux/lib directory alongside linux/packages; the installers share their browser setup through that helper.
+To add these apps to an existing setup, rerun the installer for your desktop. Keep the repository's linux/lib directory alongside linux/packages. Each installer lists its desktop packages and X11 session. The shared xrdp.sh helper handles accounts, passwords, backups, and XRDP services; desktop-apps.sh handles Firefox, and xrdp-network.sh handles the listening addresses.
 
 ## KDE Plasma X11
 
@@ -40,7 +66,7 @@ The installer offers to keep an existing Linux account password, or lets you set
 
 If native KRdp is installed, the installer stops and masks its service for the selected user. Its settings and certificates remain available. To use native KRdp again later, stop XRDP, unmask app-org.kde.krdpserver.service in the user's systemd manager, and configure a Plasma Wayland session.
 
-XRDP listens only on the current Tailscale IPv4 address, on TCP port 3389. To choose another port, run `KDE_RDP_PORT=3390 bash linux/packages/20-kde-plasma.sh`. If installation or listener verification fails after XRDP is masked, the services stay masked until setup completes successfully.
+XRDP listens on the current Tailscale IPv4 address and any selected LAN address, on TCP port 3389. To choose another port, run `KDE_RDP_PORT=3390 bash linux/packages/20-kde-plasma.sh`. If installation or listener verification fails after XRDP is masked, the services stay masked until setup completes successfully.
 
 The distribution must provide plasma-workspace with startplasma-x11, kwin-x11, and xorgxrdp. A Wayland-only Plasma build cannot run this setup. This installer does not add third-party repositories to obtain X11 packages.
 
@@ -54,12 +80,13 @@ It preserves the original .xsession as .xsession.before-xrdp-xfce and stops and 
 
 ## Checks
 
-Run the syntax, ShellCheck, and browser setup checks before installing:
+Run these checks on Linux before installing:
 
 ```bash
-bash -n linux/lib/desktop-apps.sh linux/packages/20-kde-plasma.sh linux/packages/21-xrdp-xface.sh
-shellcheck -x linux/lib/desktop-apps.sh linux/packages/20-kde-plasma.sh linux/packages/21-xrdp-xface.sh
-python3 -B linux/tests/test_desktop_apps.py
+bash -n linux/lib/*.sh linux/packages/20-kde-plasma.sh linux/packages/21-xrdp-xface.sh
+shellcheck -x linux/lib/*.sh linux/packages/20-kde-plasma.sh linux/packages/21-xrdp-xface.sh
+python3 -B linux/tests/test_xrdp_network.py
+python3 -B linux/tests/test_xrdp_install.py
 ```
 
 Package checks alone do not verify desktop login. Test installation and an authenticated RDP connection on an isolated Linux system with systemd.
@@ -86,3 +113,9 @@ Ten focused regression tests passed for source reuse, conflicting or insecure so
 Earlier isolated checks also verified session symlink rejection, Xorg backend port preservation, native KRdp service migration, and KDE's custom port setting.
 
 The live tests used a dummy tailscale0 interface and a Tailscale command fixture. They verified binding to that interface's address; they did not exercise authentication to a real Tailscale account or connections between tailnet devices.
+
+Twelve network regression tests passed for address validation, interactive choices, saved settings, firewall rules, and listener checks. Isolated Docker containers on Debian 13 and Ubuntu 24.04 verified real XRDP protocol negotiation and TLS connections to both selected addresses for both installers. An unselected interface refused connections. Repeated configuration writes preserved the original backup, reruns kept LAN access, and disabling LAN restored Tailscale-only listening.
+
+These network checks used dummy interfaces inside the containers. They did not test the room's router, Wi-Fi, or client device.
+
+The shared XRDP installer was also checked after simplification. All 22 installer and network regression tests passed in an Ubuntu 24.04 container. Debian 12 and Ubuntu 24.04 containers verified real user-owned session writes, preserved backups across reruns, encrypted XRDP connections on both selected addresses, and disabling the LAN listener. Package comparisons confirmed that both desktop app sets stayed the same. The full graphical app checks above were not repeated for this refactor.

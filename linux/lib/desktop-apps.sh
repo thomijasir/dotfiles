@@ -107,13 +107,6 @@ install_native_desktop_browser() {
     --allow-downgrades "firefox=$version"
 }
 
-verify_desktop_apps() {
-  local tool
-  for tool in "$@"; do
-    command -v "$tool" >/dev/null 2>&1 || die "Expected desktop application '$tool' was not installed."
-  done
-}
-
 prepare_desktop_user_dirs() {
   $SUDO "$RUNUSER" -u "$1" -- env HOME="$2" XDG_CONFIG_HOME="$2/.config" xdg-user-dirs-update
 }
