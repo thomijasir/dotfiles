@@ -5,6 +5,11 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source-path=SCRIPTDIR
+# shellcheck source=../lib/desktop-apps.sh
+. "$SCRIPT_DIR/../lib/desktop-apps.sh"
+
 info() { printf '\n\033[1;34m==> %s\033[0m\n' "$*"; }
 warn() { printf '\n\033[1;33mWarning: %s\033[0m\n' "$*" >&2; }
 die() { printf '\n\033[1;31mError: %s\033[0m\n' "$*" >&2; exit 1; }
@@ -25,8 +30,7 @@ trap cleanup EXIT
 # shellcheck source=/dev/null
 . /etc/os-release
 case "${ID:-}" in
-  debian) BROWSER_PACKAGE="firefox-esr" ;;
-  ubuntu) BROWSER_PACKAGE="firefox" ;;
+  debian|ubuntu) ;;
   *) die "This installer supports Debian and Ubuntu only." ;;
 esac
 [ -d /run/systemd/system ] || die "This installer requires a running systemd system."
@@ -111,13 +115,16 @@ fi
 
 info "Checking XRDP and XFCE packages"
 $SUDO apt-get update
+BROWSER_PACKAGE="$(desktop_browser_package "$ID")"
+prepare_desktop_browser "$ID"
 PACKAGES=(
   xrdp xorgxrdp xserver-xorg-core xauth x11-xserver-utils
   dbus-x11 dbus-daemon dbus-user-session libpam-systemd ssl-cert
   xfce4 xfce4-goodies xfce4-terminal
   thunar thunar-archive-plugin thunar-volman mousepad ristretto file-roller
   xfce4-screenshooter xfce4-taskmanager galculator
-  "$BROWSER_PACKAGE"
+  atril "$BROWSER_PACKAGE"
+  vlc zip unzip xz-utils xdg-utils xdg-user-dirs shared-mime-info desktop-file-utils
   fonts-dejavu fonts-liberation
 )
 for package in "${PACKAGES[@]}"; do
@@ -132,8 +139,11 @@ info "Stopping XRDP while configuring it"
 $SUDO systemctl mask xrdp.service xrdp-sesman.service
 SERVICES_MASKED=true
 $SUDO systemctl stop xrdp.service xrdp-sesman.service
+install_native_desktop_browser "$ID"
 $SUDO env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${PACKAGES[@]}"
 command -v startxfce4 >/dev/null 2>&1 || die "The XFCE X11 launcher (startxfce4) is missing."
+verify_desktop_apps "$BROWSER_PACKAGE" thunar xfce4-terminal mousepad ristretto file-roller xfce4-screenshooter xfce4-taskmanager galculator atril vlc
+prepare_desktop_user_dirs "$TARGET_USER" "$TARGET_HOME"
 
 # Write as the login user so paths in their home never receive root writes.
 info "Configuring the XFCE X11 session for '$TARGET_USER'"
@@ -264,6 +274,7 @@ fi
 SERVICES_MASKED=false
 info "XRDP + XFCE installation complete"
 printf 'Host: %s\nPort: 3389\nSession: Xorg\nDesktop: XFCE (X11)\nUser: %s\n' "$TS_IP" "$TARGET_USER"
+printf 'Apps: Firefox, Thunar, XFCE Terminal, Mousepad, Atril, Ristretto, File Roller, Screenshooter, Task Manager, Galculator, VLC\n'
 if [ "$GENERATED_PASSWORD" = true ]; then
   printf '\nGenerated Linux account password: %s\nSave it now; it will not be shown again.\n' "$XRDP_PASSWORD"
 else

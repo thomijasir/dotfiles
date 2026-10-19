@@ -6,6 +6,11 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source-path=SCRIPTDIR
+# shellcheck source=../lib/desktop-apps.sh
+. "$SCRIPT_DIR/../lib/desktop-apps.sh"
+
 info() { printf '\n\033[1;34m==> %s\033[0m\n' "$*"; }
 warn() { printf '\n\033[1;33mWarning: %s\033[0m\n' "$*" >&2; }
 die() { printf '\n\033[1;31mError: %s\033[0m\n' "$*" >&2; exit 1; }
@@ -114,12 +119,16 @@ fi
 
 info "Checking XRDP and KDE Plasma X11 packages"
 $SUDO apt-get update
+BROWSER_PACKAGE="$(desktop_browser_package "$ID")"
+prepare_desktop_browser "$ID"
 PACKAGES=(
   xrdp xorgxrdp xserver-xorg-core xauth x11-xserver-utils
   dbus-x11 dbus-daemon dbus-user-session libpam-systemd ssl-cert
   plasma-desktop plasma-workspace kwin-x11 systemsettings polkit-kde-agent-1
   dolphin konsole kate ark gwenview kde-spectacle kcalc plasma-systemmonitor
+  okular "$BROWSER_PACKAGE"
   x11-utils libgl1-mesa-dri
+  vlc zip unzip xz-utils xdg-utils xdg-user-dirs shared-mime-info desktop-file-utils
   fonts-dejavu fonts-liberation
 )
 for package in "${PACKAGES[@]}"; do
@@ -134,8 +143,11 @@ info "Stopping XRDP while configuring it"
 $SUDO systemctl mask xrdp.service xrdp-sesman.service
 SERVICES_MASKED=true
 $SUDO systemctl stop xrdp.service xrdp-sesman.service
+install_native_desktop_browser "$ID"
 $SUDO env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${PACKAGES[@]}"
 command -v startplasma-x11 >/dev/null 2>&1 || die "The Plasma X11 launcher (startplasma-x11) is missing. This distribution may provide only a Wayland session."
+verify_desktop_apps "$BROWSER_PACKAGE" dolphin konsole kate ark gwenview spectacle kcalc plasma-systemmonitor okular vlc
+prepare_desktop_user_dirs "$TARGET_USER" "$TARGET_HOME"
 
 # Write as the login user so paths in their home never receive root writes.
 info "Configuring the KDE Plasma X11 session for '$TARGET_USER'"
@@ -283,6 +295,7 @@ fi
 SERVICES_MASKED=false
 info "XRDP + KDE Plasma X11 installation complete"
 printf 'Host: %s\nPort: %s\nSession: Xorg\nDesktop: KDE Plasma (X11)\nUser: %s\n' "$TS_IP" "$RDP_PORT" "$TARGET_USER"
+printf 'Apps: Firefox, Dolphin, Konsole, Kate, Okular, Gwenview, Ark, Spectacle, KCalc, System Monitor, VLC\n'
 if [ "$GENERATED_PASSWORD" = true ]; then
   printf '\nGenerated Linux account password: %s\nSave it now; it will not be shown again.\n' "$XRDP_PASSWORD"
 else
