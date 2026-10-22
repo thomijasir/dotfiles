@@ -125,8 +125,8 @@ local function get_lazygit_args()
   }
   return lazygit_args
 end
-
-map("n", ";g", function()
+-- Open Actual LazyGit
+map("n", ";G", function()
   if vim.fn.executable("lazygit") == 0 then
     vim.notify("lazygit is not installed", vim.log.levels.WARN)
     return

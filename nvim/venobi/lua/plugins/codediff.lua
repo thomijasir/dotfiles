@@ -36,7 +36,7 @@ end
 
 local map = vim.keymap.set
 
-map("n", "<leader>gv", command(""), {
+map("n", ";g", command(""), {
   desc = "Open CodeDiff",
 })
 

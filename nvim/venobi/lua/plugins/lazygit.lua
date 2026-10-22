@@ -19,7 +19,7 @@ vim.g.lazygit_config_file_path = {
   vim.fn.stdpath("config") .. "/lazygit.yml",
 }
 
-vim.keymap.set("n", ";g", "<cmd>LazyGit<cr>", {
+vim.keymap.set("n", ";G", "<cmd>LazyGit<cr>", {
   desc = "Open LazyGit",
   silent = true,
 })
