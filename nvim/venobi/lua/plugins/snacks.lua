@@ -5,7 +5,7 @@ pack.add({
     src = "https://github.com/folke/snacks.nvim",
     version = "stable",
   },
-  -- Support dependency mini files to show image
+  -- Renders Focal's mini.files image previews and inline markdown images
   {
     src = "https://github.com/3rd/image.nvim",
   },
@@ -41,9 +41,13 @@ require("image").setup({
   window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
 })
 
+-- Leave `backend` unset (auto). Pinning it makes Focal check backend
+-- availability before the file extension, so non-image entries like `.env`
+-- raise an error whenever the backend is unavailable (e.g. inside herdr).
+-- Auto mode skips non-images quietly and falls back to chafa when image.nvim
+-- cannot draw.
 require("focal").setup({
   enabled = true,
-  backend = "image.nvim",
   border = "rounded",
 })
 

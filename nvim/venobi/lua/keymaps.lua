@@ -53,6 +53,12 @@ end, { desc = "Absolute path copied", silent = true })
 map("n", "<C-u>", "<C-u>zz", opts) -- scroll up
 map("n", "<C-d>", "<C-d>zz", opts) -- scroll down
 
+-- Move by wrapped screen line; a count (5j) still jumps real lines for relative numbers
+map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true, desc = "Down" })
+map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true, desc = "Up" })
+map({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true, desc = "Down" })
+map({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true, desc = "Up" })
+
 -- window management
 map("n", "<leader>wv", "<C-w>v", { desc = "Split vertically" }) -- split window vertically
 map("n", "<leader>wh", "<C-w>s", { desc = "Split horizontally" }) -- split window horizontally

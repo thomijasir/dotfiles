@@ -1,0 +1,19 @@
+name: postgresql
+services:
+  # 1. The Database
+  pgdb:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminportal
+      POSTGRES_DB: app_default
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+      - ./init-db:/docker-entrypoint-initdb.d:ro
+    shm_size: "256mb"
+
+volumes:
+  pgdata:

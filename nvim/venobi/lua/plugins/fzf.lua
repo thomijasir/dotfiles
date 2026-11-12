@@ -37,6 +37,10 @@ fzf.setup({
   grep = {
     rg_glob = true,
     hidden = true,
+    -- default search use smart case instead regex
+    rg_opts = "--column --line-number --no-heading --color=always --smart-case "
+      .. "--max-columns=4096 --fixed-strings -e",
+    no_esc = true,
   },
 
   keymap = {
