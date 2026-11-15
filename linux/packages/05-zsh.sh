@@ -113,6 +113,8 @@ alias lg="lazygit"
 alias ld="lazydocker"
 alias rm_node='rm -rf node_modules package-lock.json'
 alias zsh_reload='source ~/.zshrc'
+# Docker State Alias
+alias dstat='docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}\t{{.BlockIO}}"'
 
 EOF
 fi
