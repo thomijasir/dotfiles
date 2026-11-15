@@ -8,7 +8,7 @@ services:
     environment:
       - CADDY_INGRESS_NETWORKS=caddy_net
     networks:
-      - caddy_proxy
+      - caddy_net
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - caddy_data:/data
