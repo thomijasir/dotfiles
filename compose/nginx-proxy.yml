@@ -1,0 +1,62 @@
+# Replaces caddy-proxy.yml. Apps join nginx_net_net and set:
+#   VIRTUAL_HOST=app.example.com  VIRTUAL_PORT=3000
+#   LETSENCRYPT_HOST=app.example.com
+# Run: ACME_EMAIL=you@example.com docker compose -f nginx-proxy.yml up -d
+# # services:
+#   my-app:
+#     image: my-app:latest
+#     environment:
+#       - VIRTUAL_HOST=app.example.com
+#       - LETSENCRYPT_HOST=app.example.com
+#       - VIRTUAL_PORT=3000
+#     networks:
+#       - nginx_net
+#
+# networks:
+#   proxy-net:
+#     external: true
+# DONT Forget create network with trusted proxy
+#
+# docker network create --subnet 172.30.0.0/24 nginx_net
+
+services:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy:alpine
+    container_name: nginx-proxy
+    ports:
+      - 80:80
+      - 443:443
+    labels:
+      - com.github.nginx-proxy.nginx
+    networks:
+      - nginx_net
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - certs:/etc/nginx/certs:ro
+      - html:/usr/share/nginx/html
+    restart: unless-stopped
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    environment:
+      - DEFAULT_EMAIL=${ACME_EMAIL:-dev@dopbase.dev}
+    depends_on:
+      - nginx-proxy
+    networks:
+      - nginx_net
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - acme:/etc/acme.sh
+    restart: unless-stopped
+
+networks:
+  nginx_net:
+    external: true
+
+volumes:
+  certs: {}
+  html: {}
+  acme: {}
