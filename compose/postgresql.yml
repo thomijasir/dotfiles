@@ -1,12 +1,13 @@
-name: postgresql
+name: pgdb
 services:
   # 1. The Database
-  pgdb:
+  app:
+    container_name: app
     image: postgres:18-alpine
     restart: unless-stopped
     environment:
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: adminportal
+      POSTGRES_PASSWORD: admin
       POSTGRES_DB: app_default
     ports:
       - "5432:5432"
