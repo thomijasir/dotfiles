@@ -1,0 +1,39 @@
+services:
+  dozzle:
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - dozzle_data:/data
+    ports:
+      - 8081:8081
+    environment:
+      # Uncomment to enable container actions (stop, start, restart). See https://dozzle.dev/guide/actions
+      - DOZZLE_ENABLE_ACTIONS=true
+      #
+      # Uncomment to allow access to container shells. See https://dozzle.dev/guide/shell
+      - DOZZLE_ENABLE_SHELL=true
+      #
+      # Uncomment to enable authentication. See https://dozzle.dev/guide/authentication
+      # - DOZZLE_AUTH_PROVIDER=simple
+      #
+      # Label this Dozzle instance (shown in the header and multi-host menu). See https://dozzle.dev/guide/hostname
+      - DOZZLE_HOSTNAME=vend
+      #
+      # Connect to one or more remote agents to monitor other Docker hosts. See https://dozzle.dev/guide/agent
+      # - DOZZLE_REMOTE_AGENT=192.168.1.10:7007,192.168.1.11:7007
+      #
+      # Only show containers matching a filter. See https://dozzle.dev/guide/filters
+      # - DOZZLE_FILTER=label=com.example.app
+  # dozzle-agent:
+  #   image: amir20/dozzle:latest
+  #   command: agent
+  #   container_name: dozzle-agent
+  #   restart: unless-stopped
+  #   environment:
+  #     - DOZZLE_HOSTNAME=tencent-hk-01 # Friendly name shown in Dozzle UI
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   ports:
+  #     - "7007:7007"
+volumes:
+  dozzle_data:
