@@ -18,6 +18,12 @@
 # DONT Forget create network with trusted proxy
 #
 # docker network create --subnet 172.30.0.0/24 nginx_net
+#
+# Basic auth: put a file named exactly like the VIRTUAL_HOST in ./htpasswd,
+# then recreate nginx-proxy so it picks the file up:
+#   mkdir -p htpasswd
+#   printf "admin:$(openssl passwd -apr1 'your-password')\n" > htpasswd/app.example.com
+#   docker compose -f nginx-proxy.yml up -d nginx-proxy
 
 services:
   nginx-proxy:
@@ -34,6 +40,7 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - certs:/etc/nginx/certs:ro
       - html:/usr/share/nginx/html
+      # - ./htpasswd:/etc/nginx/htpasswd:ro
     configs:
       - source: cloudflare_real_ip
         target: /etc/nginx/conf.d/cloudflare.conf
@@ -43,7 +50,7 @@ services:
     image: nginxproxy/acme-companion
     container_name: nginx-proxy-acme
     environment:
-      - DEFAULT_EMAIL=${ACME_EMAIL:-dev@dopbase.com}
+      - DEFAULT_EMAIL=${ACME_EMAIL:-dev@domain.com}
     depends_on:
       - nginx-proxy
     networks:

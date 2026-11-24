@@ -5,3 +5,4 @@ luarc.json
 .aider*
 .env
 zshrc/.zsh_user
+compose/htpasswd/
