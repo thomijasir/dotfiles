@@ -11,7 +11,7 @@ pack.add({
   },
   {
     src = "https://github.com/hmdfrds/focal.nvim",
-    version = "stable",
+    version = vim.version.range("1.*"),
   },
 })
 

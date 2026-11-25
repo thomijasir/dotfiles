@@ -1,6 +1,6 @@
 local pack = require("utils.pack")
 
-pack.add({ { src = "https://github.com/lewis6991/gitsigns.nvim", version = "stable" } })
+pack.add({ { src = "https://github.com/lewis6991/gitsigns.nvim", version = vim.version.range("2.*") } })
 
 require("gitsigns").setup({
   -- Attach to untracked files so on_attach keymaps (which-key, staging) work in new files

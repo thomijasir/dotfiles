@@ -13,7 +13,7 @@
     "codediff.nvim": {
       "rev": "e08a35a56a52c290398ebfaec33c34cfcf2d0f3c",
       "src": "https://github.com/esmuellert/codediff.nvim",
-      "version": "'stable'"
+      "version": "4.0.0 - 5.0.0"
     },
     "conform.nvim": {
       "rev": "016802de402556da54c36bd7359b441266b01cdd",
@@ -23,7 +23,7 @@
     "focal.nvim": {
       "rev": "25c946b9ba57c394fbb8644f084a4cd6d0004e54",
       "src": "https://github.com/hmdfrds/focal.nvim",
-      "version": "'stable'"
+      "version": "1.0.0 - 2.0.0"
     },
     "fzf-lua": {
       "rev": "05e44d38de0a79c11fba5f7bf8138791b1dbdd1e",
@@ -32,7 +32,7 @@
     "gitsigns.nvim": {
       "rev": "5be654f2232c10ddcad19c1607a67b6b4b78fc29",
       "src": "https://github.com/lewis6991/gitsigns.nvim",
-      "version": "'stable'"
+      "version": "2.0.0 - 3.0.0"
     },
     "grug-far.nvim": {
       "rev": "11595bf747edc270bce2069d1020502ad4ae56cf",

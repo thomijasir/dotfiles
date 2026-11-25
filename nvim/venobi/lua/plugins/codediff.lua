@@ -3,7 +3,7 @@ local pack = require("utils.pack")
 pack.add({
   {
     src = "https://github.com/esmuellert/codediff.nvim",
-    version = "stable",
+    version = vim.version.range("4.*"),
   },
 }, {
   lazy = true,
